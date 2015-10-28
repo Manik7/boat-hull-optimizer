@@ -97,7 +97,6 @@ public:
 			return m_sq_perimeter = sq_edge_length(beam, chine) + sq_edge_length(chine, keel);
 	}
 	
-
 	double area_perimeter_ratio() {
 			return m_area_perimeter_ratio = area()/perimeter();
 	}
