@@ -84,51 +84,34 @@ private:
 
 public:
 	double area() {
-		/*if (m_area == 0.0) {*/
-			/*Calculate the area of the inner rectangular section
-			 * and then add the flare triangle and the deadrise 
-			 * triangle areas to that. */
 			return m_area = double(chine.x * chine.y 
 				+ ( (beam.x - chine.x) * chine.y
 				+ chine.x * (keel.y - chine.y) )/2);
-		/*} else return m_area;*/
 	}
 
 	double perimeter() {
-		/*if (m_perimeter == 0) {*/
 			return m_perimeter = edge_length(beam, chine) + edge_length(chine, keel);
-		/*} else return m_perimeter;*/
 	}
 
 	int sq_perimeter() {
-		/*if (m_sq_perimeter == 0) {*/
 			return m_sq_perimeter = sq_edge_length(beam, chine) + sq_edge_length(chine, keel);
-		/*} else return m_sq_perimeter;*/
 	}
 	
 
 	double area_perimeter_ratio() {
-		/*if (m_area_perimeter_ratio == 0.0) {*/
 			return m_area_perimeter_ratio = area()/perimeter();
-		/*} else return m_area_perimeter_ratio;*/
 	}
 
 	double area_sq_perimeter_ratio() {
-		/*if (m_area_sq_perimeter_ratio == 0.0) {*/
 			return m_area_sq_perimeter_ratio = double(area())/double(sq_perimeter());
-		/*} else return m_area_sq_perimeter_ratio;*/
 	}
 
 	double flare_angle_deg() {
-		/*if (m_flare_angle_deg == 0.0) {*/
 			return m_flare_angle_deg = acos(double(chine.y)/edge_length(beam,chine)) / 3.1415 * 180.0;
-		/*} else return m_flare_angle_deg;*/
 	}
 
 	double deadrise_angle_deg() {
-		/*if (m_deadrise_angle_deg == 0.0) {*/
 			return m_deadrise_angle_deg = acos(chine.x/edge_length(chine, keel)) / 3.1415 * 180.0;
-		/*} else return m_deadrise_angle_deg;*/
 	}
 
 	static void line_print_labels() {
