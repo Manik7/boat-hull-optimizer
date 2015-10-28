@@ -4,12 +4,14 @@
 #include <vector>
 
 #include "Station.h"
+#include "Bbox.h"
+#include "Constraints.h"
 
 class Hull {
 	std::vector<Station> stations;
 
 public:
-	void generate_stations(); /*station_origin, std::string name, Bbox bbox, area, perimeter*/
+	void generate_stations(/*Bbox bbox, Constraints con*/); 
 
 
 //	Hull();
