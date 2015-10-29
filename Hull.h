@@ -11,7 +11,7 @@ class Hull {
 	std::vector<Station> stations;
 
 public:
-	void generate_stations(/*Bbox bbox, Constraints con*/); 
+	void generate_stations(/*Bbox bbox, Constraints con*/); //TODO: You need a set of these, one pair for each station...
 
 
 //	Hull();
