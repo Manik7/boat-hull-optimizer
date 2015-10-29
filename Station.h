@@ -13,7 +13,7 @@ class Station {
 	typedef Point_3 Point;
 
 private:
-	//TODO: You could make the const to protect against accidental modification
+	//TODO: You could make the bbox and constraints const to protect against accidental modification
 	Bbox bbox = Bbox();
 	Constraints c = Constraints();
 	static const int number_of_iterations = 1000;
