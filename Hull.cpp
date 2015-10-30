@@ -1,6 +1,6 @@
 #include "Hull.h"
 
-Hull::Hull(int half_lwl, int half_bwl) : half_lwl(half_lwl), half_bwl(half_bwl) {
+Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), number_of_stations(number_of_stations) {
 	
 }
 
@@ -17,8 +17,9 @@ void Hull::generate_stations() {
 
 		best_ap_ratio = 0.0;
 		iterations = 0;
+		double station_spacing = half_lwl/(number_of_stations-1);
 
-		Bbox bbox(Point_3(0,0,1000*i),Point_3(300,450,1000*i));
+		Bbox bbox(Point_3(0,0,i*station_spacing),Point_3(300,450,i*station_spacing));
 		Constraints con(65000, 70000, 0.0, 25.0, 0, 60.0);
 
 		while(iterations<number_of_iterations) {

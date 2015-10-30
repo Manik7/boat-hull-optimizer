@@ -114,13 +114,11 @@ public:
 	}
 
 	static void line_print_labels() {
-		std::cout << "chine.x" << "\t" << "chine.y" << "\t" << "keel.y" 
-			<< "\t" << "area" << "\t" << "per." << "\t" << "a/p" << "\t"
-			<<"flare" << "\t" << "deadrise" << std::endl;
+		std::cout << "station\t" << "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "perim.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
 	}
 
 	void line_print() {
-		std::cout << chine.x << "\t" << chine.y << "\t" << keel.y 
+		std::cout << origin.z << "\t" << chine.x << "\t" << chine.y << "\t" << keel.y 
 			<< "\t" << area() << "\t" << perimeter() << "\t" << area_perimeter_ratio() << "\t"
 			<<flare_angle_deg() << "\t" << deadrise_angle_deg() << std::endl;
 	}
