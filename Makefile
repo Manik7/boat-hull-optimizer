@@ -1,12 +1,12 @@
 CXX=g++
 CXXFLAGS=-std=c++11
 
-all: main
+all: Main
 
-main: main.o Hull.o
+Main: Main.o Hull.o
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
-main.o: main.cpp
+Main.o: Main.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
 Hull.o: Hull.cpp Hull.h

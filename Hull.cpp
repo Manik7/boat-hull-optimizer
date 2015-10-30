@@ -1,5 +1,8 @@
 #include "Hull.h"
 
+Hull::Hull(int half_lwl, int half_bwl) : half_lwl(half_lwl), half_bwl(half_bwl) {
+	
+}
 
 void Hull::generate_stations() {
 
@@ -10,12 +13,12 @@ void Hull::generate_stations() {
 
 	Station::line_print_labels();
 
-	for (int i = 0; i<1; i++) {
+	for (int i = 0; i<2; i++) {
 
 		best_ap_ratio = 0.0;
 		iterations = 0;
 
-		Bbox bbox(Point_3(0,0,0),Point_3(300,450,0));
+		Bbox bbox(Point_3(0,0,1000*i),Point_3(300,450,1000*i));
 		Constraints con(65000, 70000, 0.0, 25.0, 0, 60.0);
 
 		while(iterations<number_of_iterations) {
@@ -28,24 +31,18 @@ void Hull::generate_stations() {
 			iterations++;
 		}
 		stations.push_back(station);
+		std::cout << std::endl;
 	}
 	
 }
 
-/*Hull::Hull() {
-	
-}*/
+
 
 //You could assert that a hull must have at least two stations for any of the calculations to work
 
-double Hull::volume() { //TODO
-	return 0.0;
-}
-
-double Hull::wetted_surface_area() { //TODO
-	return 0.0;
-}
-
-double Hull::calculate_pitching_moment() { //TODO
-	return 0.0;
+void Hull::compute_properties() {
+	for (const auto& it : stations) {
+		//TODO
+	}
+	
 }
