@@ -96,6 +96,9 @@ public:
 	int sq_perimeter() {
 			return m_sq_perimeter = sq_edge_length(beam, chine) + sq_edge_length(chine, keel);
 	}
+
+	double z_coord() const {
+		return origin.z;
 	
 	double area_perimeter_ratio() {
 			return m_area_perimeter_ratio = area()/perimeter();

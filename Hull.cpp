@@ -42,8 +42,25 @@ void Hull::generate_stations() {
 //You could assert that a hull must have at least two stations for any of the calculations to work
 
 void Hull::compute_properties() {
-	for (const auto& it : stations) {
-		//TODO
+
+std::list<int>::const_iterator iterator;
+for (iterator = intList.begin(); iterator != intList.end(); ++iterator) {
+    std::cout << *iterator;
+}
+
+	const auto& it = stations.begin();
+	++it;
+	const auto& it_prev = stations.begin();
+	double station_spacing = 0.0;
+
+	for ( ; it != stations.end(); ++it, ++it_prev) {
+		station_spacing = it->z_coord() - it_prev->z_coord();
+
+		volume += (it_prev->area() + it->area())/2.0 * station_spacing;
+		wetted_surface_area += (it_prev->perimeter() + it->perimeter())/2.0 * station_spacing;
+		//TODO: pitching moment
 	}
+
+	
 	
 }

@@ -2,13 +2,14 @@
 #define HULL_H
 
 #include <vector>
+#include <list>
 
 #include "Station.h"
 #include "Bbox.h"
 #include "Constraints.h"
 
 class Hull {
-	std::vector<Station> stations;
+	std::list<Station> stations;
 	const double max_twist_deg = 20.0; // degrees per 1000 mm
 	const int half_lwl;
 	const int half_bwl;
