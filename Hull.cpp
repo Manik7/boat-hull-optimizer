@@ -43,15 +43,10 @@ void Hull::generate_stations() {
 
 void Hull::compute_properties() {
 
-std::list<int>::const_iterator iterator;
-for (iterator = intList.begin(); iterator != intList.end(); ++iterator) {
-    std::cout << *iterator;
-}
-
-	const auto& it = stations.begin();
-	++it;
-	const auto& it_prev = stations.begin();
 	double station_spacing = 0.0;
+	auto it = stations.begin();
+	++it;
+	auto it_prev = stations.begin();
 
 	for ( ; it != stations.end(); ++it, ++it_prev) {
 		station_spacing = it->z_coord() - it_prev->z_coord();
@@ -62,5 +57,5 @@ for (iterator = intList.begin(); iterator != intList.end(); ++iterator) {
 	}
 
 	
-	
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²" << std::endl;
 }

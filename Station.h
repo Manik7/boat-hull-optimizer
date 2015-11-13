@@ -63,12 +63,6 @@ private:
 		}
 	}
 
-	bool satisfies_constraints() {
-		if (area() > c.area_min && area() < c.area_max && flare_angle_deg() > c.flare_min && flare_angle_deg() < c.flare_max && deadrise_angle_deg() > c.deadrise_min && deadrise_angle_deg() < c.deadrise_max) { 
-			return true;
-		} else return false;
-	}
-
 	int resolution(int input) {
 		return input/xy_resolution;
 	}
@@ -99,6 +93,7 @@ public:
 
 	double z_coord() const {
 		return origin.z;
+	}
 	
 	double area_perimeter_ratio() {
 			return m_area_perimeter_ratio = area()/perimeter();
@@ -114,6 +109,12 @@ public:
 
 	double deadrise_angle_deg() {
 			return m_deadrise_angle_deg = acos(chine.x/edge_length(chine, keel)) / 3.1415 * 180.0;
+	}
+
+	bool satisfies_constraints() {
+		if (area() > c.area_min && area() < c.area_max && flare_angle_deg() > c.flare_min && flare_angle_deg() < c.flare_max && deadrise_angle_deg() > c.deadrise_min && deadrise_angle_deg() < c.deadrise_max) { 
+			return true;
+		} else return false;
 	}
 
 	static void line_print_labels() {
