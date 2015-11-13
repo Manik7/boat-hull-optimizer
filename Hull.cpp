@@ -13,6 +13,8 @@ void Hull::generate_stations() {
 
 	Station::line_print_labels();
 
+	//TODO: Add differing station parameters here, to start creating an actual hull. 
+
 	for (int i = 0; i<2; i++) {
 
 		best_ap_ratio = 0.0;
@@ -39,7 +41,7 @@ void Hull::generate_stations() {
 
 
 
-//You could assert that a hull must have at least two stations for any of the calculations to work
+//TODO: You could assert that a hull must have at least two stations for any of the calculations to work
 
 void Hull::compute_properties() {
 
