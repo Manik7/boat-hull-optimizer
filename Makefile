@@ -3,13 +3,16 @@ CXXFLAGS=-std=c++11
 
 all: Main
 
-Main: Main.o Hull.o
+Main: Main.o Hull.o Station.o
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
 Main.o: Main.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
 Hull.o: Hull.cpp Hull.h
+	$(CXX) $(CXXFLAGS) -c $<
+
+Station.o: Station.cpp Station.h
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
