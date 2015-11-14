@@ -20,9 +20,9 @@ class Hull {
 	double pitching_moment = 0.0;
 
 public:
-	Hull(int half_lwl = 1000, int half_bwl = 275, int number_of_stations = 2);
+	Hull(int half_lwl = 3300, int half_bwl = 275, int number_of_stations = 2);
 
-	void generate_stations(/*Bbox bbox, Constraints con*/); //TODO: You need a set of these, one pair for each station...
+	void generate_stations(/*Bbox bbox, Constraints con*/); //TODO: You need a list of these bbox-constraint-tuples, one tuple for each station
 
 	void compute_properties();
 	
