@@ -6,7 +6,6 @@ Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_l
 
 void Hull::generate_stations() {
 
-	Station station;
 	double best_ap_ratio = 0.0;
 	unsigned int iterations = 0;
 	unsigned const int number_of_iterations = 10000;
@@ -17,6 +16,8 @@ void Hull::generate_stations() {
 
 	for (int i = 0; i<2; i++) {
 
+		Station station;
+		Station best_station;
 		best_ap_ratio = 0.0;
 		iterations = 0;
 		double station_spacing = half_lwl/(number_of_stations-1);
@@ -29,11 +30,12 @@ void Hull::generate_stations() {
 
 			if(station.area_perimeter_ratio() > best_ap_ratio) {
 				best_ap_ratio = station.area_perimeter_ratio();
+				best_station = station;
 				station.line_print();
 			}
 			iterations++;
 		}
-		stations.push_back(station);
+		stations.push_back(best_station);
 		std::cout << std::endl;
 	}
 	
@@ -58,6 +60,5 @@ void Hull::compute_properties() {
 		//TODO: pitching moment
 	}
 
-	
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²" << std::endl;
 }
