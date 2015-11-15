@@ -15,10 +15,10 @@ class Bezier_quadratic {
 public:
 	Bezier_quadratic(Point_3& p0, Point_3& p1, Point_3& p2);
 
-	Point_3 point_at_t(double t) const;
-	double evaluate_x(double t) const;
-	double evaluate_y(double t) const;
-	double evaluate_z(double t) const;
+	double x_coordinate(double t) const; //Computes the x-coordinate of the bezier curve at t. This is faster than constructing the entire point P(t).
+	double y_coordinate(double t) const;
+	double z_coordinate(double t) const;
+	Point_3 point_at_t(double t) const; // Constructs the point P(t) along the bezier curve
 
 	/* This function finds the first point along the bezier curve which has the specified z-coordinate value. Note that this only works if the given bezier spline is a monotonic function*/
 	Point_3 find_point_with_z_coord(double z_value, double epsilon = 0.001) const;

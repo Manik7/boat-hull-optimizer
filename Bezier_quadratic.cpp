@@ -4,9 +4,9 @@ Bezier_quadratic::Bezier_quadratic(Point_3& p0, Point_3& p1, Point_3& p2) : p0(p
 
 Point_3 Bezier_quadratic::point_at_t(double t) const {
 	Point_3 point;
-	point.x = evaluate_x(t);
-	point.y = evaluate_y(t);
-	point.z = evaluate_z(t);
+	point.x = x_coordinate(t);
+	point.y = y_coordinate(t);
+	point.z = z_coordinate(t);
 	point.name = "t=" + std::to_string(t);
 	return point;
 }
@@ -22,15 +22,15 @@ double Bezier_quadratic::evaluate_1D(double t, double p0_coord, double p1_coord,
 	return pow(1-t,2)*p0_coord + 2*(1-t)*t*p1_coord + pow(t,2)*p2_coord;
 }
 
-double Bezier_quadratic::evaluate_x(double t) const {
+double Bezier_quadratic::x_coordinate(double t) const {
 	return evaluate_1D(t, p0.x, p1.x, p2.x);
 }
 
-double Bezier_quadratic::evaluate_y(double t) const {
+double Bezier_quadratic::y_coordinate(double t) const {
 	return evaluate_1D(t, p0.y, p1.y, p2.y);
 }
 
-double Bezier_quadratic::evaluate_z(double t) const {
+double Bezier_quadratic::z_coordinate(double t) const {
 	return evaluate_1D(t, p0.z, p1.z, p2.z);
 }
 
