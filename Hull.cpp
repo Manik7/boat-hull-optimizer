@@ -1,47 +1,62 @@
 #include "Hull.h"
 
-Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), number_of_stations(number_of_stations) {
+Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), number_of_stations(number_of_stations), wl_curve(WaterlineCurve(half_lwl, half_bwl)) {
 	
 }
 
 void Hull::generate_stations() {
 
+//	Station::line_print_labels(); //TODO: Uncomment
+
+	double station_spacing = (half_lwl-100)/(number_of_stations-1); //No stations generated for the last 100mm of the hull
+	int station_bbox_width;
+	int station_z_coord;
+
+	for (int i = 0; i<number_of_stations; i++) {
+
+		station_z_coord = i*station_spacing;
+		Point_3 wl_curve_point(wl_curve.find_point_with_z_coord(station_z_coord));
+
+		Bbox bbox(	Point_3(0,0,i*station_spacing),
+				Point_3(wl_curve_point.x, 450, station_z_coord));
+
+		Constraints con;
+
+		if (i==0) {
+			con = Constraints(65000, 70000, 0.0, 25.0, 0.0, 60.0);
+		} else {
+			con = Constraints(0, 70000, 0.0, 25.0, 0.0, 90.0);
+		}
+
+		generate_optimized_station(bbox, con);
+	}
+
+	std::cout << std::endl;
+}
+
+void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
+
+	Station::line_print_labels(); //TODO: comment out
+
+	Station station;
+	Station best_station;
 	double best_ap_ratio = 0.0;
 	unsigned int iterations = 0;
 	unsigned const int number_of_iterations = 10000;
 
-	Station::line_print_labels();
+	while(iterations<number_of_iterations) {
+		station = Station(bbox, con);
 
-	//TODO: Add differing station parameters here, to start creating an actual hull. 
-
-	for (int i = 0; i<2; i++) {
-
-		Station station;
-		Station best_station;
-		best_ap_ratio = 0.0;
-		iterations = 0;
-		double station_spacing = half_lwl/(number_of_stations-1);
-
-		Bbox bbox(Point_3(0,0,i*station_spacing),Point_3(300,450,i*station_spacing));
-		Constraints con(65000, 70000, 0.0, 25.0, 0, 60.0);
-
-		while(iterations<number_of_iterations) {
-			station = Station(bbox, con);
-
-			if(station.area_perimeter_ratio() > best_ap_ratio) {
-				best_ap_ratio = station.area_perimeter_ratio();
-				best_station = station;
-				station.line_print();
-			}
-			iterations++;
+		if(station.area_perimeter_ratio() > best_ap_ratio) {
+			best_ap_ratio = station.area_perimeter_ratio();
+			best_station = station;	
+			best_station.line_print(); //TODO: Comment out		
 		}
-		stations.push_back(best_station);
-		std::cout << std::endl;
+		iterations++;
 	}
-	
+//	best_station.line_print();
+	stations.push_back(best_station);
 }
-
-
 
 //TODO: You could assert that a hull must have at least two stations for any of the calculations to work
 

@@ -8,7 +8,7 @@
 //TODO: Write a unit test for this class
 
 class Bezier_quadratic {
-
+protected:
 	Point_3 p0, p1, p2;
 	Bezier_quadratic() {}; // private default constructor
 
@@ -23,7 +23,7 @@ public:
 	/* This function finds the first point along the bezier curve which has the specified z-coordinate value. Note that this only works if the given bezier spline is a monotonic function*/
 	Point_3 find_point_with_z_coord(double z_value, double epsilon = 0.001) const;
 
-private:
+protected:
 
 	// Finds say the x-value of the bezier curve by specifiying t, and giving the x coordinates of the three points of this spline. Care must be taken to specify the values along the correct axis.
 	double evaluate_1D(double t, double p0_coord, double p1_coord, double p2_coord) const;

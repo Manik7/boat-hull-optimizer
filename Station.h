@@ -13,11 +13,11 @@ class Station {
 	typedef Point_3 Point;
 
 private:
-	//TODO: You could make the bbox and constraints const to protect against accidental modification
+	//TODO: You could make the bbox and constraints 'const' to protect against accidental modification
 	Bbox bbox = Bbox();
 	Constraints c = Constraints();
 	static const int number_of_iterations = 1000;
-	static const int xy_resolution = 10; //TODO: Better to not make this static
+	static const int xy_resolution = 10; //TODO: Better to not make this static? That would allow a higher resolution at the bow and lower resolution at the midsection
 	Point origin, beam, keel, chine;
 
 public:

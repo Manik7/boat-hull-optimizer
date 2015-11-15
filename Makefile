@@ -3,7 +3,7 @@ CXXFLAGS=-std=c++11
 
 all: Main
 
-Main: Main.o Hull.o Station.o
+Main: Main.o Hull.o Station.o Bezier_quadratic.o
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
 Main.o: Main.cpp
@@ -15,14 +15,14 @@ Hull.o: Hull.cpp Hull.h
 Station.o: Station.cpp Station.h Point_3.h Bbox.h
 	$(CXX) $(CXXFLAGS) -c $<
 
-Bezier: Bezier_quadratic.o Bezier_quad_unit.o
-	$(CXX) $(CXXFLAGS) $^ -o ./bezier_test
+Bezier_quadratic.o: Bezier_quadratic.cpp Bezier_quadratic.h Point_3.h
+	$(CXX) $(CXXFLAGS) -c $<
 
 Bezier_quad_unit.o: Bezier_quad_unit.cpp 
 	$(CXX) $(CXXFLAGS) -c $<
 
-Bezier_quadratic.o: Bezier_quadratic.cpp Bezier_quadratic.h Point_3.h
-	$(CXX) $(CXXFLAGS) -c $<
+Bezier: Bezier_quadratic.o Bezier_quad_unit.o
+	$(CXX) $(CXXFLAGS) $^ -o ./bezier_test
 
 clean:
 	rm -f main bezier_test *.o

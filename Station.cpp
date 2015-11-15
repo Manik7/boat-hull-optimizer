@@ -10,14 +10,14 @@ void Station::generate_chine_and_keel() {
 	std::uniform_int_distribution<int> distr;
 	bool foundSolution = false;
 
-	chine = Point(0, 0, origin.z, "chine");
+	chine = Point(0, 0, origin.z, "chine"); //set the x-coordinate (beam) later
 
 	for (int i = 0; i<number_of_iterations; i++) {
 
-		distr = std::uniform_int_distribution<int>(resolution(bbox.max.x)/4, resolution(bbox.max.x)); // set to x range
+		distr = std::uniform_int_distribution<int>(resolution(bbox.max.x/4), resolution(bbox.max.x)); // set to x range, from 0 to bbox_max.x, instead of 0 I'm using 25%-of-beam instead, as solutions with the chine that far in would be discarded anyway
 		chine.x = distr(eng)*xy_resolution;  // random x_chine
 
-		distr = std::uniform_int_distribution<int>(resolution(bbox.max.y)/4, resolution(bbox.max.y)); //set to y range
+		distr = std::uniform_int_distribution<int>(resolution(bbox.max.y/4), resolution(bbox.max.y)); //set to y range, also using the 25% heuristic here
 		chine.y = distr(eng)*xy_resolution; // random y_chine
 		keel = Point(0, distr(eng)*xy_resolution, origin.z, "keel"); // random y_keel
 		
@@ -28,7 +28,10 @@ void Station::generate_chine_and_keel() {
 
 	}
 	if (!foundSolution) {
-		std::cout << "Could not find a solution for section at z = " << origin.z << " after " << number_of_iterations << " iterations." << std::endl;
+		//If you failed to find a solution, use this (very small) default station instead:
+		chine.x = xy_resolution;
+		chine.y = bbox.max.y/2;
+		keel = Point(0, bbox.max.y, origin.z, "keel");
 	}
 }
 
@@ -86,11 +89,11 @@ bool Station::satisfies_constraints() const {
 }
 
 void Station::line_print_labels() {
-	std::cout << "station\t" << "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "perim.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
+	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "perim.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
 }
 
 void Station::line_print() const {
-	std::cout << origin.z << "\t" << chine.x << "\t" << chine.y << "\t" << keel.y 
-		<< "\t" << area() << "\t" << perimeter() << "\t" << area_perimeter_ratio() << "\t"
-		<<flare_angle_deg() << "\t" << deadrise_angle_deg() << std::endl;
+	std::cout << origin.z << '\t' << beam.x << '\t' << chine.x << '\t' << chine.y << '\t' << keel.y 
+		<< '\t' << area() << '\t' << perimeter() << '\t' << area_perimeter_ratio() << '\t'
+		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
