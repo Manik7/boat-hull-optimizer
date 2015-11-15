@@ -12,11 +12,20 @@ Main.o: Main.cpp
 Hull.o: Hull.cpp Hull.h
 	$(CXX) $(CXXFLAGS) -c $<
 
-Station.o: Station.cpp Station.h
+Station.o: Station.cpp Station.h Point_3.h Bbox.h
+	$(CXX) $(CXXFLAGS) -c $<
+
+Bezier: Bezier_quadratic.o Bezier_quad_unit.o
+	$(CXX) $(CXXFLAGS) $^ -o ./bezier_test
+
+Bezier_quad_unit.o: Bezier_quad_unit.cpp 
+	$(CXX) $(CXXFLAGS) -c $<
+
+Bezier_quadratic.o: Bezier_quadratic.cpp Bezier_quadratic.h Point_3.h
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	rm -f main *.o
+	rm -f main bezier_test *.o
 
 #%.o: %.cpp %.h
 #	$(CXX) $(CXXFLAGS) -c $<
