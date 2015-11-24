@@ -1,6 +1,6 @@
 #include "Station.h"
 
-Station::Station(Bbox& bbox, Constraints& constraints) : bbox(bbox), c(constraints), origin(bbox.min.x, bbox.min.y, bbox.min.z), beam(bbox.max.x, 0, origin.z, "beam") {
+Station::Station(Bbox& bbox, Constraints& constraints) : bbox(bbox), c(constraints), origin(bbox.min.x, bbox.min.y, bbox.min.z, "origin"), beam(bbox.max.x, 0, origin.z, "beam") {
 		generate_chine_and_keel();		
 }
 

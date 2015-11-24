@@ -9,10 +9,8 @@
 #include "Constraints.h"
 
 class Station {
-
 	typedef Point_3 Point;
 
-private:
 	//TODO: You could make the bbox and constraints 'const' to protect against accidental modification
 	Bbox bbox = Bbox();
 	Constraints c = Constraints();
@@ -40,7 +38,7 @@ public:
 	double area_sq_perimeter_ratio() const;
 	double flare_angle_deg() const;
 	double deadrise_angle_deg() const;
-	bool satisfies_constraints() const;
+	bool satisfies_constraints() const; //TODO: Check the chine and keel against bbox constraints as well
 	static void line_print_labels();
 	void line_print() const;
 

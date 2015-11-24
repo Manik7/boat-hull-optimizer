@@ -2,7 +2,6 @@
 #define HULL_H
 
 #include <vector>
-#include <list>
 
 #include "Station.h"
 #include "Bbox.h"
@@ -12,7 +11,7 @@
 class Hull {
 	typedef Bezier_quadratic Bezier;
 
-	std::list<Station> stations;
+	std::vector<Station> stations;
 	const WaterlineCurve wl_curve;
 	const double max_twist_deg = 20.0; // degrees per 1000 mm
 	const int half_lwl;
