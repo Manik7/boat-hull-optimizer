@@ -21,3 +21,7 @@ double OptimizableHull::fitness() {
 	compute_properties();
 	return wetted_surface_area; //TODO: proper fitness function needed here
 }
+
+int numberOfParameters() {
+	
+}
