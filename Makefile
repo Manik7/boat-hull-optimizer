@@ -6,6 +6,9 @@ all: Main
 Main: Main.o Hull.o Station.o Bezier_quadratic.o
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
+Bezier: Bezier_quadratic.o Bezier_quad_unit.o
+	$(CXX) $(CXXFLAGS) $^ -o ./bezier_test
+
 Main.o: Main.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
@@ -21,8 +24,8 @@ Bezier_quadratic.o: Bezier_quadratic.cpp Bezier_quadratic.h Point_3.h
 Bezier_quad_unit.o: Bezier_quad_unit.cpp 
 	$(CXX) $(CXXFLAGS) -c $<
 
-Bezier: Bezier_quadratic.o Bezier_quad_unit.o
-	$(CXX) $(CXXFLAGS) $^ -o ./bezier_test
+OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h
+	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
 	rm -f main bezier_test *.o

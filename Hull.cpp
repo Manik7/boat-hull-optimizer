@@ -61,7 +61,12 @@ void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
 //TODO: You could assert that a hull must have at least two stations for any of the calculations to work
 
 void Hull::compute_properties() {
-
+	
+	//Reset Hull attributes to 0.0
+	volume = 0.0;
+	wetted_surface_area = 0.0;
+	pitching_moment = 0.0;
+	
 	double station_spacing = 0.0;
 	auto it = stations.begin();
 	++it;

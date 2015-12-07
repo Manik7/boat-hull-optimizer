@@ -97,3 +97,29 @@ void Station::line_print() const {
 		<< '\t' << area() << '\t' << perimeter() << '\t' << area_perimeter_ratio() << '\t'
 		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
+
+int Station::getParameter(int index) {
+	assert(index >= 0 && index < 3);
+	
+	switch (index) {
+		case 0:
+			return chine.x;
+		case 1:
+			return chine.y;
+		case 2:
+			return keel.y;
+	}
+}
+
+void Station::setParameter(int index, int value) {
+	assert(index >= 0 && index < 3);
+	
+	switch (index) {
+		case 0:
+			chine.x = value;
+		case 1:
+			chine.y = value;
+		case 2:
+			keel.y = value;
+	}
+}

@@ -9,6 +9,8 @@
 #include "WaterlineCurve.h"
 
 class Hull {
+
+protected:
 	typedef Bezier_quadratic Bezier;
 
 	std::vector<Station> stations;

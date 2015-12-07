@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <random>
+#include <cassert>
 
 #include "Bbox.h"
 #include "Point_3.h"
@@ -42,6 +43,8 @@ public:
 	static void line_print_labels();
 	void line_print() const;
 
+	int getParameter(int index);
+	void setParameter(int index, int value);
 };
 
 #endif // STATION_H
