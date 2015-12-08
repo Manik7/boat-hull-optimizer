@@ -5,7 +5,7 @@ int main () {
 	OptimizableHull hull;
 	hull.generate_stations();
 
-	std::cout << "random hull generated, constraints met = " << hull.satisfies_constraints() << '\n';
+	std::cout << "random hull generated, constraints met = " << hull.satisfies_constraints() << "\n\n\n";
 	
 	GreedyOptimizer<OptimizableHull> greed(hull);
 	greed.run();

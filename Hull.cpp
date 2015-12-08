@@ -34,27 +34,6 @@ void Hull::generate_stations() {
 	std::cout << std::endl;
 }
 
-void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
-
-	Station station;
-	Station best_station;
-	double best_ap_ratio = 0.0;
-	unsigned int iterations = 0;
-	unsigned const int number_of_iterations = 100;
-
-	while(iterations<number_of_iterations) {
-		station = Station(bbox, con);
-
-		if(station.area_perimeter_ratio() > best_ap_ratio) {
-			best_ap_ratio = station.area_perimeter_ratio();
-			best_station = station;		
-		}
-		iterations++;
-	}
-	best_station.line_print();
-	stations.push_back(best_station);
-}
-
 void Hull::compute_properties() {
 	
 	assert(number_of_stations >= 2);
@@ -75,7 +54,36 @@ void Hull::compute_properties() {
 		volume += (it_prev->area() + it->area())/2.0 * station_spacing;
 		wetted_surface_area += (it_prev->perimeter() + it->perimeter())/2.0 * station_spacing;
 		//TODO: pitching moment
+	}	
+}
+
+void Hull::print_hull() const {
+	
+	Station::line_print_labels();
+	for (auto station : stations) {
+		station.line_print();
 	}
 
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²\n" << std::endl;
+}
+
+void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
+
+	Station station;
+	Station best_station;
+	double best_ap_ratio = 0.0;
+	unsigned int iterations = 0;
+	unsigned const int number_of_iterations = 100;
+
+	while(iterations<number_of_iterations) {
+		station = Station(bbox, con);
+
+		if(station.area_perimeter_ratio() > best_ap_ratio) {
+			best_ap_ratio = station.area_perimeter_ratio();
+			best_station = station;		
+		}
+		iterations++;
+	}
+	best_station.line_print();
+	stations.push_back(best_station);
 }

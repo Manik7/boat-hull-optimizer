@@ -28,6 +28,7 @@ public:
 
 		for (int i = 0; i < 10; ++i) {
 			do_step();
+			model.print_hull(); //TODO: Can't get at it for some reason...
 		}
 		//TODO: output here?
 	}

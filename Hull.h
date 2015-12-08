@@ -29,6 +29,7 @@ public:
 
 	void generate_stations();
 	void compute_properties();
+	void print_hull() const;
 
 private:
 	void generate_optimized_station(Bbox& bbox, Constraints& con);
