@@ -1,4 +1,4 @@
-#include "GreedyOptimizer.h"
+/*#include "GreedyOptimizer.h"
 
 //Constructor
 template<typename OptimizableHull>
@@ -56,4 +56,4 @@ bool GreedyOptimizer<OptimizableType>::win_dice_roll() {
 	
 	if (diceRollDistribution(engine) == 0) return true;
 	else return false;
-}
+}*/

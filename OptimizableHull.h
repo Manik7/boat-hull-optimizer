@@ -6,14 +6,13 @@
 #include "Hull.h"
 #include "Bbox.h"
 
-class OptimizableHull : public Hull, public Optimizable {
+struct OptimizableHull : public Hull, public Optimizable {
 
 	int get_parameter(int index) const;
 	void set_parameter(int index, int value);
 	bool satisfies_constraints() const;
 	double fitness();
 
-public: 
 	OptimizableHull() : Optimizable(3*number_of_stations, 0, 99) {};
 
 };

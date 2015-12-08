@@ -6,7 +6,7 @@ Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_l
 
 void Hull::generate_stations() {
 
-//	Station::line_print_labels(); //TODO: Uncomment
+	Station::line_print_labels();
 
 	double station_spacing = (half_lwl-100)/(number_of_stations-1); //No stations generated for the last 100mm of the hull
 	int station_bbox_width;
@@ -35,8 +35,6 @@ void Hull::generate_stations() {
 }
 
 void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
-
-	Station::line_print_labels(); //TODO: comment out
 
 	Station station;
 	Station best_station;

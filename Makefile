@@ -27,8 +27,8 @@ Bezier_quad_unit.o: Bezier_quad_unit.cpp
 OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h Optimizable.h
 	$(CXX) $(CXXFLAGS) -c $<
 
-GreedyOptimizer.o: GreedyOptimizer.cpp GreedyOptimizer.h
-	$(CXX) $(CXXFLAGS) -c $<
+#GreedyOptimizer.o: GreedyOptimizer.cpp GreedyOptimizer.h
+#	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
 	rm -f main bezier_test *.o
