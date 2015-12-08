@@ -1,9 +1,16 @@
 #include "GreedyOptimizer.h"
 
 //Constructor
-void GreedyOptimizer::GreedyOptimizer : model(model), engine(rd()), indexDistribution(0, model.numberOfParameters-1), valueDistribution(1, 5), diceRollDistribution(0,2) {}
+template<typename OptimizableHull>
+GreedyOptimizer<OptimizableType>::GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())) {
+	indexDistribution = std::uniform_int_distribution<int>(0, model.numberOfParameters-1);
+	valueDistribution = std::uniform_int_distribution<int>(1, 5);
+	diceRollDistribution = std::uniform_int_distribution<int>(0,2);
 
-void GreedyOptimizer::run() {
+}
+
+template<typename OptimizableHull>
+void GreedyOptimizer<OptimizableType>::run() {
 
 	//TODO: Implement temperature here, with tuning of the valueDistribution, for simulated annealing
 
@@ -14,12 +21,13 @@ void GreedyOptimizer::run() {
 	//TODO: output here?
 }
 
-void GreedyOptimizer::do_step() {
+template<typename OptimizableHull>
+void GreedyOptimizer<OptimizableType>::do_step() {
 	
 	double oldFitness = model.fitness();		// store old fitness
-	int index = indexDistribution(eng);		// choose parameter to modify
+	int index = indexDistribution(engine);		// choose parameter to modify
 	int oldValue = model.get_parameter(index); 	// store old parameter value	
-	int modifier = valueDistribution(eng);		// get random value as a modifier for the parameter
+	int modifier = valueDistribution(engine);		// get random value as a modifier for the parameter
 						
 	// modify the parameter
 	if (oldValue + modifier > model.maxValue) { //resulting value too big
@@ -33,7 +41,7 @@ void GreedyOptimizer::do_step() {
 	}
 
 	// decide whether or not to keep the new value
-	if(model.satisfies_constraints() && (model.fitness > oldFitness || win_dice_roll()) {
+	if(model.satisfies_constraints() && (model.fitness() > oldFitness || win_dice_roll())) {
 		// keep new solution if valid AND either:
 			// (a) is fitter or 
 			// (b) you won the dice roll
@@ -43,8 +51,9 @@ void GreedyOptimizer::do_step() {
 	
 }
 
-bool GreedyOptimizer::win_dice_roll() {
+template<typename OptimizableHull>
+bool GreedyOptimizer<OptimizableType>::win_dice_roll() {
 	
-	if (diceRollDistribution(eng) == 0) return true;
+	if (diceRollDistribution(engine) == 0) return true;
 	else return false;
 }

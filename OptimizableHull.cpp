@@ -1,10 +1,10 @@
-#include "OptimizableHull.cpp"
+#include "OptimizableHull.h"
 
 int OptimizableHull::get_parameter(int index) const {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	Station st = stations[index/3];
-	double realParameterValue = st.get_parameter(index%3);
+	Station station = stations[index/3];
+	double realParameterValue = station.get_parameter(index%3);
 	Bbox bbox = station.getBbox();
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
@@ -21,7 +21,7 @@ int OptimizableHull::get_parameter(int index) const {
 void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	Station st = stations[index/3];
+	Station station = stations[index/3];
 	double mappedParameterValue;
 	Bbox bbox = station.getBbox();
 
@@ -39,12 +39,12 @@ void OptimizableHull::set_parameter(int index, int value) {
 
 }
 
-bool OptimizableHull::satisfies_constraints() {
+bool OptimizableHull::satisfies_constraints() const {
 
 	//TODO: Implement constraints for the entire hull, like the minimum volume and the panel twist-rate
 
 	for (auto station : stations) {
-		if !satisfies_constraints() return false;
+		if (!station.Station::satisfies_constraints()) return false;
 	}
 
 	return true; 

@@ -2,11 +2,12 @@
 #define GREEDY_OPTIMIZER_H
 
 #include <random>
-#include "Optimizable"
+#include "Optimizable.h"
 
+template<typename OptimizableType>
 class GreedyOptimizer {
 
-	Optimizable model;
+	OptimizableType model;
 
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 engine;
@@ -15,14 +16,14 @@ class GreedyOptimizer {
 	std::uniform_int_distribution<int> diceRollDistribution;
 
 public:
-	GreedyOptimizer(Optimizable model);
+	GreedyOptimizer(OptimizableType model);
 
 	void run();
-	void do_step(int maxStepSize);
+	void do_step();
 
 private:
 	int choose_parameter() const;
-	bool win_dice_roll() const;
+	bool win_dice_roll();
 
 };
 
