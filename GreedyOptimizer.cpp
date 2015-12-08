@@ -1,7 +1,7 @@
 #include "GreedyOptimizer.h"
 
 //Constructor
-template<typename OptimizableHull>
+template<typename OptimizableType>
 GreedyOptimizer<OptimizableType>::GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())) {
 	indexDistribution = std::uniform_int_distribution<int>(0, model.numberOfParameters-1);
 	valueDistribution = std::uniform_int_distribution<int>(1, 5);
@@ -9,7 +9,7 @@ GreedyOptimizer<OptimizableType>::GreedyOptimizer(OptimizableType model) : model
 
 }
 
-template<typename OptimizableHull>
+template<typename OptimizableType>
 void GreedyOptimizer<OptimizableType>::run() {
 
 	//TODO: Implement temperature here, with tuning of the valueDistribution, for simulated annealing
@@ -21,7 +21,7 @@ void GreedyOptimizer<OptimizableType>::run() {
 	//TODO: output here?
 }
 
-template<typename OptimizableHull>
+template<typename OptimizableType>
 void GreedyOptimizer<OptimizableType>::do_step() {
 	
 	double oldFitness = model.fitness();		// store old fitness
@@ -51,7 +51,7 @@ void GreedyOptimizer<OptimizableType>::do_step() {
 	
 }
 
-template<typename OptimizableHull>
+template<typename OptimizableType>
 bool GreedyOptimizer<OptimizableType>::win_dice_roll() {
 	
 	if (diceRollDistribution(engine) == 0) return true;
