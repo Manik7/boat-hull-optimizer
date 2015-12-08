@@ -98,7 +98,7 @@ void Station::line_print() const {
 		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
 
-int Station::getParameter(int index) {
+int Station::get_parameter(int index) {
 	assert(index >= 0 && index < 3);
 	
 	switch (index) {
@@ -111,7 +111,7 @@ int Station::getParameter(int index) {
 	}
 }
 
-void Station::setParameter(int index, int value) {
+void Station::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3);
 	
 	switch (index) {

@@ -1,27 +1,23 @@
 #include "OptimizableHull.cpp"
 
-int OptimizableHull::getParameter(int index) const {
+int OptimizableHull::get_parameter(int index) const {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	return stations[index/3].getParameter(index%3);
+	return stations[index/3].get_parameter(index%3);
 }
 
-void OptimizableHull::setParameter(int index, int value) {
+void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	stations[index/3].setParameter(index%3, value);
+	stations[index/3].set_parameter(index%3, value);
 
 }
 
-bool OptimizableHull::checkConstraints() {
+bool OptimizableHull::satisfies_constraints() {
 	return true; //TODO Implement
 }
 
-double OptimizableHull::fitness() {
+double OptimizableHull::fitness() { //TODO: proper fitness function needed here.
 	compute_properties();
-	return wetted_surface_area; //TODO: proper fitness function needed here
-}
-
-int numberOfParameters() {
-	
+	return 1/wetted_surface_area; // 1/WSA ensures that a lower WSA leads to increased fitness
 }

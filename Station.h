@@ -43,8 +43,8 @@ public:
 	static void line_print_labels();
 	void line_print() const;
 
-	int getParameter(int index);
-	void setParameter(int index, int value);
+	int get_parameter(int index);
+	void set_parameter(int index, int value);
 };
 
 #endif // STATION_H

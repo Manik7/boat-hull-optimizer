@@ -6,9 +6,9 @@
 
 class OptimizableHull : public Hull {
 
-	int getParameter(int index) const;
-	void setParameter(int index, int value);
-	bool checkContraints() const;
+	int get_parameter(int index) const;
+	void set_parameter(int index, int value);
+	bool satisfies_constraints() const;
 	double fitness() const;
 
 	const int numberOfParameters;
