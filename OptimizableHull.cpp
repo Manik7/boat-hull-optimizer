@@ -14,7 +14,14 @@ void OptimizableHull::set_parameter(int index, int value) {
 }
 
 bool OptimizableHull::satisfies_constraints() {
-	return true; //TODO Implement
+
+	//TODO: Implement constraints for the entire hull, like the minimum volume and the panel twist-rate
+
+	for (auto station : stations) {
+		if !satisfies_constraints() return false;
+	}
+
+	return true; 
 }
 
 double OptimizableHull::fitness() { //TODO: proper fitness function needed here.

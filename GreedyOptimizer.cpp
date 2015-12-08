@@ -1,15 +1,16 @@
 #include "GreedyOptimizer.h"
 
 //Constructor
-void GreedyOptimizer::GreedyOptimizer : model(model), engine(rd()), indexDistribution(0, model.numberOfParameters-1), valueDistribution(0, 99), diceRollDistribution(0,2) {}
+void GreedyOptimizer::GreedyOptimizer : model(model), engine(rd()), indexDistribution(0, model.numberOfParameters-1), valueDistribution(1, 5), diceRollDistribution(0,2) {}
 
 void GreedyOptimizer::run() {
-	//tune the range of the valueDistribution in here, since it is constant, or determined by simulated annealing. You don't have to set it in every step though.
-	
-	//TODO: Possibly initialize the distribution here for hill climbing (or leave it in the constructor?)
-	//TODO: Implement temperature here, for simulated annealing
-	//TODO: Tune the valueDistribution here so that it delivers the right values
 
+	//TODO: Implement temperature here, with tuning of the valueDistribution, for simulated annealing
+
+	for (int i = 0; i < 1e6; ++i) {
+		do_step();
+	}
+	
 }
 
 void GreedyOptimizer::do_step() {
