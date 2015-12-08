@@ -42,26 +42,25 @@ void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
 	Station best_station;
 	double best_ap_ratio = 0.0;
 	unsigned int iterations = 0;
-	unsigned const int number_of_iterations = 10000;
+	unsigned const int number_of_iterations = 100;
 
 	while(iterations<number_of_iterations) {
 		station = Station(bbox, con);
 
 		if(station.area_perimeter_ratio() > best_ap_ratio) {
 			best_ap_ratio = station.area_perimeter_ratio();
-			best_station = station;	
-			best_station.line_print(); //TODO: Comment out		
+			best_station = station;		
 		}
 		iterations++;
 	}
-//	best_station.line_print();
+	best_station.line_print();
 	stations.push_back(best_station);
 }
 
-//TODO: You could assert that a hull must have at least two stations for any of the calculations to work
-
 void Hull::compute_properties() {
 	
+	assert(number_of_stations >= 2);
+
 	//Reset Hull attributes to 0.0
 	volume = 0.0;
 	wetted_surface_area = 0.0;
@@ -80,5 +79,5 @@ void Hull::compute_properties() {
 		//TODO: pitching moment
 	}
 
-	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²" << std::endl;
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²\n" << std::endl;
 }

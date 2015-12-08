@@ -31,6 +31,7 @@ private:
 	int sq_edge_length(Point a, Point b) const;
 
 public:
+	Bbox getBbox() const;
 	double area() const;
 	double perimeter() const;
 	int sq_perimeter() const;

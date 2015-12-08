@@ -11,6 +11,7 @@ void GreedyOptimizer::run() {
 		do_step();
 	}
 	
+	//TODO: output here?
 }
 
 void GreedyOptimizer::do_step() {
@@ -21,11 +22,11 @@ void GreedyOptimizer::do_step() {
 	int modifier = valueDistribution(eng);		// get random value as a modifier for the parameter
 						
 	// modify the parameter
-	if (oldValue + modifier > maxValue) { //resulting value too big
-		model.set_parameter(index, maxValue);
+	if (oldValue + modifier > model.maxValue) { //resulting value too big
+		model.set_parameter(index, model.maxValue);
 	} 
-	else if (oldValue + modifier < minValue) { //too small
-		model.set_parameter(index, minValue);
+	else if (oldValue + modifier < model.minValue) { //too small
+		model.set_parameter(index, model.minValue);
 	} 
 	else { //can be changed freely
 		model.set_parameter(index, oldValue + modifier);

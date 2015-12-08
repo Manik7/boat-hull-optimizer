@@ -1,7 +1,11 @@
-#include "Hull.h"
+#include "GreedyOptimizer.h"
+#include "OptimizableHull.h"
 
 int main () {
-	Hull hull;
-	hull.generate_stations();
+	OptimizableHull hull;
+	hull.generate_stations();	
+	GreedyOptimizer greed(hull);
+	greed.run();
+	
 	hull.compute_properties();
 }

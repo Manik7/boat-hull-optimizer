@@ -27,8 +27,7 @@ protected:
 public:
 	Hull(int half_lwl = 3500, int half_bwl = 290, int number_of_stations = 10);
 
-	void generate_stations(/*Bbox bbox, Constraints con*/); //TODO: You need a list of these bbox-constraint-tuples, one tuple for each station
-
+	void generate_stations();
 	void compute_properties();
 
 private:

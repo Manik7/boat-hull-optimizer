@@ -48,6 +48,10 @@ int Station::sq_edge_length(Point a, Point b) const {
 	return pow(a.x - b.x, 2.0) + pow(a.y - b.y, 2.0);
 }
 
+Bbox Station::getBbox() const {
+	return bbox;
+}
+
 double Station::area() const {
 	return double(chine.x * chine.y 
 		+ ( (beam.x - chine.x) * chine.y
@@ -98,7 +102,7 @@ void Station::line_print() const {
 		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
 
-int Station::get_parameter(int index) {
+int Station::get_parameter(int index) { //TODO: an enum for the parameters would be nice
 	assert(index >= 0 && index < 3);
 	
 	switch (index) {
@@ -111,7 +115,7 @@ int Station::get_parameter(int index) {
 	}
 }
 
-void Station::set_parameter(int index, int value) {
+void Station::set_parameter(int index, int value) { //TODO: an enum for the parameters would be nice
 	assert(index >= 0 && index < 3);
 	
 	switch (index) {

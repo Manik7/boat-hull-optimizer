@@ -2,12 +2,11 @@
 #define GREEDY_OPTIMIZER_H
 
 #include <random>
+#include "Optimizable"
 
 class GreedyOptimizer {
 
 	Optimizable model;
-	static const int minValue = 0; //of parameter
-	static const int maxValue = 100;
 
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 engine;

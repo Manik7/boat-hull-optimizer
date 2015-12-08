@@ -3,7 +3,7 @@ CXXFLAGS=-std=c++11
 
 all: Main
 
-Main: Main.o Hull.o Station.o Bezier_quadratic.o
+Main: Main.o Hull.o Station.o Bezier_quadratic.o OptimizableHull.o GreedyOptimizer.o 
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
 Bezier: Bezier_quadratic.o Bezier_quad_unit.o
@@ -24,7 +24,10 @@ Bezier_quadratic.o: Bezier_quadratic.cpp Bezier_quadratic.h Point_3.h
 Bezier_quad_unit.o: Bezier_quad_unit.cpp 
 	$(CXX) $(CXXFLAGS) -c $<
 
-OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h
+OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h Optimizable.h
+	$(CXX) $(CXXFLAGS) -c $<
+
+GreedyOptimizer.o: GreedyOptimizer.cpp GreedyOptimizer.h
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:

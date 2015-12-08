@@ -3,6 +3,7 @@
 
 #include <assert>
 #include "Optimizable.h"
+#include "Hull.h"
 
 class OptimizableHull : public Hull {
 
@@ -11,10 +12,8 @@ class OptimizableHull : public Hull {
 	bool satisfies_constraints() const;
 	double fitness() const;
 
-	const int numberOfParameters;
-
 public: 
-	OptimizableHull() : numberOfParameters(3*number_of_stations) {};
+	OptimizableHull() : numberOfParameters(3*number_of_stations), minValue(0), maxValue(99) {};
 
 };
 

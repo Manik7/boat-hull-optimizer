@@ -3,13 +3,39 @@
 int OptimizableHull::get_parameter(int index) const {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	return stations[index/3].get_parameter(index%3);
+	Station st = stations[index/3];
+	double realParameterValue = st.get_parameter(index%3);
+	Bbox bbox = station.getBbox();
+
+	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
+		return realParameterValue / bbox.max.x * maxValue;
+	} 
+	else if (index%3 == 1) {
+		return realParameterValue / bbox.max.y * maxValue;
+	} 
+	else {
+		return realParameterValue / bbox.max.y * maxValue;
+	}
 }
 
 void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	stations[index/3].set_parameter(index%3, value);
+	Station st = stations[index/3];
+	double mappedParameterValue;
+	Bbox bbox = station.getBbox();
+
+	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
+		mappedParameterValue = value / maxValue * bbox.max.x;
+	} 
+	else if (index%3 == 1) {
+		mappedParameterValue = value / maxValue * bbox.max.y;
+	} 
+	else {
+		mappedParameterValue = value / maxValue * bbox.max.y;
+	}
+
+	station.set_parameter(index%3, mappedParameterValue);
 
 }
 

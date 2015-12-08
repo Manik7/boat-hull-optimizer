@@ -4,6 +4,8 @@
 struct Optimizable {
 
 	const int numberOfParameters;
+	const int minValue;
+	const int maxValue;
 
 	virtual int getParameter(int index) const;
 	virtual void setParameter(int index, int value);
