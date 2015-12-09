@@ -22,17 +22,17 @@ void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
 
 	Station station = stations[index/3];
-	double mappedParameterValue;
+	int mappedParameterValue;
 	Bbox bbox = station.getBbox();
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
-		mappedParameterValue = value / maxValue * bbox.max.x;
+		mappedParameterValue = int(double(value) / double(maxValue) * double(bbox.max.x));
 	} 
 	else if (index%3 == 1) {
-		mappedParameterValue = value / maxValue * bbox.max.y;
+		mappedParameterValue = int(double(value) / double(maxValue) * double(bbox.max.y));
 	} 
 	else {
-		mappedParameterValue = value / maxValue * bbox.max.y;
+		mappedParameterValue = int(double(value) / double(maxValue) * double(bbox.max.y));
 	}
 
 	station.set_parameter(index%3, mappedParameterValue);
@@ -41,13 +41,16 @@ void OptimizableHull::set_parameter(int index, int value) {
 
 bool OptimizableHull::satisfies_constraints() const {
 
-	//TODO: Implement constraints for the entire hull, like the minimum volume and the panel twist-rate
-
-	for (auto station : stations) {
+	
+	//TODO uncomment the functionality! this is for debugging purposes only
+	
+/*	for (auto station : stations) {
 		if (!station.Station::satisfies_constraints()) return false;
-	}
+	}*/
 
 	return true; 
+	
+	//TODO: Implement constraints for the entire hull, like the minimum volume and the panel twist-rate
 }
 
 double OptimizableHull::fitness() { //TODO: proper fitness function needed here.

@@ -121,9 +121,12 @@ void Station::set_parameter(int index, int value) { //TODO: an enum for the para
 	switch (index) {
 		case 0:
 			chine.x = value;
+			break;
 		case 1:
 			chine.y = value;
+			break;
 		case 2:
 			keel.y = value;
+			break;
 	}
 }
