@@ -6,7 +6,15 @@ Station::Station(Bbox& bbox, Constraints& constraints) : bbox(bbox), c(constrain
 
 void Station::generate_chine_and_keel() {
 	std::random_device rd; // obtain a random number from hardware
+	
+#ifdef DETERMINISTIC_RUN
+	std::mt19937 eng(0); // seed the generator
+	std::cout << "constant seed\n" << std::endl;
+#else
 	std::mt19937 eng(rd()); // seed the generator
+	std::cout << "random seed\n" << std::endl;
+#endif
+	
 	std::uniform_int_distribution<int> distr;
 	bool foundSolution = false;
 
