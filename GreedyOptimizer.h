@@ -28,7 +28,7 @@ public:
 #else
 	GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-10, 0)), 
+		valueDistribution(std::uniform_int_distribution<int>(-5, 5)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
 #endif

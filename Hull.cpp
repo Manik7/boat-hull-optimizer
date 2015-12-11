@@ -72,7 +72,7 @@ void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
 	Station best_station;
 	double best_ap_ratio = 0.0;
 	unsigned int iterations = 0;
-	unsigned const int number_of_iterations = 100;
+	const unsigned int number_of_iterations = 100;
 
 	while(iterations<number_of_iterations) {
 		station = Station(bbox, con);

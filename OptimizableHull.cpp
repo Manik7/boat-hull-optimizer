@@ -1,11 +1,19 @@
 #include "OptimizableHull.h"
 
+OptimizableHull::OptimizableHull() : Optimizable(3*number_of_stations, 0, 99) {}
+
 int OptimizableHull::get_parameter(int index) const {
 	assert(index >= 0 && index < 3*number_of_stations);
 
+	/*TODO: Understand what's going on with the next line. For some 
+	 * reason if you set this to a Station& the code will not compile. 
+	 * A Station& is not needed here since it's read-only access, so
+	 * a copy is fine here, but it's weird that you can't get a reference
+	 * here. In the set_parameter method below, where you really do need
+	 * the reference, it's not a problem to get one.*/
 	Station station = stations[index/3];
 	double realParameterValue = station.get_parameter(index%3);
-	Bbox bbox = station.getBbox();
+	Bbox bbox(station.getBbox());
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
 		return realParameterValue / bbox.max.x * maxValue;
@@ -21,9 +29,9 @@ int OptimizableHull::get_parameter(int index) const {
 void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
 
-	Station station = stations[index/3];
+	Station& station = stations[index/3];
 	int mappedParameterValue;
-	Bbox bbox = station.getBbox();
+	Bbox bbox(station.getBbox());
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
 		mappedParameterValue = int(double(value) / double(maxValue) * double(bbox.max.x));

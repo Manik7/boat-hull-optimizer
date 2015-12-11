@@ -8,12 +8,12 @@
 
 struct OptimizableHull : public Hull, public Optimizable {
 
+	OptimizableHull();
+	
 	int get_parameter(int index) const;
 	void set_parameter(int index, int value);
 	bool satisfies_constraints() const;
 	double fitness();
-
-	OptimizableHull() : Optimizable(3*number_of_stations, 0, 99) {};
 
 };
 
