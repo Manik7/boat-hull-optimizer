@@ -6,8 +6,6 @@ Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_l
 
 void Hull::generate_stations() {
 
-	Station::line_print_labels();
-
 	double station_spacing = (half_lwl-100)/(number_of_stations-1); //No stations generated for the last 100mm of the hull
 	int station_bbox_width;
 	int station_z_coord;
@@ -30,8 +28,6 @@ void Hull::generate_stations() {
 
 		generate_optimized_station(bbox, con);
 	}
-
-	std::cout << std::endl;
 }
 
 void Hull::compute_properties() {
@@ -55,6 +51,9 @@ void Hull::compute_properties() {
 		wetted_surface_area += (it_prev->perimeter() + it->perimeter())/2.0 * station_spacing;
 		//TODO: pitching moment
 	}	
+	
+	volume = volume*4*pow(10,-9);
+	wetted_surface_area = wetted_surface_area*4*pow(10,-6);
 }
 
 void Hull::print_hull() const {
@@ -64,7 +63,7 @@ void Hull::print_hull() const {
 		station.line_print();
 	}
 
-	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t\t" << wetted_surface_area*4*pow(10,-6) << " m²\n" << std::endl;
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume << " m³" << std::endl << "WSA =\t" << wetted_surface_area << " m²\n" << std::endl;
 }
 
 void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
@@ -84,6 +83,5 @@ void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
 		}
 		iterations++;
 	}
-	best_station.line_print();
 	stations.push_back(best_station);
 }

@@ -21,8 +21,8 @@ struct Point_3 {
 };
 
 inline std::ostream& operator<< (std::ostream& os, const Point_3& p) {
-		os << p.name << '\t' << p.x << '\t' << p.y << '\t' << p.z;
-		return os;
-	}
+	os << p.name << '\t' << p.x << '\t' << p.y << '\t' << p.z;
+	return os;
+}
 
 #endif // POINT_3_H

@@ -4,11 +4,13 @@
 int main () {
 	OptimizableHull hull;
 	hull.generate_stations();
-
-	std::cout << "random hull generated, constraints met = " << hull.satisfies_constraints() << "\n\n\n";
+	hull.compute_properties();
+	hull.print_hull();
+	
+	std::cout << "random hull generated, satisfies_constraints() = " << hull.satisfies_constraints() << "\n\n\n";
 	
 	GreedyOptimizer<OptimizableHull> greed(hull);
 	greed.run();
 	
-	hull.compute_properties();
+
 }
