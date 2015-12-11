@@ -49,7 +49,7 @@ void OptimizableHull::set_parameter(int index, int value) {
 
 bool OptimizableHull::satisfies_constraints() const {
 	
-	if (this->volume < min_hull_volume) return false; //TODO: Define this value somewhere else, as an attribute of the hull for instance
+	if (this->volume < min_hull_volume) return false;
 	
 	for (auto station : stations) {
 		if (!station.Station::satisfies_constraints()) return false;

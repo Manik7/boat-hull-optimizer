@@ -1,8 +1,10 @@
 #ifndef GREEDY_OPTIMIZER_H
 #define GREEDY_OPTIMIZER_H
 
+#include <iostream>
 #include <random>
-# include <cassert>
+#include <cassert>
+
 #include "Optimizable.h"
 
 template<typename OptimizableType>
@@ -19,19 +21,14 @@ class GreedyOptimizer {
 
 public:
 #ifdef DETERMINISTIC_RUN
-	GreedyOptimizer(OptimizableType model) : model(model), /*engine(std::mt19937(rd())), */ engine(0), 
-		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-10, 0)), 
-		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
-		epsilon(0.00001) { }
+	GreedyOptimizer(OptimizableType model) : model(model), engine(0), 
 #else
 	GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
+#endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-5, 5)), 
+		valueDistribution(std::uniform_int_distribution<int>(-20, 20)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
-#endif
-
 	
 		
 	void run(int steps = 2) {
@@ -42,6 +39,7 @@ public:
 			do_step();
 			model.print_hull();
 		}
+
 	}
 	
 	void do_step() {
@@ -49,7 +47,7 @@ public:
 		double oldFitness = model.fitness();		// store old fitness
 		int index = indexDistribution(engine);		// choose parameter to modify
 		int oldValue = model.get_parameter(index); 	// store old parameter value	
-		int modifier = valueDistribution(engine);		// get random value as a modifier for the parameter
+		int modifier = valueDistribution(engine);	// get random value as a modifier for the parameter
 						
 		// modify the parameter
 		if (oldValue + modifier > model.maxValue) { //resulting value too big
@@ -62,8 +60,10 @@ public:
 			model.set_parameter(index, oldValue + modifier);
 		}
 		
+		std::cout << model.satisfies_constraints() << '\n'; //TODO: debug output
+		
 		// decide whether or not to keep the new value
-		if(model.satisfies_constraints() && ( (model.fitness() > oldFitness-epsilon) || win_dice_roll(60))) { //TODO: adjust dice roll probability
+		if(model.satisfies_constraints() && ( (model.fitness() > oldFitness-epsilon) || win_dice_roll(30))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
