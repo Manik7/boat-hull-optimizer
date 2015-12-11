@@ -3,7 +3,6 @@
 
 #include <random>
 # include <cassert>
-#include <iostream> //TODO: remove
 #include "Optimizable.h"
 
 template<typename OptimizableType>
@@ -54,31 +53,21 @@ public:
 						
 		// modify the parameter
 		if (oldValue + modifier > model.maxValue) { //resulting value too big
-			std::cout << "p = " << index << " & resulting value too large\n";					//TODO: remove
 			model.set_parameter(index, model.maxValue);
 		} 
 		else if (oldValue + modifier < model.minValue) { //too small
-			std::cout << "p = " << index << " resulting value too small\n";						//TODO: remove
 			model.set_parameter(index, model.minValue);
 		} 
 		else { //can be changed freely
-			std::cout << "p = " << index << " can be changed by " << modifier << "\n";				//TODO: remove
 			model.set_parameter(index, oldValue + modifier);
 		}
-
-		std::cout << "satisfies_constraints() = " << model.satisfies_constraints() << "\n"; 				//TODO: remove
-		std::cout << "model.fitness() > oldFitness - epsilon = " << (model.fitness() > oldFitness - epsilon) << "\n"; 	//TODO: remove
 		
 		// decide whether or not to keep the new value
 		if(model.satisfies_constraints() && ( (model.fitness() > oldFitness-epsilon) || win_dice_roll(60))) { //TODO: adjust dice roll probability
-//		if(model.satisfies_constraints() && model.fitness() >= oldFitness) {
-			if (!model.satisfies_constraints()) std::cout << "won the dice roll\n"; 				//TODO: remove
-			std::cout << "keeping solution \n";									//TODO: remove
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
 		} else {
-			std::cout << "reverting\n"; 										//TODO: remove
 			model.set_parameter(index, oldValue); //revert
 		}
 	}

@@ -44,17 +44,16 @@ void OptimizableHull::set_parameter(int index, int value) {
 	}
 
 	station.set_parameter(index%3, mappedParameterValue);
-
+	compute_properties();
 }
 
 bool OptimizableHull::satisfies_constraints() const {
-
 	
-	//TODO uncomment the functionality! this is for debugging purposes only
+	if (this->volume < min_hull_volume) return false; //TODO: Define this value somewhere else, as an attribute of the hull for instance
 	
-/*	for (auto station : stations) {
+	for (auto station : stations) {
 		if (!station.Station::satisfies_constraints()) return false;
-	}*/
+	}
 
 	return true; 
 	
@@ -62,6 +61,5 @@ bool OptimizableHull::satisfies_constraints() const {
 }
 
 double OptimizableHull::fitness() { //TODO: proper fitness function needed here.
-	compute_properties();
 	return 1/wetted_surface_area; // 1/WSA ensures that a lower WSA leads to increased fitness
 }
