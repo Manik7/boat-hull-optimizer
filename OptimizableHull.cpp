@@ -28,8 +28,10 @@ int OptimizableHull::get_parameter(int index) const {
 
 void OptimizableHull::set_parameter(int index, int value) {
 	assert(index >= 0 && index < 3*number_of_stations);
-
+	
 	Station& station = stations[index/3];
+	lastParameterIndex = index;
+	lastParameterRealValue = station.get_parameter(index%3);
 	int mappedParameterValue;
 	Bbox bbox(station.getBbox());
 
@@ -44,12 +46,25 @@ void OptimizableHull::set_parameter(int index, int value) {
 	}
 
 	station.set_parameter(index%3, mappedParameterValue);
+	parameterChanged = true;
 	compute_properties();
 }
 
+void OptimizableHull::revert_last_change()
+{
+	if(parameterChanged) {
+		stations[lastParameterIndex/3].set_parameter(lastParameterIndex%3, lastParameterRealValue);
+		parameterChanged = false;
+		compute_properties();
+	}
+}
+
+
 bool OptimizableHull::satisfies_constraints() const {
 	
-	if (this->volume < min_hull_volume) return false;
+	if (this->volume < min_hull_volume) {
+		return false;
+	}
 	
 	for (auto station : stations) {
 		if (!station.Station::satisfies_constraints()) return false;
@@ -63,3 +78,9 @@ bool OptimizableHull::satisfies_constraints() const {
 double OptimizableHull::fitness() { //TODO: proper fitness function needed here.
 	return 1/wetted_surface_area; // 1/WSA ensures that a lower WSA leads to increased fitness
 }
+
+void OptimizableHull::output()
+{
+	print_hull();
+}
+
