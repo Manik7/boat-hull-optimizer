@@ -60,7 +60,7 @@ public:
 		}
 		
 		// decide whether or not to keep the new value
-		if(model.satisfies_constraints() && ( (model.fitness() > oldFitness-epsilon) || win_dice_roll(30))) { //TODO: adjust dice roll probability
+		if(model.satisfies_constraints() && ( (model.fitness() < oldFitness-epsilon) || win_dice_roll(30))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
