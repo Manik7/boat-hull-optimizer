@@ -26,7 +26,7 @@ public:
 	GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-10, 10)), 
+		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
 	
@@ -60,7 +60,7 @@ public:
 		}
 		
 		// decide whether or not to keep the new value
-		if(model.satisfies_constraints() && ( (model.fitness() < oldFitness-epsilon) || win_dice_roll(30))) { //TODO: adjust dice roll probability
+		if(model.satisfies_constraints() && ( (model.fitness() < oldFitness-epsilon) || win_dice_roll(80))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll

@@ -31,6 +31,12 @@ OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h Optimizable.h
 #GreedyOptimizer.o: GreedyOptimizer.cpp GreedyOptimizer.h
 #	$(CXX) $(CXXFLAGS) -c $<
 
+visualisation: example.dat
+	gnuplot visualization.gp
+
+example.dat: Main
+	./main
+
 clean:
 	rm -f main bezier_test *.o
 
