@@ -10,14 +10,13 @@
 #include "Constraints.h"
 
 class Station {
-	typedef Point_3 Point;
 
 	//TODO: You could make the bbox and constraints 'const' to protect against accidental modification
-	Bbox bbox = Bbox();
-	Constraints c = Constraints();
-	static const int number_of_iterations = 1000;
-	static const int xy_resolution = 10; //TODO: Better to not make this static? That would allow a higher resolution at the bow and lower resolution at the midsection
-	Point origin, beam, keel, chine;
+	Bbox bbox_ = Bbox();
+	Constraints constraints_ = Constraints();
+	static const int number_of_iterations_ = 1000;
+	static const int xy_resolution_ = 10; //TODO: Better to not make this static? That would allow a higher resolution at the bow and lower resolution at the midsection
+	Point_3 origin_, beam_, keel_, chine_;
 
 public:
 	Station(Bbox& bbox, Constraints& constraints);
@@ -27,11 +26,15 @@ private:
 	void generate_chine_and_keel();
 	int resolution(int input) const;
 	//TODO: Performance could be improved by using the squared_edge_length to avoid taking roots
-	double edge_length(Point a, Point b) const;
-	int sq_edge_length(Point a, Point b) const;
+	double edge_length(Point_3 a, Point_3 b) const;
+	int sq_edge_length(Point_3 a, Point_3 b) const;
 
 public:
-	Bbox getBbox() const;
+	Bbox bbox() const;
+	Point_3 origin() const;
+	Point_3 beam() const;
+	Point_3 keel() const;
+	Point_3 chine() const;
 	double area() const;
 	double perimeter() const;
 	int sq_perimeter() const;

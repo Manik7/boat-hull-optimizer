@@ -2,6 +2,8 @@
 #define HULL_H
 
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 #include "Station.h"
 #include "Bbox.h"
@@ -31,6 +33,7 @@ public:
 	void generate_stations();
 	void compute_properties();
 	void print_hull() const;
+	void export_hull_coordinates() const;
 
 private:
 	void generate_optimized_station(Bbox& bbox, Constraints& con);

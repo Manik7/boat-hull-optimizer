@@ -10,7 +10,6 @@ int main () {
 	std::cout << "random hull generated, satisfies_constraints() = " << hull.satisfies_constraints() << "\n\n\n";
 	
 	GreedyOptimizer<OptimizableHull> greed(hull);
-	greed.run(1000000);
-	
-
+	greed.run(1000);
+	hull.export_hull_coordinates();	
 }

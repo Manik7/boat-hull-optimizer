@@ -13,7 +13,7 @@ int OptimizableHull::get_parameter(int index) const {
 	 * the reference, it's not a problem to get one.*/
 	Station station = stations[index/3];
 	double realParameterValue = station.get_parameter(index%3);
-	Bbox bbox(station.getBbox());
+	Bbox bbox(station.bbox());
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
 		return realParameterValue / bbox.max.x * maxValue;
@@ -33,7 +33,7 @@ void OptimizableHull::set_parameter(int index, int value) {
 	lastParameterIndex = index;
 	lastParameterRealValue = station.get_parameter(index%3);
 	int mappedParameterValue;
-	Bbox bbox(station.getBbox());
+	Bbox bbox(station.bbox());
 
 	if(index%3 == 0) { //TODO: an enum for the parameters would be nice
 		mappedParameterValue = int(double(value) / double(maxValue) * double(bbox.max.x));
