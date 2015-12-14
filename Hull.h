@@ -2,6 +2,8 @@
 #define HULL_H
 
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 #include "Station.h"
 #include "Bbox.h"
@@ -26,11 +28,12 @@ protected:
 	double pitching_moment = 0.0;
 
 public:
-	Hull(int half_lwl = 3500, int half_bwl = 290, int number_of_stations = 10);
+	Hull(int half_lwl = 3500, int half_bwl = 290, int number_of_stations = 5);
 
 	void generate_stations();
 	void compute_properties();
 	void print_hull() const;
+	void export_hull_coordinates() const;
 
 private:
 	void generate_optimized_station(Bbox& bbox, Constraints& con);

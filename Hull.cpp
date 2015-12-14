@@ -66,6 +66,28 @@ void Hull::print_hull() const {
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume << " m³" << std::endl << "WSA =\t" << wetted_surface_area << " m²\n" << std::endl;
 }
 
+void Hull::export_hull_coordinates() const
+{
+	std::ofstream datfile;
+	datfile.open("example.dat");
+	
+	if (datfile.is_open()) {
+	
+		datfile << "# Station x y z coordinates\n";
+		
+		for (auto station : stations) {
+			datfile << "\n\nstation-" << station.origin().z << '\n';
+			datfile << station.keel().x << ' ' << station.keel().y << ' ' << station.keel().z << '\n';
+			datfile << station.chine().x << ' ' << station.chine().y << ' ' << station.chine().z << '\n';
+			datfile << station.beam().x << ' ' << station.beam().y << ' ' << station.beam().z << '\n';
+			datfile << station.origin().x << ' ' << station.origin().y << ' ' << station.origin().z << '\n';
+		}
+		
+		datfile.close();
+	} else std::cerr << "Error opening file!\n";
+}
+
+
 void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
 
 	Station station;
