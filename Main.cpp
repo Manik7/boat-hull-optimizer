@@ -12,5 +12,4 @@ int main () {
 	GreedyOptimizer<OptimizableHull> greed(hull);
 	greed.run(1000);
 	hull.export_hull_coordinates();	
-
 }

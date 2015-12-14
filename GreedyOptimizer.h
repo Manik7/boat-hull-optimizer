@@ -1,7 +1,7 @@
 #ifndef GREEDY_OPTIMIZER_H
 #define GREEDY_OPTIMIZER_H
 
-#include <iostream>
+// #include <iostream>
 #include <random>
 #include <cassert>
 
@@ -26,7 +26,7 @@ public:
 	GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-20, 20)), 
+		valueDistribution(std::uniform_int_distribution<int>(-10, 10)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
 	
@@ -37,9 +37,8 @@ public:
 
 		for (int i = 0; i < steps; ++i) {
 			do_step();
-			model.print_hull();
 		}
-
+		model.output();
 	}
 	
 	void do_step() {
@@ -60,15 +59,13 @@ public:
 			model.set_parameter(index, oldValue + modifier);
 		}
 		
-		std::cout << model.satisfies_constraints() << '\n'; //TODO: debug output
-		
 		// decide whether or not to keep the new value
 		if(model.satisfies_constraints() && ( (model.fitness() > oldFitness-epsilon) || win_dice_roll(30))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
 		} else {
-			model.set_parameter(index, oldValue); //revert
+			model.revert_last_change(); //revert
 		}
 	}
 private:

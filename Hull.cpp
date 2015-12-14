@@ -21,9 +21,9 @@ void Hull::generate_stations() {
 		Constraints con;
 
 		if (i==0) {
-			con = Constraints(65000, 70000, 0.0, 25.0, 0.0, 60.0);
+			con = Constraints(40000, 60000, 0.0, 25.0, 0.0, 60.0);
 		} else {
-			con = Constraints(0, 70000, 0.0, 25.0, 0.0, 90.0);
+			con = Constraints(0, 60000, 0.0, 25.0, 0.0, 90.0);
 		}
 
 		generate_optimized_station(bbox, con);
