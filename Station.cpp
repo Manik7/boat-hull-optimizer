@@ -116,13 +116,13 @@ double Station::deadrise_angle_deg() const { //TODO: Assumes points lie within b
 	}
 }
 
-bool Station::points_in_bbox() const
+bool Station::points_in_bbox() const //TODO: Only needed for the initialization of the station, since the greedy algorithm maintains this condition on its own accord
 {
 	if(chine_.x <= bbox_.max.x && chine_.y <= bbox_.max.y && keel_.y <= bbox_.max.y) return true;
 	else return false;
 }
 
-bool Station::satisfies_constraints() const {
+bool Station::satisfies_constraints() const { // TODO: points_in_bbox can be removed here, only needed for initialization of the hull
 	if (points_in_bbox() && /* area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
 		return true;
 	} else return false;

@@ -5,10 +5,11 @@
 #include <random>
 #include <cassert>
 
+#include "Optimizer.h"
 #include "Optimizable.h"
 
 template<typename OptimizableType>
-class GreedyOptimizer {
+class GreedyOptimizer : public Optimizer {
 
 	OptimizableType model;
 
@@ -29,7 +30,6 @@ public:
 		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
-	
 		
 	void run(int steps = 2) {
 		assert(steps > 0);
