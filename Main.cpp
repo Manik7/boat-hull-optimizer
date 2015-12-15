@@ -6,10 +6,10 @@ int main () {
 	hull.generate_stations();
 	hull.compute_properties();
 	hull.print_hull();
-	
+	hull.export_hull_coordinates("seed.dat");
 	std::cout << "random hull generated, satisfies_constraints() = " << hull.satisfies_constraints() << "\n\n\n";
 	
 	GreedyOptimizer<OptimizableHull> greed(hull);
 	greed.run(1000000);
-	hull.export_hull_coordinates();	
+	hull.export_hull_coordinates("result.dat");
 }

@@ -104,16 +104,26 @@ double Station::area_sq_perimeter_ratio() const {
 	return double(area())/double(sq_perimeter());
 }
 
-double Station::flare_angle_deg() const {
-	return acos(double(chine_.y)/edge_length(beam_,chine_)) / 3.1415 * 180.0;
+double Station::flare_angle_deg() const { //TODO: Assumes point lies within bounding box
+	return asin(chine_.y/edge_length(beam_,chine_)) / 3.1415 * 180.0;
 }
 
-double Station::deadrise_angle_deg() const {
-	return acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
+double Station::deadrise_angle_deg() const { //TODO: Assumes points lie within bounding box
+	if(chine_.y >= keel_.y) {
+		return acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
+	} else {
+		return -acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
+	}
+}
+
+bool Station::points_in_bbox() const
+{
+	if(chine_.x <= bbox_.max.x && chine_.y <= bbox_.max.y && keel_.y <= bbox_.max.y) return true;
+	else return false;
 }
 
 bool Station::satisfies_constraints() const {
-	if (area() > constraints_.area_min && area() < constraints_.area_max && flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
+	if (points_in_bbox() && /* area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
 		return true;
 	} else return false;
 }

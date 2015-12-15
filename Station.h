@@ -28,6 +28,7 @@ private:
 	//TODO: Performance could be improved by using the squared_edge_length to avoid taking roots
 	double edge_length(Point_3 a, Point_3 b) const;
 	int sq_edge_length(Point_3 a, Point_3 b) const;
+	bool points_in_bbox() const;
 
 public:
 	Bbox bbox() const;

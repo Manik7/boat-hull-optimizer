@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 #include "Station.h"
 #include "Bbox.h"
@@ -28,12 +29,12 @@ protected:
 	double pitching_moment = 0.0;
 
 public:
-	Hull(int half_lwl = 3500, int half_bwl = 290, int number_of_stations = 5);
+	Hull(int half_lwl = 3500, int half_bwl = 235, int number_of_stations = 5);
 
 	void generate_stations();
 	void compute_properties();
 	void print_hull() const;
-	void export_hull_coordinates() const;
+	void export_hull_coordinates(std::string filename = "example.dat") const;
 
 private:
 	void generate_optimized_station(Bbox& bbox, Constraints& con);

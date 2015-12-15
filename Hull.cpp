@@ -21,7 +21,7 @@ void Hull::generate_stations() {
 		Constraints con;
 
 		if (i==0) {
-			con = Constraints(40000, 60000, 0.0, 25.0, 0.0, 60.0);
+			con = Constraints(40000, 60000, 0.0, 25.0, 0.0, 70.0);
 		} else {
 			con = Constraints(0, 60000, 0.0, 25.0, 0.0, 90.0);
 		}
@@ -66,10 +66,9 @@ void Hull::print_hull() const {
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume << " m³" << std::endl << "WSA =\t" << wetted_surface_area << " m²\n" << std::endl;
 }
 
-void Hull::export_hull_coordinates() const
-{
+void Hull::export_hull_coordinates(std::string filename) const {
 	std::ofstream datfile;
-	datfile.open("example.dat");
+	datfile.open(filename);
 	
 	if (datfile.is_open()) {
 	
@@ -84,7 +83,7 @@ void Hull::export_hull_coordinates() const
 		}
 		
 		datfile.close();
-	} else std::cerr << "Error opening file!\n";
+	} else std::cout << "Error opening file!\n";
 }
 
 
