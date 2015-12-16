@@ -109,7 +109,7 @@ double Station::flare_angle_deg() const { //TODO: Assumes point lies within boun
 }
 
 double Station::deadrise_angle_deg() const { //TODO: Assumes points lie within bounding box
-	if(chine_.y >= keel_.y) {
+	if(keel_.y >= chine_.y) {
 		return acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
 	} else {
 		return -acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
@@ -123,7 +123,7 @@ bool Station::points_in_bbox() const
 }
 
 bool Station::satisfies_constraints() const {
-	if (points_in_bbox() && /* area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
+	if (points_in_bbox() && area() > constraints_.area_min && area() < constraints_.area_max && flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
 		return true;
 	} else return false;
 }
