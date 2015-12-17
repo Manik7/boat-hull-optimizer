@@ -66,7 +66,7 @@ void Hull::print_hull() const {
 
 void Hull::export_hull_coordinates(std::string filename) const {
 	std::ofstream datfile;
-	datfile.open(filename);
+	datfile.open("data/" + filename);
 	
 	if (datfile.is_open()) {
 	
