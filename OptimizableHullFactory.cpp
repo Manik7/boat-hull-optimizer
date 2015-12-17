@@ -3,13 +3,15 @@
 OptimizableHull OptimizableHullFactory::classicGenerator() {
 	OptimizableHull hull;
 
-	generate_stations(hull);
+	for (auto& station : hull.stations) {
+		generate_optimized_station(station);
+	}
 	hull.compute_properties();
 	
 	return hull;
 }
 
-void OptimizableHullFactory::generate_optimized_station(Station& station, Bbox& bbox, Constraints& con) {
+void OptimizableHullFactory::generate_optimized_station(Station& station/*, Bbox& bbox, Constraints& con*/) {
 
 	Station working_station;
 	double best_ap_ratio = 0.0;
@@ -17,7 +19,7 @@ void OptimizableHullFactory::generate_optimized_station(Station& station, Bbox& 
 	const unsigned int number_of_iterations = 1000;
 
 	while(iterations<number_of_iterations) {
-		working_station = Station(bbox, con);
+// 		working_station = Station(bbox, con);
 
 		if(working_station.area_perimeter_ratio() > best_ap_ratio) {
 			best_ap_ratio = working_station.area_perimeter_ratio();

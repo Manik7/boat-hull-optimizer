@@ -22,9 +22,9 @@ class GreedyOptimizer : public Optimizer {
 
 public:
 #ifdef DETERMINISTIC_RUN
-	GreedyOptimizer(OptimizableType model) : model(model), engine(0), 
+	GreedyOptimizer(OptimizableType& model) : model(model), engine(0), 
 #else
-	GreedyOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
+	GreedyOptimizer(OptimizableType& model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
 		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 

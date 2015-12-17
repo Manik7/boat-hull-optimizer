@@ -20,9 +20,9 @@ class MonteCarloOptimizer : public Optimizer {
 public:
 	
 #ifdef DETERMINISTIC_RUN
-	MonteCarloOptimizer(OptimizableType model) : model(model), engine(0), 
+	MonteCarloOptimizer(OptimizableType& model) : model(model), engine(0), 
 #else
-	MonteCarloOptimizer(OptimizableType model) : model(model), engine(std::mt19937(rd())),
+	MonteCarloOptimizer(OptimizableType& model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
 		valueDistribution(std::uniform_int_distribution<int>(0, 100)) {}
