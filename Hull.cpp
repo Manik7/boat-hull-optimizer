@@ -2,37 +2,35 @@
 
 Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), number_of_stations(number_of_stations), wl_curve(WaterlineCurve(half_lwl, half_bwl)) {
 	
-}
-
-void Hull::generate_stations() {
-
+	assert(number_of_stations >= 2);
+	assert(half_lwl > 0 && half_bwl > 0);
+	
+	Station current_station;
 	double station_spacing = (half_lwl-100)/(number_of_stations-1); //No stations generated for the last 100mm of the hull
 	int station_bbox_width;
 	int station_z_coord;
-
+	
+	Bbox bbox;
+	Constraints con;
+	
 	for (int i = 0; i<number_of_stations; i++) {
 
 		station_z_coord = i*station_spacing;
 		Point_3 wl_curve_point(wl_curve.find_point_with_z_coord(station_z_coord));
 
-		Bbox bbox(	Point_3(0,0,i*station_spacing),
-				Point_3(wl_curve_point.x, 450, station_z_coord));
-
-		Constraints con;
-
+		bbox = Bbox(Point_3(0,0,i*station_spacing), Point_3(wl_curve_point.x, 450, station_z_coord));
+		
 		if (i==0) {
 			con = Constraints(40000, 60000, 0.0, 25.0, 0.0, 70.0);
 		} else {
 			con = Constraints(0, 60000, 0.0, 25.0, 0.0, 90.0);
 		}
-
-		generate_optimized_station(bbox, con);
+		
+		stations.push_back(Station(bbox,con));
 	}
 }
 
 void Hull::compute_properties() {
-	
-	assert(number_of_stations >= 2);
 
 	//Reset Hull attributes to 0.0
 	volume = 0.0;
@@ -84,25 +82,4 @@ void Hull::export_hull_coordinates(std::string filename) const {
 		
 		datfile.close();
 	} else std::cout << "Error opening file!\n";
-}
-
-
-void Hull::generate_optimized_station(Bbox& bbox, Constraints& con) {
-
-	Station station;
-	Station best_station;
-	double best_ap_ratio = 0.0;
-	unsigned int iterations = 0;
-	const unsigned int number_of_iterations = 1000;
-
-	while(iterations<number_of_iterations) {
-		station = Station(bbox, con);
-
-		if(station.area_perimeter_ratio() > best_ap_ratio) {
-			best_ap_ratio = station.area_perimeter_ratio();
-			best_station = station;		
-		}
-		iterations++;
-	}
-	stations.push_back(best_station);
 }

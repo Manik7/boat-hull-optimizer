@@ -7,7 +7,6 @@ int main () {
 // 	MonteCarloOptimizer<OptimizableHull> carlos(hull);
 	GreedyOptimizer<OptimizableHull> greed(hull);
 
-	hull.generate_stations();
 	hull.compute_properties();
 	hull.print_hull();
 	hull.export_hull_coordinates("seed.dat");

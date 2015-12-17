@@ -8,14 +8,22 @@
 #include "Bbox.h"
 #include "Point_3.h"
 #include "Constraints.h"
+/*#include "OptimizableHullFactory.h"
+#include "Hull.h"*/
 
 class Station {
+	/*friend class OptimizableHullFactory;
+	friend class Hull;*/
 
-	//TODO: You could make the bbox and constraints 'const' to protect against accidental modification
+	/* TODO: Refactor so that the bbox, origin, beam, keel, and chine 
+	 * are all private members, with friendship in the right places 
+	 * to allow access. You could make the bbox and constraints 'const' 
+	 * to protect against accidental modification */
+	
 	Bbox bbox_ = Bbox();
 	Constraints constraints_ = Constraints();
 	static const int number_of_iterations_ = 1000;
-	static const int xy_resolution_ = 10; //TODO: Better to not make this static? That would allow a higher resolution at the bow and lower resolution at the midsection
+	static const int xy_resolution_ = 10; //TODO: Get rid of this, or continue to use it for the hull generation?
 	Point_3 origin_, beam_, keel_, chine_;
 
 public:
