@@ -59,7 +59,6 @@ void OptimizableHull::revert_last_change()
 	}
 }
 
-
 bool OptimizableHull::satisfies_constraints() const {
 	
 	if (this->volume < min_hull_volume) {
