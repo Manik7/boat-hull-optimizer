@@ -17,7 +17,7 @@ int main () {
 // 	hull.export_hull_coordinates("carlos.dat");
 	
 	if (hull.satisfies_constraints()) {
-		std::cout << "Seed generated successfully! Starting Greed...\n";			
+		std::cout << "Seed generated successfully! Starting Greed...\n";
 		greed.run(1000000);
 		hull.print_hull();
 		hull.export_hull_coordinates("greed.dat");

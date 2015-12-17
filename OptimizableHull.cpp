@@ -61,6 +61,8 @@ void OptimizableHull::revert_last_change()
 
 bool OptimizableHull::satisfies_constraints() const {
 	
+	//TODO: Implement constraints for the entire hull such as the panel twist-rate and non-negative rocker
+	
 	if (this->volume < min_hull_volume) {
 		return false;
 	}
@@ -70,8 +72,6 @@ bool OptimizableHull::satisfies_constraints() const {
 	}
 
 	return true; 
-	
-	//TODO: Implement constraints for the entire hull, like the minimum volume and the panel twist-rate
 }
 
 double OptimizableHull::fitness() { //TODO: proper fitness function needed here.
