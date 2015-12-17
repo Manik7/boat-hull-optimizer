@@ -50,6 +50,14 @@ void OptimizableHull::set_parameter(int index, int value) {
 	compute_properties();
 }
 
+void OptimizableHull::set_all_parameters(int value)
+{
+	for (int i = 0; i < 3*number_of_stations; ++i) {
+		set_parameter(i, value);
+	}
+}
+
+
 void OptimizableHull::revert_last_change()
 {
 	if(parameterChanged) {

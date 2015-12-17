@@ -12,6 +12,7 @@ struct OptimizableHull : public Hull, public Optimizable {
 	
 	int get_parameter(int index) const;
 	void set_parameter(int index, int value);
+	void set_all_parameters(int value);
 	void revert_last_change();
 	bool satisfies_constraints() const;
 	double fitness();
