@@ -25,7 +25,7 @@ int main () {
 	
 	if (hull.satisfies_constraints()) {
 		std::cout << "Seed generated successfully! Starting Greed...\n\n";
-		greed.run(100*1000);
+		greed.run(1000*1000);
 		std::cout << "Greedy\n";
 		hull.print_hull();
 		hull.export_hull_coordinates("greed.dat");
