@@ -123,7 +123,7 @@ bool Station::points_in_bbox() const //TODO: Only needed for the initialization 
 }
 
 bool Station::satisfies_constraints() const { // TODO: points_in_bbox can be removed here, only needed for initialization of the hull
-	if (points_in_bbox() && /* area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() > constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() > constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
+	if (/*points_in_bbox() &&  area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() >= constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() >= constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
 		return true;
 	} else return false;
 }
@@ -151,18 +151,18 @@ int Station::get_parameter(int index) { //TODO: an enum for the parameters would
 	}
 }
 
-void Station::set_parameter(int index, int value) { //TODO: an enum for the parameters would be nice
+void Station::set_parameter(int index, int realValue) { //TODO: an enum for the parameters would be nice
 	assert(index >= 0 && index < 3);
 	
 	switch (index) {
 		case 0:
-			chine_.x = value;
+			chine_.x = realValue;
 			break;
 		case 1:
-			chine_.y = value;
+			chine_.y = realValue;
 			break;
 		case 2:
-			keel_.y = value;
+			keel_.y = realValue;
 			break;
 	}
 }

@@ -57,7 +57,7 @@ public:
 	void line_print() const;
 
 	int get_parameter(int index);
-	void set_parameter(int index, int value);
+	void set_parameter(int index, int realValue);
 };
 
 #endif // STATION_H

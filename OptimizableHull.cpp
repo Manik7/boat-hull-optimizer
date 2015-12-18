@@ -75,8 +75,8 @@ bool OptimizableHull::satisfies_constraints() const {
 		return false;
 	}
 	
-	for (auto station : stations) {
-		if (!station.Station::satisfies_constraints()) return false;
+	for (auto& station : stations) {
+		if (!station.satisfies_constraints()) return false;
 	}
 
 	return true; 

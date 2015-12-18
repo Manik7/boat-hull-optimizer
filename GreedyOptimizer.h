@@ -11,7 +11,7 @@
 template<typename OptimizableType>
 class GreedyOptimizer : public Optimizer {
 
-	OptimizableType model;
+	OptimizableType* model;
 
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 engine;
@@ -22,11 +22,11 @@ class GreedyOptimizer : public Optimizer {
 
 public:
 #ifdef DETERMINISTIC_RUN
-	GreedyOptimizer(OptimizableType& model) : model(model), engine(0), 
+	GreedyOptimizer(OptimizableType* model) : model(model), engine(0), 
 #else
-	GreedyOptimizer(OptimizableType& model) : model(model), engine(std::mt19937(rd())),
+	GreedyOptimizer(OptimizableType* model) : model(model), engine(std::mt19937(rd())),
 #endif
-		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
+		indexDistribution(std::uniform_int_distribution<int>(0, model->numberOfParameters-1)), 
 		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
 		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
 		epsilon(0.00001) { }
@@ -38,34 +38,33 @@ public:
 		for (int i = 0; i < steps; ++i) {
 			do_step();
 		}
-		model.output();
 	}
 	
 	void do_step() {
 	
-		double oldFitness = model.fitness();		// store old fitness
+		double oldFitness = model->fitness();		// store old fitness
 		int index = indexDistribution(engine);		// choose parameter to modify
-		int oldValue = model.get_parameter(index); 	// store old parameter value	
+		int oldValue = model->get_parameter(index); 	// store old parameter value	
 		int modifier = valueDistribution(engine);	// get random value as a modifier for the parameter
 						
 		// modify the parameter
-		if (oldValue + modifier > model.maxValue) { //resulting value too big
-			model.set_parameter(index, model.maxValue);
+		if (oldValue + modifier > model->maxValue) { //resulting value too big
+			model->set_parameter(index, model->maxValue);
 		} 
-		else if (oldValue + modifier < model.minValue) { //too small
-			model.set_parameter(index, model.minValue);
+		else if (oldValue + modifier < model->minValue) { //too small
+			model->set_parameter(index, model->minValue);
 		} 
 		else { //can be changed freely
-			model.set_parameter(index, oldValue + modifier);
+			model->set_parameter(index, oldValue + modifier);
 		}
 		
 		// decide whether or not to keep the new value
-		if(model.satisfies_constraints() && ( (model.fitness() < oldFitness-epsilon) || win_dice_roll(80))) { //TODO: adjust dice roll probability
+		if(model->satisfies_constraints() && ( (model->fitness() < oldFitness-epsilon) || win_dice_roll(80))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
 		} else {
-			model.revert_last_change(); //revert
+			model->revert_last_change(); //revert
 		}
 	}
 private:

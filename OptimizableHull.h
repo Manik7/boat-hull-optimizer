@@ -2,6 +2,8 @@
 #define OPTIMIZABLE_HULL_H
 
 #include <cassert>
+#include <iostream>
+
 #include "Optimizable.h"
 #include "Hull.h"
 #include "Bbox.h"

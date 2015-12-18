@@ -7,7 +7,7 @@
 template<typename OptimizableType>
 class MonteCarloOptimizer : public Optimizer {
 	
-	OptimizableType model;
+	OptimizableType* model;
 
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 engine;
@@ -20,16 +20,16 @@ class MonteCarloOptimizer : public Optimizer {
 public:
 	
 #ifdef DETERMINISTIC_RUN
-	MonteCarloOptimizer(OptimizableType& model) : model(model), engine(0), 
+	MonteCarloOptimizer(OptimizableType* model) : model(model), engine(0), 
 #else
-	MonteCarloOptimizer(OptimizableType& model) : model(model), engine(std::mt19937(rd())),
+	MonteCarloOptimizer(OptimizableType* model) : model(model), engine(std::mt19937(rd())),
 #endif
-		indexDistribution(std::uniform_int_distribution<int>(0, model.numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(0, 100)) {}
+		indexDistribution(std::uniform_int_distribution<int>(0, model->numberOfParameters-1)), 
+		valueDistribution(std::uniform_int_distribution<int>(50, 100)) {}
 	
 	void run(int steps = 1000000) {
 		
-		model.set_all_parameters(0);
+		model->set_all_parameters(0);
 		
 		for(int i = 0; i<steps && !foundValidModel; ++i) {
 			do_step();
@@ -38,23 +38,44 @@ public:
 	}
 	
 	void do_step() {
-		int index = indexDistribution(engine);
-		int value = valueDistribution(engine);
+		int index = 1; //start on first chine.y value
+		int value = 0;
 		
-		model.set_parameter(index, value);
+		/* TODO: If the chine is lower than the keel, drag the keel value down far enough to 
+		 * get a flat bottom, that helps meet the constraints. This implementation results in 
+		 * a non-generic optimizer. A solution to fix this would be to implement a stack to
+		 * stack to store the reversion values, so that multiple changes can be undone. That
+		 * stack would have to be cleared every time a value is accepted. Reverting the 
+		 * entire stack would be an acceptable reversion function. */
+		bool convexBottom = true;		
+		for ( ; index < model->numberOfParameters; index+=3) {
+			if (model->get_parameter(index) > model->get_parameter(index+1)) { //chine deeper than keel
+				convexBottom = false;
+				break;
+			}
+		}
+		
+		if(convexBottom) {
+			index = indexDistribution(engine);
+			value = valueDistribution(engine);
+		} else {
+			value = model->get_parameter(index+1) ; //get the keel value set the chine.y to equal it
+		}
+		
+		model->set_parameter(index, value);
 		
 		if(!foundValidModel) { // You haven't found a (valid) parameter set yet, i.e. one that meets the constraints
-			if (model.satisfies_constraints()) { 
+			if (model->satisfies_constraints()) { 
 				foundValidModel = true;
-				oldFitness = model.fitness();
+				oldFitness = model->fitness();
 			} // else just keep the change you made and do nothing further
 		} 
 		
 		else { // You already had a valid model
-			if (model.satisfies_constraints() && model.fitness() <= oldFitness) {
-				oldFitness = model.fitness();
+			if (model->satisfies_constraints() && model->fitness() <= oldFitness) {
+				oldFitness = model->fitness();
 			} else {
-				model.revert_last_change();
+				model->revert_last_change();
 			}
 		}
 	}

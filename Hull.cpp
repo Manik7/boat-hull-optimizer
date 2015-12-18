@@ -21,9 +21,9 @@ Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_l
 		bbox = Bbox(Point_3(0,0,i*station_spacing), Point_3(wl_curve_point.x, 450, station_z_coord));
 		
 		if (i==0) {
-			con = Constraints(40000, 60000, 0.0, 25.0, 0.0, 70.0);
+			con = Constraints(40000, 60000, 0.0, 90.0, 0.0, 30.0);
 		} else {
-			con = Constraints(0, 60000, 0.0, 25.0, 0.0, 90.0);
+			con = Constraints(0, 60000, 0.0, 90.0, 0.0, 30.0);
 		}
 		
 		stations.push_back(Station(bbox,con));
