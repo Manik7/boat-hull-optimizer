@@ -1,6 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++11 -pg
-#-D DETERMINISTIC_RUN
+CXXFLAGS=-std=c++11 -pg -D DETERMINISTIC_RUN
 
 all: Main
 
@@ -40,7 +39,7 @@ clean_data:
 	
 profile: Main
 	./main
-	gprof –p ./main gmon.out
+	gprof -p ./main gmon.out
 	
 plot:
 	gnuplot visualization.gp

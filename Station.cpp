@@ -27,7 +27,7 @@ void Station::generate_chine_and_keel() {
 		chine_.y = distr(eng)*xy_resolution_; // random y_chine
 		keel_ = Point_3(0, distr(eng)*xy_resolution_, origin_.z, "keel"); // random y_keel
 		
-		if (satisfies_constraints()) {
+		if (satisfies_constraints() && points_in_bbox()) {
 			foundSolution = true;
 			break;
 		}
@@ -39,6 +39,8 @@ void Station::generate_chine_and_keel() {
 		chine_.y = bbox_.max.y/2;
 		keel_ = Point_3(0, bbox_.max.y, origin_.z, "keel");
 	}
+	
+	update();
 }
 
 int Station::resolution(int input) const {
@@ -51,7 +53,7 @@ double Station::edge_length(Point_3 a, Point_3 b) const {
 }
 
 int Station::sq_edge_length(Point_3 a, Point_3 b) const {
-	return pow(a.x - b.x, 2.0) + pow(a.y - b.y, 2.0);
+	return pow(a.x - b.x, 2) + pow(a.y - b.y, 2);
 }
 
 Bbox Station::bbox() const {
@@ -79,13 +81,11 @@ Point_3 Station::keel() const
 }
 
 double Station::area() const {
-	return double(chine_.x * chine_.y 
-		+ ( (beam_.x - chine_.x) * chine_.y
-		+ chine_.x * (keel_.y - chine_.y) )/2);
+	return area_;
 }
 
 double Station::perimeter() const {
-	return edge_length(beam_, chine_) + edge_length(chine_, keel_);
+	return perimeter_;
 }
 
 int Station::sq_perimeter() const {
@@ -104,16 +104,12 @@ double Station::area_sq_perimeter_ratio() const {
 	return double(area())/double(sq_perimeter());
 }
 
-double Station::flare_angle_deg() const { //TODO: Assumes point lies within bounding box
-	return asin(chine_.y/edge_length(beam_,chine_)) / 3.1415 * 180.0;
+double Station::flare_angle_deg() const { 
+	return flare_angle_deg_;
 }
 
-double Station::deadrise_angle_deg() const { //TODO: Assumes points lie within bounding box
-	if(keel_.y >= chine_.y) {
-		return acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
-	} else {
-		return -acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0;
-	}
+double Station::deadrise_angle_deg() const { 
+	return deadrise_angle_deg_;
 }
 
 bool Station::points_in_bbox() const //TODO: Only needed for the initialization of the station, since the greedy algorithm maintains this condition on its own accord
@@ -129,12 +125,12 @@ bool Station::satisfies_constraints() const { // TODO: points_in_bbox can be rem
 }
 
 void Station::line_print_labels() {
-	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "perim.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
+	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "sq_per.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
 }
 
 void Station::line_print() const {
 	std::cout << origin_.z << '\t' << beam_.x << '\t' << chine_.x << '\t' << chine_.y << '\t' << keel_.y 
-		<< '\t' << area() << '\t' << perimeter() << '\t' << area_perimeter_ratio() << '\t'
+		<< '\t' << area() << '\t' << sq_perimeter() << '\t' << area_perimeter_ratio() << '\t'
 		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
 
@@ -165,4 +161,17 @@ void Station::set_parameter(int index, int realValue) { //TODO: an enum for the 
 			keel_.y = realValue;
 			break;
 	}
+	update();
+}
+
+void Station::update() {
+	area_ = double(chine_.x * chine_.y + ( (beam_.x - chine_.x) * chine_.y + chine_.x * (keel_.y - chine_.y) )/2);
+	perimeter_ = edge_length(beam_, chine_) + edge_length(chine_, keel_);
+	flare_angle_deg_ = asin(chine_.y/edge_length(beam_,chine_)) / 3.1415 * 180.0; //TODO: Assumes point lies within bounding box
+	
+	if(keel_.y >= chine_.y) {
+		deadrise_angle_deg_ = acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0; //TODO: Assumes points lie within bounding box
+	} else {
+		deadrise_angle_deg_ = -acos(chine_.x/edge_length(chine_, keel_)) / 3.1415 * 180.0; //TODO: Assumes points lie within bounding box
+	}	
 }

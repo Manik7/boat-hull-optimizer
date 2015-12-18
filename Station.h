@@ -25,6 +25,11 @@ class Station {
 	static const int number_of_iterations_ = 1000;
 	static const int xy_resolution_ = 10; //TODO: Get rid of this, or continue to use it for the hull generation?
 	Point_3 origin_, beam_, keel_, chine_;
+	
+	double area_ = 0.0;
+	double perimeter_ = 0.0;
+	double flare_angle_deg_ = 90.0;
+	double deadrise_angle_deg_ = 0.0;
 
 public:
 	Station(Bbox& bbox, Constraints& constraints);
@@ -37,6 +42,7 @@ private:
 	double edge_length(Point_3 a, Point_3 b) const;
 	int sq_edge_length(Point_3 a, Point_3 b) const;
 	bool points_in_bbox() const;
+	void update();
 
 public:
 	Bbox bbox() const;

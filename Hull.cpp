@@ -1,12 +1,14 @@
 #include "Hull.h"
 
-Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), number_of_stations(number_of_stations), wl_curve(WaterlineCurve(half_lwl, half_bwl)) {
+Hull::Hull(int half_lwl, int half_bwl, int number_of_stations) : half_lwl(half_lwl), half_bwl(half_bwl), 
+number_of_stations(number_of_stations), station_spacing((half_lwl-100)/(number_of_stations-1)), wl_curve(WaterlineCurve(half_lwl, half_bwl)) {
+	
+	// ^ No stations generated for the last 100mm of the hull
 	
 	assert(number_of_stations >= 2);
 	assert(half_lwl > 0 && half_bwl > 0);
 	
 	Station current_station;
-	double station_spacing = (half_lwl-100)/(number_of_stations-1); //No stations generated for the last 100mm of the hull
 	int station_bbox_width;
 	int station_z_coord;
 	
@@ -37,14 +39,11 @@ void Hull::compute_properties() {
 	wetted_surface_area = 0.0;
 	pitching_moment = 0.0;
 	
-	double station_spacing = 0.0;
 	auto it = stations.begin();
 	++it;
 	auto it_prev = stations.begin();
 
 	for ( ; it != stations.end(); ++it, ++it_prev) {
-		station_spacing = it->z_coord() - it_prev->z_coord();
-
 		volume += (it_prev->area() + it->area())/2.0 * station_spacing;
 		wetted_surface_area += (it_prev->perimeter() + it->perimeter())/2.0 * station_spacing;
 		//TODO: pitching moment

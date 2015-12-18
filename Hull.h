@@ -24,6 +24,7 @@ protected:
 	const int half_lwl;
 	const int half_bwl;
 	const int number_of_stations;
+	const double station_spacing;
 
 	double volume = 0.0;
 	double wetted_surface_area = 0.0;
