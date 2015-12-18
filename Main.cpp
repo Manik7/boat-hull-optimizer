@@ -10,22 +10,22 @@ int main () {
 	GreedyOptimizer<OptimizableHull> greed(&hull);
 
 	std::cout << "Seed\n";
-	hull.print_hull();
+// 	hull.print_hull();
 	hull.export_hull_coordinates("seed.dat");
 	
-	if (!hull.satisfies_constraints()) {
-		carlos.run(1000000);
+// 	if (!hull.satisfies_constraints()) {
+		carlos.run(1000*1000);
+// 		carlos.run(false,10*1000*1000);
 		std::cout << "Monte Carlo\n";
 		hull.print_hull();
-		hull.export_hull_coordinates("carlos.dat");
-	} else {
-		std::cout << "Seed hull OK, skipping Monte Carlo optimization.\n";
-		hull.export_hull_coordinates("carlos.dat");
-	}
+// 	} else {
+// 		std::cout << "Seed hull OK, skipping Monte Carlo optimization.\n";
+// 	}
+	hull.export_hull_coordinates("carlos.dat"); //TODO: Exporting even when monte carlo was not run, because the gnuplot script can't deal with it if carlos.dat is missing
 	
 	if (hull.satisfies_constraints()) {
 		std::cout << "Seed generated successfully! Starting Greed...\n\n";
-		greed.run(10*1000*1000);
+		greed.run(100*1000);
 		std::cout << "Greedy\n";
 		hull.print_hull();
 		hull.export_hull_coordinates("greed.dat");

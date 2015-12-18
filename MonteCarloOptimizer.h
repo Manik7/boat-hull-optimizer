@@ -29,9 +29,19 @@ public:
 	
 	void run(int steps = 1000000) {
 		
-		model->set_all_parameters(0);
+// 		model->set_all_parameters(0);
 		
-		for(int i = 0; i<steps && !foundValidModel; ++i) {
+		for(int i = 0; i<steps && (!foundValidModel); ++i) {
+			do_step();
+		}
+		
+	}
+	
+	void run(bool stopOnFirstValidConfig, int steps = 1000000) {
+		
+// 		model->set_all_parameters(0);
+		
+		for(int i = 0; i<steps && (!stopOnFirstValidConfig || !foundValidModel); ++i) {
 			do_step();
 		}
 		

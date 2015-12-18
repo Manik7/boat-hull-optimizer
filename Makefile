@@ -38,6 +38,9 @@ visualisation: clean_data Main
 clean_data:
 	rm -f data/*.dat data/*.svg
 	
+plot:
+	gnuplot visualization.gp
+	
 clean:
 	rm -f main bezier_test *.o data/*.dat data/*.svg
 
