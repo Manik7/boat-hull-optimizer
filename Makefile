@@ -4,7 +4,7 @@ CXXFLAGS=-std=c++11 -g
 
 all: Main
 
-Main: Main.o Hull.o Station.o Bezier_quadratic.o OptimizableHull.o GreedyOptimizer.o 
+Main: Main.o Hull.o Station.o Bezier_quadratic.o OptimizableHull.o
 	$(CXX) $(CXXFLAGS) $^ -o ./main
 
 Bezier: Bezier_quadratic.o Bezier_quad_unit.o
