@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-std=c++11 -g -D DETERMINISTIC_RUN
+CXXFLAGS=-std=c++11 -g
+#-D DETERMINISTIC_RUN
 
 all: Main
 
@@ -30,9 +31,13 @@ OptimizableHull.o: OptimizableHull.cpp OptimizableHull.h Optimizable.h
 #GreedyOptimizer.o: GreedyOptimizer.cpp GreedyOptimizer.h
 #	$(CXX) $(CXXFLAGS) -c $<
 
-visualisation:
+visualisation: clean_data Main
+	./main
 	gnuplot visualization.gp
 
+clean_data:
+	rm -f data/*.dat data/*.svg
+	
 clean:
 	rm -f main bezier_test *.o data/*.dat data/*.svg
 
