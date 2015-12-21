@@ -20,14 +20,16 @@ void Station::generate_chine_and_keel() {
 
 	for (int i = 0; i<number_of_iterations_; i++) {
 
-		distr = std::uniform_int_distribution<int>(resolution(bbox_.max.x/4), resolution(bbox_.max.x)); // set to x range, from 0 to bbox_max.x, instead of 0 I'm using 25%-of-beam instead, as solutions with the chine that far in would be discarded anyway
-		chine_.x = distr(eng)*xy_resolution_;  // random x_chine
+		distr = std::uniform_int_distribution<int>(bbox_.max.x/4, bbox_.max.x); // set to x range, from 0 to bbox_max.x, instead of 0 I'm using 25%-of-beam instead, as solutions with the chine that far in would be discarded anyway
+		chine_.x = distr(eng);  // random x_chine
 
-		distr = std::uniform_int_distribution<int>(resolution(bbox_.max.y/4), resolution(bbox_.max.y)); //set to y range, also using the 25% heuristic here
-		chine_.y = distr(eng)*xy_resolution_; // random y_chine
-		keel_ = Point_3(0, distr(eng)*xy_resolution_, origin_.z, "keel"); // random y_keel
+		distr = std::uniform_int_distribution<int>(bbox_.max.y/4, bbox_.max.y); //set to y range, also using the 25% heuristic here
+		chine_.y = distr(eng); // random y_chine
+		keel_ = Point_3(0, distr(eng), origin_.z, "keel"); // random y_keel
 		
-		if (satisfies_constraints() && points_in_bbox()) {
+		update();
+		
+		if (satisfies_constraints()) {
 			foundSolution = true;
 			break;
 		}

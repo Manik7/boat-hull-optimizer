@@ -23,9 +23,9 @@ number_of_stations(number_of_stations), station_spacing((half_lwl-100)/(number_o
 		bbox = Bbox(Point_3(0,0,i*station_spacing), Point_3(wl_curve_point.x, 450, station_z_coord));
 		
 		if (i==0) {
-			con = Constraints(40000, 60000, 0.0, 90.0, 0.0, 30.0);
+			con = Constraints(0.0, 90.0, 0.0, 30.0);
 		} else {
-			con = Constraints(0, 60000, 0.0, 90.0, 0.0, 30.0);
+			con = Constraints(0.0, 90.0, 0.0, 30.0);
 		}
 		
 		stations.push_back(Station(bbox,con));
