@@ -119,18 +119,18 @@ bool Station::points_in_bbox() const //TODO: Only needed for the initialization 
 }
 
 bool Station::satisfies_constraints() const { // TODO: points_in_bbox can be removed here, only needed for initialization of the hull
-	if (/*points_in_bbox() &&  area() > constraints_.area_min && area() < constraints_.area_max &&*/ flare_angle_deg() >= constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() >= constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
+	if (flare_angle_deg() >= constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() >= constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
 		return true;
 	} else return false;
 }
 
 void Station::line_print_labels() {
-	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "sq_per.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
+	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" << "a/p\t" <<"flare\t" << "deadrise" << std::endl;
 }
 
 void Station::line_print() const {
 	std::cout << origin_.z << '\t' << beam_.x << '\t' << chine_.x << '\t' << chine_.y << '\t' << keel_.y 
-		<< '\t' << area() << '\t' << sq_perimeter() << '\t' << area_perimeter_ratio() << '\t'
+		<< '\t' << area() << '\t' << perimeter() << '\t' << area_perimeter_ratio() << '\t'
 		<<flare_angle_deg() << '\t' << deadrise_angle_deg() << std::endl;
 }
 

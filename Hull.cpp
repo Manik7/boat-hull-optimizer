@@ -33,24 +33,23 @@ number_of_stations(number_of_stations), station_spacing((half_lwl-100)/(number_o
 }
 
 void Hull::compute_properties() {
-
-	//Reset Hull attributes to 0.0
-	volume = 0.0;
-	wetted_surface_area = 0.0;
-	pitching_moment = 0.0;
 	
-	auto it = stations.begin();
-	++it;
-	auto it_prev = stations.begin();
-
-	for ( ; it != stations.end(); ++it, ++it_prev) {
-		volume += (it_prev->area() + it->area())/2.0 * station_spacing;
-		wetted_surface_area += (it_prev->perimeter() + it->perimeter())/2.0 * station_spacing;
+	volume = 0;
+	wetted_surface_area = 0;
+	pitching_moment = 0;
+	
+	for (auto it = stations.begin(); it != stations.end(); ++it) {
+		volume += it->area() * station_spacing;
+		wetted_surface_area += it->perimeter() * station_spacing;
 		//TODO: pitching moment
-	}	
+	}
 	
-	volume = volume*4*pow(10,-9);
-	wetted_surface_area = wetted_surface_area*4*pow(10,-6);
+	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
+	volume -= station_spacing / 2 * (stations.begin()->area() + stations.end()->area());
+	wetted_surface_area -= station_spacing / 2 * (stations.begin()->perimeter() + stations.end()->perimeter());	
+	
+	//volume = volume*4*pow(10,-9);
+	//wetted_surface_area = wetted_surface_area*4*pow(10,-6);
 }
 
 void Hull::print_hull() const {
@@ -60,7 +59,7 @@ void Hull::print_hull() const {
 		station.line_print();
 	}
 
-	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume << " m³" << std::endl << "WSA =\t" << wetted_surface_area << " m²\n" << std::endl;
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_surface_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
 
 void Hull::export_hull_coordinates(std::string filename) const {

@@ -7,7 +7,7 @@ struct Constraints {
 
 	Constraints(double amin, double amax, double fmin, double fmax, double dmin, double dmax) : area_min(amin), area_max(amax), flare_min(fmin), flare_max(fmax), deadrise_min(dmin), deadrise_max(dmax) {}
 
-	Constraints() : area_min(0.0), area_max(0.0), flare_min(0.0), flare_max(0.0), deadrise_min(0.0), deadrise_max(0.0) {}
+	Constraints() : area_min(0.0), area_max(0.0), flare_min(0.0), flare_max(90.0), deadrise_min(0.0), deadrise_max(90.0) {}
 
 };
 
