@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-std=c++11 -pg -D DETERMINISTIC_RUN
+CXXFLAGS=-std=c++11 -pg 
+#-D DETERMINISTIC_RUN
 
 all: Main
 
