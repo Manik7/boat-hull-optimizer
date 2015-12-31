@@ -5,7 +5,7 @@
 #include "Station.h"
 
 class OptimizableHullFactory {
-	void generate_optimized_station(Station& station, Bbox& bbox, Constraints& con);
+	void generate_optimized_station(Station& station, Bbox& bbox, AngleConstraints& con);
 	
 public:
 	OptimizableHull classicGenerator();
