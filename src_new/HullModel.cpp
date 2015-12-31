@@ -1,11 +1,16 @@
-#include "HullModel.cpp"
+#include "HullModel.h"
 
-double HullModel::fitness()
+void HullModel::compute_fitness()
 {
-	return 0.0; //TODO
+
 }
 
-T HullModel::map_parameter(int domain_value)
+T HullModel::get_range_max(int index)
 {
-	
+
+}
+
+T HullModel::get_range_min(int index)
+{
+
 }
