@@ -14,7 +14,7 @@ int main () {
 	hull.export_hull_coordinates("seed.dat");
 	
 	if (!hull.satisfies_constraints()) {
-		carlos.run(1000*1000);
+		carlos.run(1000);
 // 		carlos.run(false,10*1000*1000);
 		std::cout << "Monte Carlo\n";
 		hull.print_hull();
@@ -25,7 +25,7 @@ int main () {
 	
 	if (hull.satisfies_constraints()) {
 		std::cout << "Seed generated successfully! Starting Greed...\n\n";
-		greed.run(10*1000*1000);
+		greed.run(1000);
 		std::cout << "Greedy\n";
 		hull.print_hull();
 		hull.export_hull_coordinates("greed.dat");
