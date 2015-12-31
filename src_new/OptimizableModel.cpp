@@ -14,31 +14,38 @@ OptimizableModel::OptimizableModel(std::pair<int, T> genome[])
 	compute_fitness();
 }
 
-
-void OptimizableModel::mutate()
-{
-	int index = OptimizableModel.indexDistribution(engine);	// choose parameter to modify
-	int value = OptimizableModel.valueDistribution(engine);	// get a random value for the parameter
-	
-	set_parameter(index, value);
-}
-
 OptimizableModel OptimizableModel::crossover(OptimizableModel& partner)
 {
 	std::pair<T,T> newGenome[NUMBER_OF_PARAMETERS];
+	int crossover_point = OptimizableModel.indexDistribution(engine);
 	
-	for (int i = 0; i<NUMBER_OF_PARAMETERS; ++i) {
-		if(coinFlipDistribution(engine)) { //this one's gene is selected
-			newGenome[i] = parameters[i];
-			
-		} else { //partner's gene is selected
-			newGenome[i] = partner.parameters[i];
-		}
+	int i = 0;
+	for ( ; i < NUMBER_OF_PARAMETERS && i < crossover_point; ++i) { //this one's genes are copied
+		newGenome[i] = parameters[i];
 	}
+	for ( ; i < NUMBER_OF_PARAMETERS; ++i) { //partner's gene are copied
+		newGenome[i] = partner.parameters[i];
+	}
+	
+// 	for (int i = 0; i < NUMBER_OF_PARAMETERS; ++i) { //this one's genes are copied is selected
+// 		if (i < crossover_point) {
+// 			newGenome[i] = parameters[i];
+// 		} else {
+// 			newGenome[i] = partner.parameters[i];
+// 		}
+// 	}
 	
 	return OptimizableModel(newGenome);
 }
 
+void OptimizableModel::mutate()
+{
+	for (int i = 0; i < NUMBER_OF_PARAMETERS; ++i) {
+		if (coinFlipDistribution(engine)) { // choose if parameter is to mutate
+			set_parameter(i, OptimizableModel.valueDistribution(engine)); // get a random value for the parameter
+		}
+	}
+}
 
 T OptimizableModel::get_parameter(int index) {
 	return parameters[index].first;

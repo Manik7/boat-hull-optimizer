@@ -3,8 +3,8 @@
 
 #include "OptimizableModel.h"
 
-template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
-class HullModel : public OptimizableModel<T, NUMBER_OF_PARAMETERS, DOMAIN_LO, DOMAIN_HI> {
+template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100, double MUTATION_RATE = 0.01>
+class HullModel : public OptimizableModel<T, NUMBER_OF_PARAMETERS, DOMAIN_LO, DOMAIN_HI, MUTATION_RATE> {
 	
 protected:
 	void compute_fitness(); //compute and set the fitness value

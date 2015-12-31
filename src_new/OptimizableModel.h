@@ -4,7 +4,7 @@
 #include <utility>
 #include <random>
 
-template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
+template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100, double MUTATION_RATE = 0.01>
 class OptimizableModel {
 
 protected:
@@ -21,14 +21,14 @@ public:
 #endif
 	static std::uniform_int_distribution<int> indexDistribution<int>(0, NUMBER_OF_PARAMETERS-1);
 	static std::uniform_int_distribution<int> valueDistribution<int>(DOMAIN_LO, DOMAIN_HI);
-	static std::bernoulli_distribution coinFlipDistribution(0.5);
-
+	static std::bernoulli_distribution coinFlipDistribution(MUTATION_RATE);
+	
 	double fitness = 0.0;
 	
 	OptimizableModel(std::pair< int, T > genome[]);
 	
-	void mutate();
 	OptimizableModel crossover(OptimizableModel& partner); //TODO: Figure out the signature with the best performance
+	void mutate();
 	
 	inline void set_parameter(int index, int domain_value); // Sets the domain value & updates the fitness
 	inline T get_parameter(int index);
