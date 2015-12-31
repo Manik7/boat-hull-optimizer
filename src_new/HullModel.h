@@ -3,7 +3,7 @@
 
 #include "OptimizableModel.h"
 
-template <typename T, int NUMBER_OF_PARAMETERS, T DOMAIN_LO = 0, T DOMAIN_HI = 100>
+template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel<T, NUMBER_OF_PARAMETERS, DOMAIN_LO, DOMAIN_HI> {
 	
 protected:

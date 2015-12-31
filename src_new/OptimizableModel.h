@@ -4,11 +4,11 @@
 #include <utility>
 #include <random>
 
-template <typename T, int NUMBER_OF_PARAMETERS, T DOMAIN_LO = 0, T DOMAIN_HI = 100>
+template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class OptimizableModel {
 
 protected:
-	std::pair<T,T> parameters[NUMBER_OF_PARAMETERS]; //parameter domain (input values), parameter range (output, the real values)
+	std::pair<int,T> parameters[NUMBER_OF_PARAMETERS]; //parameter domain (input values), parameter range (output, the real values)
 	
 public:
 
@@ -25,7 +25,7 @@ public:
 
 	double fitness = 0.0;
 	
-	OptimizableModel(std::pair< T, T > genome[]);
+	OptimizableModel(std::pair< int, T > genome[]);
 	
 	void mutate();
 	OptimizableModel crossover(OptimizableModel& partner); //TODO: Figure out the signature with the best performance
