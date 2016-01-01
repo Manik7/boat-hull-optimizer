@@ -13,7 +13,7 @@ public:
 	enum ParameterIndex { CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
 	const Bbox& bbox;
-	const AngleConstraints& angles;
+	const StationParameters& angles;
 	
 	int chine_x, chine_y, keel_y;
 	double area;

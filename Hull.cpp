@@ -13,7 +13,7 @@ number_of_stations(number_of_stations), station_spacing((half_lwl-100)/(number_o
 	int station_z_coord;
 	
 	Bbox bbox;
-	AngleConstraints con;
+	StationParameters con;
 	
 	for (int i = 0; i<number_of_stations; i++) {
 
@@ -23,9 +23,9 @@ number_of_stations(number_of_stations), station_spacing((half_lwl-100)/(number_o
 		bbox = Bbox(Point_3(0,0,i*station_spacing), Point_3(wl_curve_point.x, 450, station_z_coord));
 		
 		if (i==0) {
-			con = AngleConstraints(0.0, 90.0, 0.0, 30.0);
+			con = StationParameters(0.0, 90.0, 0.0, 30.0);
 		} else {
-			con = AngleConstraints(0.0, 90.0, 0.0, 30.0);
+			con = StationParameters(0.0, 90.0, 0.0, 30.0);
 		}
 		
 		stations.push_back(Station(bbox,con));

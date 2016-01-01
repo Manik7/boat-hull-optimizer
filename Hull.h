@@ -9,7 +9,7 @@
 
 #include "Station.h"
 #include "Bbox.h"
-#include "AngleConstraints.h"
+#include "StationParameters.h"
 #include "WaterlineCurve.h"
 
 class Hull {

@@ -7,7 +7,7 @@
 
 #include "Bbox.h"
 #include "Point_3.h"
-#include "AngleConstraints.h"
+#include "StationParameters.h"
 /*#include "OptimizableHullFactory.h"
 #include "Hull.h"*/
 
@@ -21,7 +21,7 @@ class Station {
 	 * to protect against accidental modification */
 	
 	Bbox bbox_ = Bbox();
-	AngleConstraints constraints_ = AngleConstraints();
+	StationParameters constraints_ = StationParameters();
 	static const int number_of_iterations_ = 1000;
 	static const int xy_resolution_ = 10; //TODO: Get rid of this, or continue to use it for the hull generation?
 	Point_3 origin_, beam_, keel_, chine_;
@@ -32,7 +32,7 @@ class Station {
 	double deadrise_angle_deg_ = 0.0;
 
 public:
-	Station(Bbox& bbox, AngleConstraints& constraints);
+	Station(Bbox& bbox, StationParameters& constraints);
 	Station() {}
 
 private:

@@ -46,7 +46,7 @@ plot:
 	gnuplot visualization.gp
 	
 clean:
-	rm -f main bezier_test *.o data/*.dat data/*.svg
+	rm -f main bezier_test *.o data/*.dat data/*.svg gmon.out
 
 #%.o: %.cpp %.h
 #	$(CXX) $(CXXFLAGS) -c $<

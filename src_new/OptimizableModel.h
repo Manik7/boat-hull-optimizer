@@ -4,11 +4,11 @@
 #include <utility>
 #include <random>
 
-template <typename T, int NUMBER_OF_PARAMETERS, int DOMAIN_LO = 0, int DOMAIN_HI = 100, double MUTATION_RATE = 0.01>
+template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100, double MUTATION_RATE = 0.01>
 class OptimizableModel {
 
 protected:
-	std::pair<int,T> parameters[NUMBER_OF_PARAMETERS]; //parameter domain (input values), parameter range (output, the real values)
+	std::pair<int,T> genome[NUMBER_OF_GENES]; //parameter domain (input values), parameter range (output, the real values)
 	
 public:
 
@@ -19,7 +19,7 @@ public:
 #else
 	static std::mt19937 engine(rd());
 #endif
-	static std::uniform_int_distribution<int> indexDistribution<int>(0, NUMBER_OF_PARAMETERS-1);
+	static std::uniform_int_distribution<int> indexDistribution<int>(0, NUMBER_OF_GENES-1);
 	static std::uniform_int_distribution<int> valueDistribution<int>(DOMAIN_LO, DOMAIN_HI);
 	static std::bernoulli_distribution coinFlipDistribution(MUTATION_RATE);
 	
@@ -29,6 +29,8 @@ public:
 	
 	OptimizableModel crossover(OptimizableModel& partner); //TODO: Figure out the signature with the best performance
 	void mutate();
+	
+	virtual void output()=0;
 	
 	inline void set_parameter(int index, int domain_value); // Sets the domain value & updates the fitness
 	inline T get_parameter(int index);

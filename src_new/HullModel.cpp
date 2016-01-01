@@ -1,48 +1,110 @@
 #include "HullModel.h"
 
-bool HullModel::satisfies_constraints(StationProperties& properties) {
+HullModel::HullModel() {
+	WaterlineCurve wl_curve(hull_parameters.HALF_LWL, hull_parameters.HALF_BWL);
 	
-	
+	for (int i : hull_parameters.NUMBER_OF_STATIONS) {
+		//compute the beams of the stations and initialize the station_parameters with those
+		station_parameters[i] = StationParameters(wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(i*hull_parameters.STATION_SPACING)));
+	}
 }
+
+void HullModel::output()
+{
+	StationProperties properties;
+	
+	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "sq_per.\t" <<"flare\t" << "deadrise" << std::endl;
+	
+	for (int stat_no=0; stat_no<hull_parameters.NUMBER_OF_STATIONS; ++stat_no) {
+		
+		properties = calculate_station_properties(stat_no);
+		
+		std::cout << station_parameters[stat_no].z_coord << '\t' 
+			<< station_parameters[stat_no].half_beam.x << '\t' 
+			<< OptimizableModel::genome[3*stat_no + CHINE_X] << '\t' 
+			<< OptimizableModel::genome[3*stat_no + CHINE_Y] << '\t' 
+			<< OptimizableModel::genome[3*stat_no + KEEL_Y] << '\t' 		
+			<< '\t' << properties.area << '\t' << properties.sq_perimeter << '\t'
+			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
+	}
+}
+
 
 void HullModel::compute_fitness()
 {
 	bool constraints_ok = true;
-	StationProperties properties;
+	StationProperties properties[PROPERTIES.NUMBER_OF_STATIONS];
 	volume = 0.0;
 	sq_wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
 	
-	for (int i = 0; i<NUMBER_OF_PARAMETERS/3; ++i) {
+	for (int stat_no = 0; stat_no<hull_parameters.NUMBER_OF_STATIONS; ++stat_no) {
 		
-		properties = StationProperties(HullModel.station_builder.constructStation(
-			OptimizableModel::parameters[i*3], OptimizableModel::parameters[i*3+1], OptimizableModel::parameters[i*3+2]));
+		properties[stat_no] = StationProperties(calculate_station_properties(stat_no));
 		
-		if (angle_constraints[i].deadrise_min > properties.deadrise_deg || properties.deadrise_deg > angle_constraints[i].deadrise_max) {
+		if (station_parameters[stat_no].deadrise_min > properties[stat_no].deadrise_deg || properties[stat_no].deadrise_deg > station_parameters[stat_no].deadrise_max) {
 			//deadrise NOT ok
 			constraints_ok = false;
-		} else if (angle_constraints[i].flare_min > properties.flare_deg || properties.flare_deg > angle_constraints[i].flare_max) {
+			break;
+		} else if (station_parameters[stat_no].flare_min > properties[stat_no].flare_deg || properties[stat_no].flare_deg > station_parameters[stat_no].flare_max) {
 			// flare NOT ok
 			constraints_ok = false;
-		} //TODO: implement twist rate here (with another else-if)
+			break;
+		} 
 		
-		//TODO: volume, sq_WSA, and pitching moment calculations and additions here
+// 		else if (i>0) { //TODO: uncommment this twist rate check
+// 			if(!twist_rate_ok(properties[i-1],properties[i])) {
+// 				constraints_ok = false;
+// 				break;
+// 			}
+// 		}
+		
+		//volume, WSA, moment to trim calcs
+		volume += properties[stat_no].area * hull_parameters.STATION_SPACING;
+		sq_wetted_area += properties[stat_no].sq_perimeter * hull_parameters.STATION_SPACING;
+		//TODO: moment_to_trim_1_deg
 	}
 	
+	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
+	volume -= hull_parameters.STATION_SPACING * (properties[0].area + properties[hull_parameters.NUMBER_OF_STATIONS-1].area) / 2;
+	sq_wetted_area -= hull_parameters.STATION_SPACING * (properties[0].sq_perimeter + properties[hull_parameters.NUMBER_OF_STATIONS-1].sq_perimeter) / 2;	
+	//TODO: moment_to_trim_1_deg
+	
 	if(constraints_ok) {
-		OptimizableModel::fitness = sq_wetted_area; //TODO
+		OptimizableModel::fitness = sq_wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
 		OptimizableModel::fitness = 0.0;
 	}
 	
 }
 
-T HullModel::get_range_max(int index)
-{
-// TODO
+inline T HullModel::get_range_min(int gene_index) {
+	return 0;
 }
 
-T HullModel::get_range_min(int index)
+inline T HullModel::get_range_max(int gene_index) {
+	switch (gene_index % 3) {
+		case CHINE_X:
+			return station_parameters[gene_index/3].half_beam;
+		case CHINE_Y:
+			return hull_parameters.MAX_DRAFT;
+		case KEEL_Y:
+			return hull_parameters.MAX_DRAFT;
+	}
+}
+
+inline StationProperties HullModel::calculate_station_properties(int station_index)
 {
-// TODO
+	return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, OptimizableModel::genome[3*station_index]+CHINE_X, OptimizableModel::genome[3*station_index]+CHINE_Y, OptimizableModel::genome[3*station_index]+KEEL_Y);
+}
+
+inline bool HullModel::twist_rate_ok(StationProperties& first, StationProperties& second) {
+	return second.flare_deg < first.flare_deg + hull_parameters.MAX_TWIST_RATE_DEG 
+		&& second.deadrise_deg < first.deadrise_deg + hull_parameters.MAX_TWIST_RATE_DEG; 
+		
+	/* NOTE: You do not check for an increasing panel twist here, meaning that 
+	 * decreasing flare & deadrise angles are possible. Furthermore, if the angles 
+	 * are decreasing, then that decrease is not limited to MAX_TWIST_RATE_DEG so 
+	 * it is hoped that the hulls will simply optimize such cases away.
+	 */
 }
