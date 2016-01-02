@@ -1,7 +1,7 @@
-all: release
+all: release debug
 
 release:
-	$(MAKE) -j4 -C build/release/
+	$(MAKE) -C build/release/
 
 debug:
 	$(MAKE) -C build/debug/
@@ -10,14 +10,16 @@ visualization: clean_data
 	./main
 	gnuplot visualization.gp
 
-profile: Main
-	./main
-	gprof -p ./main gmon.out
+profile: debug
+	cd build/debug/ && ./hull_optimizer
+	cd build/debug/ && gprof -p ./hull_optimizer gmon.out
 	
 plot:
 	gnuplot visualization.gp
 	
 setup:
+	rm -rf build/release/*
+	rm -rf build/debug/*
 	cd build/release && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ ../..
 	cd build/debug && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ ../..
 
