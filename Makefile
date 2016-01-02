@@ -17,12 +17,8 @@ profile: Main
 plot:
 	gnuplot visualization.gp
 	
-setup:	setup_release setup_debug
-
-setup_release:
+setup:
 	cd build/release && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=g++ ../..
-
-setup_debug:
 	cd build/debug && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++ ../..
 
 clean: clean_data clean_profiling
