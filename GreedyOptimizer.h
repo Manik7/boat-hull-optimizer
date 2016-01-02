@@ -17,7 +17,7 @@ class GreedyOptimizer : public Optimizer {
 	std::mt19937 engine;
 	std::uniform_int_distribution<int> indexDistribution;
 	std::uniform_int_distribution<int> valueDistribution;
-	std::uniform_int_distribution<int> diceRollDistribution;
+	std::bernoulli_distribution coinFlipDistribution; 
 	const double epsilon;
 
 public:
@@ -28,15 +28,14 @@ public:
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model->numberOfParameters-1)), 
 		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
-		diceRollDistribution(std::uniform_int_distribution<int>(0,100)),
+		coinFlipDistribution(std::bernoulli_distribution(0.9)), //adjust dice roll probability
 		epsilon(0.00001) { }
 		
 	void run(int steps = 2) {
 		assert(steps > 0);
-		//TODO: Implement temperature here, with tuning of the valueDistribution, for simulated annealing
-
+		
 		for (int i = 0; i < steps; ++i) {
-			do_step();
+			do_step(); //TODO: Implement temperature here, with tuning of the valueDistribution, for simulated annealing
 		}
 	}
 	
@@ -59,19 +58,13 @@ public:
 		}
 		
 		// decide whether or not to keep the new value
-		if(model->satisfies_constraints() && ( (model->fitness() < oldFitness-epsilon) || win_dice_roll(90))) { //TODO: adjust dice roll probability
+		if(model->satisfies_constraints() && ( (model->fitness() < oldFitness-epsilon) || coinFlipDistribution(engine))) { //TODO: adjust dice roll probability
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
 		} else {
 			model->revert_last_change(); //revert
 		}
-	}
-private:
-	bool win_dice_roll(int odds = 50)	{
-		assert(odds >= 0 && odds <= 100);
-		if (diceRollDistribution(engine) < odds) return true;
-		else return false;
 	}
 };
 

@@ -3,9 +3,14 @@
 HullModel::HullModel() {
 	WaterlineCurve wl_curve(hull_parameters.HALF_LWL, hull_parameters.HALF_BWL);
 	
-	for (int i : hull_parameters.NUMBER_OF_STATIONS) {
+	for (int geneNo = 0; geneNo < NUMBER_OF_GENES; ++geneNo) {
+		OptimizableModel::genome[geneNo] = std::pair<int, T>(0, 0);
+		OptimizableModel::set_parameter(geneNo, DOMAIN_HI);
+	}
+	
+	for (int statNo : hull_parameters.NUMBER_OF_STATIONS) {
 		//compute the beams of the stations and initialize the station_parameters with those
-		station_parameters[i] = StationParameters(wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(i*hull_parameters.STATION_SPACING)));
+		station_parameters[statNo] = StationParameters(wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(statNo*hull_parameters.STATION_SPACING)));
 	}
 }
 

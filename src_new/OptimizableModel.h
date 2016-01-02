@@ -32,10 +32,15 @@ public:
 	
 	virtual void output()=0;
 	
-	inline void set_parameter(int index, int domain_value); // Sets the domain value & updates the fitness
+	// TODO: set_parameter always updates the fitness, meaning many useless calculations if multiple parameters are changed 'at once'
+	inline void set_parameter(int index, int domain_value); // Sets the domain value & updates the fitness 
 	inline T get_parameter(int index);
 	
 protected:
+	/*TODO: It might be worth going for a fitness() function which either gives you the stored value, 
+	 * or updates the values first and then returns it if changes have been made. You'd need a simple
+	 * flag such as 'isUpToDate' which you set to false every time set_parameter is called.
+	 */
 	virtual void compute_fitness()=0; //compute and set the fitness value
 	
 	/*TODO: as a performance improvement, you might be able to do with with 

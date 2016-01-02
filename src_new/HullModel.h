@@ -16,7 +16,8 @@ class HullModel : public OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
-	StationParameters station_parameters[NUMBER_OF_GENES/3];	
+	//TODO should be static const
+	StationParameters station_parameters[NUMBER_OF_GENES/3]; 
 	HullParameters<NUMBER_OF_GENES> hull_parameters = HullParameters<NUMBER_OF_GENES>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
 	StationCalculator station_calculator = StationCalculator(hull_parameters);
 	
@@ -27,7 +28,7 @@ private: //attributes
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
-	void output(); //TODO: include file output in here as well, not just console
+	void output(); //TODO: do file output here as well, and not just console output
 	
 protected: //methods
 	void compute_fitness(); //compute and set the fitness value
