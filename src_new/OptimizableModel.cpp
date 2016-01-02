@@ -1,6 +1,21 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel(std::pair<int, T> genes[])
+OptimizableModel::OptimizableModel() //TODO: initialize distributions here
+{
+	/* TODO: The values are (and need to be) hard copied. 
+	 * With an std::vector this would be less of a problem, 
+	 * and the size could be verified via assertion as well. 
+	 */
+	
+	for (int i = 0; i < NUMBER_OF_GENES; ++i) { 
+		genome[i].first = 0;
+		genome[i].second = 0;
+	}
+	
+	compute_fitness();
+}
+
+OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) //TODO: initialize distributions here
 {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 

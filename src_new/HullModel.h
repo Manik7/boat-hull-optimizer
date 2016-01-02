@@ -19,7 +19,7 @@ public: //attributes
 	//TODO should be static const
 	StationParameters station_parameters[NUMBER_OF_GENES/3]; 
 	HullParameters<NUMBER_OF_GENES> hull_parameters = HullParameters<NUMBER_OF_GENES>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	StationCalculator station_calculator = StationCalculator(hull_parameters);
+	StationCalculator<int, HullParameters<NUMBER_OF_GENES> > station_calculator = StationCalculator(hull_parameters);
 	
 private: //attributes
 	double volume = 0.0;

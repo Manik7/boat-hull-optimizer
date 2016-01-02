@@ -10,7 +10,7 @@
 
 //TODO: Make the hull_properties into template parameters to clean the code up a bit (?)
 
-template<typename T>
+template<typename T, typename HullParameters>
 struct StationCalculator {
 	
 	// attributes
