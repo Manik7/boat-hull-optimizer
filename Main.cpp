@@ -9,6 +9,10 @@ int main () {
 	MonteCarloOptimizer<OptimizableHull> carlos(&hull);
 	GreedyOptimizer<OptimizableHull> greed(&hull);
 
+#ifdef DETERMINISTIC_RUN
+	std::cout << "Deterministic run.\n";
+#endif
+
 	std::cout << "Seed\n";
 	hull.print_hull();
 	hull.export_hull_coordinates("seed.dat");
