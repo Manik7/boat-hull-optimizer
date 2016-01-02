@@ -27,7 +27,7 @@ private: //attributes
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
-	void output();
+	void output(); //TODO: include file output in here as well, not just console
 	
 protected: //methods
 	void compute_fitness(); //compute and set the fitness value
