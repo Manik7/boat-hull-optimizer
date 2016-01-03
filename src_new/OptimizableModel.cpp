@@ -1,6 +1,15 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel() //TODO: initialize distributions here
+OptimizableModel::OptimizableModel() 
+	: MUTATION_RATE(0.01),
+	indexDistribution(std::uniform_int_distribution<int>(0, NUMBER_OF_GENES-1)),
+	valueDistribution(std::uniform_int_distribution<int>(DOMAIN_LO, DOMAIN_HI)),
+	coinFlipDistribution(std::bernoulli_distribution(MUTATION_RATE)),
+#ifdef DETERMINISTIC_RUN
+	engine(std::mt19937(0))
+#else
+	engine(std::mt19937(rd()))
+#endif
 {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 
@@ -15,7 +24,7 @@ OptimizableModel::OptimizableModel() //TODO: initialize distributions here
 	compute_fitness();
 }
 
-OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) //TODO: initialize distributions here
+OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel()
 {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 

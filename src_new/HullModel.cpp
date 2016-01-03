@@ -1,6 +1,9 @@
 #include "HullModel.h"
 
-HullModel::HullModel() {
+HullModel::HullModel() : station_parameters(StationParameters[NUMBER_OF_GENES/3]),
+	hull_parameters(HullParameters<NUMBER_OF_GENES>()),
+	station_calculator(StationCalculator(hull_parameters))
+{
 	WaterlineCurve wl_curve(hull_parameters.HALF_LWL, hull_parameters.HALF_BWL);
 	
 	for (int geneNo = 0; geneNo < NUMBER_OF_GENES; ++geneNo) {

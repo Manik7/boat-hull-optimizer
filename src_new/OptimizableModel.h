@@ -11,18 +11,12 @@ protected:
 	std::pair<int,T> genome[NUMBER_OF_GENES]; //parameter domain (input values), parameter range (output, the real values)
 	
 public:
-
 	static std::random_device rd; // obtain a random number from hardware
-	
-#ifdef DETERMINISTIC_RUN
-	static std::mt19937 engine = std::mt19937(0); //TODO move all these to the constructors
-#else
-	static std::mt19937 engine(rd());
-#endif
-	static std::uniform_int_distribution<int> indexDistribution = std::uniform_int_distribution<int>(0, NUMBER_OF_GENES-1);
-	static std::uniform_int_distribution<int> valueDistribution = std::uniform_int_distribution<int>((DOMAIN_LO, DOMAIN_HI);
-	static std::bernoulli_distribution coinFlipDistribution = std::bernoulli_distribution(MUTATION_RATE);
-	static const double MUTATION_RATE = 0.01;
+	static std::mt19937 engine;
+	static std::uniform_int_distribution<int> indexDistribution;
+	static std::uniform_int_distribution<int> valueDistribution;
+	static std::bernoulli_distribution coinFlipDistribution;
+	static const double MUTATION_RATE;
 	
 	double fitness = 0.0;
 	
@@ -48,8 +42,8 @@ protected:
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 
 	 * of the function for each parameter. */
-	virtual inline T get_range_min(int index)=0; // Get the min value for the range (i.e. real values) for the parameters
-	virtual inline T get_range_max(int index)=0;
+	virtual inline T get_range_min(int index); // Get the min value for the range (i.e. real values) for the parameters
+	virtual inline T get_range_max(int index);
 };
 
 #endif // OPTIMIZABLE_MODEL_H

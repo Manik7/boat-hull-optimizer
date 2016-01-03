@@ -10,16 +10,16 @@
 #include "../Bbox.h"
 #include "HullParameters.h"
 
-template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100, double MUTATION_RATE = 0.01>
-class HullModel : public OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI, MUTATION_RATE> {
+template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
+class HullModel : public OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> {
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
 	//TODO should be static const
 	StationParameters station_parameters[NUMBER_OF_GENES/3]; 
-	HullParameters<NUMBER_OF_GENES> hull_parameters = HullParameters<NUMBER_OF_GENES>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	StationCalculator<int, HullParameters<NUMBER_OF_GENES> > station_calculator = StationCalculator(hull_parameters);
+	static const HullParameters<NUMBER_OF_GENES> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
+	static const StationCalculator<int, HullParameters<NUMBER_OF_GENES> > station_calculator;
 	
 private: //attributes
 	double volume = 0.0;
