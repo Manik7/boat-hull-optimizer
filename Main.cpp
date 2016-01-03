@@ -45,15 +45,11 @@ void old_alg() {
 	}
 }
 
-void new_alg() {
-// 	typedef typename HullModel<int, 15, 0, 100, 0.01> HullModel;
-	
+void new_alg() {	
 	HullModel<int, 15, 0, 100> hull = HullModel();
 	HillClimber<HullModel<int, 15, 0, 100>> hillary(&hull);
 	
 	hull.output();
-	
 	hillary.run(5);
-	
 	hull.output();
 }
