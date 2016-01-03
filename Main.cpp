@@ -5,6 +5,9 @@
 #include "src_new/HullModel.h"
 #include "src_new/HillClimber.h"
 
+void old_alg();
+void new_alg();
+
 int main () {
 	old_alg();
 // 	new_alg();
@@ -46,7 +49,7 @@ void old_alg() {
 }
 
 void new_alg() {	
-	HullModel<int, 15, 0, 100> hull = HullModel();
+	HullModel<int, 15, 0, 100> hull = HullModel<int, 15, 0, 100>();
 	HillClimber<HullModel<int, 15, 0, 100>> hillary(&hull);
 	
 	hull.output();

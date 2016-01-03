@@ -1,7 +1,6 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel() 
-	: MUTATION_RATE(0.01),
+OptimizableModel::OptimizableModel() : 
 	indexDistribution(std::uniform_int_distribution<int>(0, NUMBER_OF_GENES-1)),
 	valueDistribution(std::uniform_int_distribution<int>(DOMAIN_LO, DOMAIN_HI)),
 	coinFlipDistribution(std::bernoulli_distribution(MUTATION_RATE)),
@@ -21,7 +20,7 @@ OptimizableModel::OptimizableModel()
 		genome[i].second = 0;
 	}
 	
-	compute_fitness();
+	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
 OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel()
@@ -35,7 +34,7 @@ OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel
 		genome[i] = genes[i];		
 	}
 	
-	compute_fitness();
+	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
 OptimizableModel OptimizableModel::crossover(OptimizableModel& partner)
@@ -44,7 +43,7 @@ OptimizableModel OptimizableModel::crossover(OptimizableModel& partner)
 	int crossover_point = OptimizableModel.indexDistribution(engine);
 	
 	int i = 0;
-	for ( ; i < NUMBER_OF_GENES && i < crossover_point; ++i) { //this one's genes are copied
+	for ( ; i < crossover_point && i < NUMBER_OF_GENES; ++i) { //this one's genes are copied
 		newGenome[i] = genome[i];
 	}
 	for ( ; i < NUMBER_OF_GENES; ++i) { //partner's gene are copied

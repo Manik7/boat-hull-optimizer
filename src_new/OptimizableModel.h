@@ -4,9 +4,14 @@
 #include <utility>
 #include <random>
 
-template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
-class OptimizableModel {
-
+template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
+struct OptimizableModel {
+public:
+ 	typedef NumberType T;
+	static constexpr int numberOfGenes = NUMBER_OF_GENES;
+	static constexpr int domainLo = DOMAIN_LO;
+	static constexpr int domainHi = DOMAIN_HI;
+	
 protected:
 	std::pair<int,T> genome[NUMBER_OF_GENES]; //parameter domain (input values), parameter range (output, the real values)
 	
@@ -16,7 +21,7 @@ public:
 	static std::uniform_int_distribution<int> indexDistribution;
 	static std::uniform_int_distribution<int> valueDistribution;
 	static std::bernoulli_distribution coinFlipDistribution;
-	static const double MUTATION_RATE;
+	static constexpr double MUTATION_RATE = 0.01;
 	
 	double fitness = 0.0;
 	
