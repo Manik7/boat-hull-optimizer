@@ -85,34 +85,3 @@ void HullModel::compute_fitness()
 	}
 	
 }
-
-inline T HullModel::get_range_min(int gene_index) {
-	return 0;
-}
-
-inline T HullModel::get_range_max(int gene_index) {
-	switch (gene_index % 3) {
-		case CHINE_X:
-			return station_parameters[gene_index/3].half_beam;
-		case CHINE_Y:
-			return hull_parameters.MAX_DRAFT;
-		case KEEL_Y:
-			return hull_parameters.MAX_DRAFT;
-	}
-}
-
-inline StationProperties HullModel::calculate_station_properties(int station_index)
-{
-	return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, OptimizableModel::genome[3*station_index]+CHINE_X, OptimizableModel::genome[3*station_index]+CHINE_Y, OptimizableModel::genome[3*station_index]+KEEL_Y);
-}
-
-inline bool HullModel::twist_rate_ok(StationProperties& first, StationProperties& second) {
-	return second.flare_deg < first.flare_deg + hull_parameters.MAX_TWIST_RATE_DEG 
-		&& second.deadrise_deg < first.deadrise_deg + hull_parameters.MAX_TWIST_RATE_DEG; 
-		
-	/* NOTE: You do not check for an increasing panel twist here, meaning that 
-	 * decreasing flare & deadrise angles are possible. Furthermore, if the angles 
-	 * are decreasing, then that decrease is not limited to MAX_TWIST_RATE_DEG so 
-	 * it is hoped that the hulls will simply optimize such cases away.
-	 */
-}

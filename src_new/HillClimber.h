@@ -68,7 +68,7 @@ public:
 				// (a) is fitter or 
 				// (b) you won the dice roll
 		} else {
-			model->set_parameter(oldValue); //revert
+			model->set_parameter(index, oldValue); //revert
 		}
 	}
 };

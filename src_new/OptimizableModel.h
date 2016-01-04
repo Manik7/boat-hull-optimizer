@@ -28,14 +28,21 @@ public:
 	OptimizableModel();
 	OptimizableModel(std::pair< int, T > genome[]);
 	
-	OptimizableModel crossover(OptimizableModel& partner); //TODO: Figure out the signature with the best performance
+	void crossover(OptimizableModel& partner, OptimizableModel& child); //TODO: Figure out the signature with the best performance
 	void mutate();
 	
 	virtual void output()=0;
 	
 	// TODO: set_parameter always updates the fitness, meaning many useless calculations if multiple parameters are changed 'at once'
-	inline void set_parameter(int index, int domain_value); // Sets the domain value & updates the fitness 
-	inline T get_parameter(int index);
+	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
+		genome[index].first = domain_value;
+		genome[index].second = (get_range_max()-get_range_min()) * T(domain_value - DOMAIN_LO) / (DOMAIN_HI-DOMAIN_LO) + get_range_min();
+		compute_fitness();
+	}
+	
+	inline T get_parameter(int index) {
+		return genome[index].first;
+	}
 	
 protected:
 	/*TODO: It might be worth going for a fitness() function which either gives you the stored value, 

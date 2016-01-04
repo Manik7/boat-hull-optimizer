@@ -37,17 +37,16 @@ OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel
 	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
-OptimizableModel OptimizableModel::crossover(OptimizableModel& partner)
+void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& child)
 {
-	std::pair<T,T> newGenome[NUMBER_OF_GENES];
 	int crossover_point = OptimizableModel.indexDistribution(engine);
 	
 	int i = 0;
 	for ( ; i < crossover_point && i < NUMBER_OF_GENES; ++i) { //this one's genes are copied
-		newGenome[i] = genome[i];
+		child.genome[i] = genome[i];
 	}
 	for ( ; i < NUMBER_OF_GENES; ++i) { //partner's gene are copied
-		newGenome[i] = partner.parameters[i];
+		child.genome[i] = partner.genome[i];
 	}
 
 // 	//NOTE: The following code packs this into a single loop with an if statement instead of split loops
@@ -58,8 +57,6 @@ OptimizableModel OptimizableModel::crossover(OptimizableModel& partner)
 // 			newGenome[i] = partner.parameters[i];
 // 		}
 // 	}
-	
-	return OptimizableModel(newGenome);
 }
 
 void OptimizableModel::mutate()
@@ -69,15 +66,4 @@ void OptimizableModel::mutate()
 			set_parameter(i, OptimizableModel.valueDistribution(engine)); // get a random value for the parameter
 		}
 	}
-}
-
-T OptimizableModel::get_parameter(int index) {
-	return genome[index].first;
-}
-
-void OptimizableModel::set_parameter(int index, int domain_value)
-{
-	genome[index].first = domain_value;
-	genome[index].second = (get_range_max()-get_range_min()) * T(domain_value - DOMAIN_LO) / (DOMAIN_HI-DOMAIN_LO) + get_range_min();
-	compute_fitness();
 }
