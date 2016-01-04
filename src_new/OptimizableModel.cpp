@@ -57,6 +57,7 @@ void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& ch
 // 			newGenome[i] = partner.parameters[i];
 // 		}
 // 	}
+	child.compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
 void OptimizableModel::mutate()

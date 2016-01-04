@@ -13,6 +13,8 @@
 template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> {
 	
+	using Model = OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
+	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
@@ -52,7 +54,7 @@ private: //methods
 	void flare_angle_deg();
 	
 	inline StationProperties calculate_station_properties(int station_index) {
-		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, OptimizableModel::genome[3*station_index]+CHINE_X, OptimizableModel::genome[3*station_index]+CHINE_Y, OptimizableModel::genome[3*station_index]+KEEL_Y);
+		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, Model::genome[3*station_index]+CHINE_X, Model::genome[3*station_index]+CHINE_Y, Model::genome[3*station_index]+KEEL_Y);
 	}
 	
 	inline bool twist_rate_ok(StationProperties& first, StationProperties& second) {

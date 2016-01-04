@@ -36,7 +36,7 @@ public:
 	// TODO: set_parameter always updates the fitness, meaning many useless calculations if multiple parameters are changed 'at once'
 	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
 		genome[index].first = domain_value;
-		genome[index].second = (get_range_max()-get_range_min()) * T(domain_value - DOMAIN_LO) / (DOMAIN_HI-DOMAIN_LO) + get_range_min();
+		genome[index].second = (get_range_max(index) - get_range_min(index)) * T(domain_value - DOMAIN_LO) / (DOMAIN_HI-DOMAIN_LO) + get_range_min(index);
 		compute_fitness();
 	}
 	
@@ -54,8 +54,8 @@ protected:
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 
 	 * of the function for each parameter. */
-	virtual inline T get_range_min(int index); // Get the min value for the range (i.e. real values) for the parameters
-	virtual inline T get_range_max(int index);
+	virtual T get_range_min(int index)=0; // Get the min value for the range (i.e. real values) for the parameters
+	virtual T get_range_max(int index)=0;
 };
 
 #endif // OPTIMIZABLE_MODEL_H
