@@ -8,6 +8,7 @@ template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAI
 struct OptimizableModel {
 public:
  	typedef NumberType T;
+	using Optimizable_model = OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
 	static constexpr int numberOfGenes = NUMBER_OF_GENES;
 	static constexpr int domainLo = DOMAIN_LO;
 	static constexpr int domainHi = DOMAIN_HI;
@@ -17,10 +18,10 @@ protected:
 	
 public:
 	static std::random_device rd; // obtain a random number from hardware
-	static std::mt19937 engine;
-	static std::uniform_int_distribution<int> indexDistribution;
-	static std::uniform_int_distribution<int> valueDistribution;
-	static std::bernoulli_distribution coinFlipDistribution;
+	std::mt19937 engine; //TODO: make static
+	std::uniform_int_distribution<int> indexDistribution; //TODO: make static
+	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
+	std::bernoulli_distribution coinFlipDistribution; //TODO: make static
 	static constexpr double MUTATION_RATE = 0.01;
 	
 	double fitness = 0.0;

@@ -1,6 +1,7 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel() : 
+template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::OptimizableModel() : 
 	indexDistribution(std::uniform_int_distribution<int>(0, NUMBER_OF_GENES-1)),
 	valueDistribution(std::uniform_int_distribution<int>(DOMAIN_LO, DOMAIN_HI)),
 	coinFlipDistribution(std::bernoulli_distribution(MUTATION_RATE)),
@@ -23,7 +24,8 @@ OptimizableModel::OptimizableModel() :
 	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
-OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel()
+template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel()
 {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 
@@ -37,9 +39,10 @@ OptimizableModel::OptimizableModel(std::pair<int, T> genes[]) : OptimizableModel
 	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
-void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& child)
+template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+void OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::crossover(OptimizableModel& partner, OptimizableModel& child)
 {
-	int crossover_point = OptimizableModel.indexDistribution(engine);
+	int crossover_point = indexDistribution(engine);
 	
 	int i = 0;
 	for ( ; i < crossover_point && i < NUMBER_OF_GENES; ++i) { //this one's genes are copied
@@ -60,11 +63,12 @@ void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& ch
 	child.compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
-void OptimizableModel::mutate()
+template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+void OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::mutate()
 {
 	for (int i = 0; i < NUMBER_OF_GENES; ++i) {
 		if (coinFlipDistribution(engine)) { // choose if parameter is to mutate
-			set_parameter(i, OptimizableModel.valueDistribution(engine)); // get a random value for the parameter
+			set_parameter(i, valueDistribution(engine)); // get a random value for the parameter
 		}
 	}
 }

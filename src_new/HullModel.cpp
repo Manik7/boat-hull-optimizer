@@ -1,14 +1,16 @@
 #include "HullModel.h"
 
-HullModel::HullModel() : station_parameters(StationParameters[NUMBER_OF_GENES/3]),
+template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::HullModel() 
+	: station_parameters(StationParameters()),
 	hull_parameters(HullParameters<NUMBER_OF_GENES>()),
-	station_calculator(StationCalculator(hull_parameters))
+	station_calculator(StationCalc(hull_parameters))
 {
 	WaterlineCurve wl_curve(hull_parameters.HALF_LWL, hull_parameters.HALF_BWL);
 	
 	for (int geneNo = 0; geneNo < NUMBER_OF_GENES; ++geneNo) {
-		OptimizableModel::genome[geneNo] = std::pair<int, T>(0, 0);
-		OptimizableModel::set_parameter(geneNo, DOMAIN_HI);
+		Model::genome[geneNo] = std::pair<int, T>(0, 0);
+		Model::set_parameter(geneNo, DOMAIN_HI);
 	}
 	
 	for (int statNo : hull_parameters.NUMBER_OF_STATIONS) {
@@ -17,7 +19,8 @@ HullModel::HullModel() : station_parameters(StationParameters[NUMBER_OF_GENES/3]
 	}
 }
 
-void HullModel::output()
+template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+void HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::output()
 {
 	StationProperties properties;
 	
@@ -29,19 +32,19 @@ void HullModel::output()
 		
 		std::cout << station_parameters[stat_no].z_coord << '\t' 
 			<< station_parameters[stat_no].half_beam.x << '\t' 
-			<< OptimizableModel::genome[3*stat_no + CHINE_X] << '\t' 
-			<< OptimizableModel::genome[3*stat_no + CHINE_Y] << '\t' 
-			<< OptimizableModel::genome[3*stat_no + KEEL_Y] << '\t' 		
+			<< Model::genome[3*stat_no + CHINE_X] << '\t' 
+			<< Model::genome[3*stat_no + CHINE_Y] << '\t' 
+			<< Model::genome[3*stat_no + KEEL_Y] << '\t' 		
 			<< '\t' << properties.area << '\t' << properties.sq_perimeter << '\t'
 			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
 	}
 }
 
-
-void HullModel::compute_fitness()
+template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
+void HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::compute_fitness()
 {
 	bool constraints_ok = true;
-	StationProperties properties[PROPERTIES.NUMBER_OF_STATIONS];
+	StationProperties properties[hull_parameters.NUMBER_OF_STATIONS];
 	volume = 0.0;
 	sq_wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
@@ -72,16 +75,16 @@ void HullModel::compute_fitness()
 		sq_wetted_area += properties[stat_no].sq_perimeter * hull_parameters.STATION_SPACING;
 		//TODO: moment_to_trim_1_deg
 	}
-	
-	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
-	volume -= hull_parameters.STATION_SPACING * (properties[0].area + properties[hull_parameters.NUMBER_OF_STATIONS-1].area) / 2;
-	sq_wetted_area -= hull_parameters.STATION_SPACING * (properties[0].sq_perimeter + properties[hull_parameters.NUMBER_OF_STATIONS-1].sq_perimeter) / 2;	
-	//TODO: moment_to_trim_1_deg
-	
+		
 	if(constraints_ok) {
-		OptimizableModel::fitness = sq_wetted_area; //TODO: moment_to_trim_1_deg
+		// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
+		volume -= hull_parameters.STATION_SPACING * (properties[0].area + properties[hull_parameters.NUMBER_OF_STATIONS-1].area) / 2;
+		sq_wetted_area -= hull_parameters.STATION_SPACING * (properties[0].sq_perimeter + properties[hull_parameters.NUMBER_OF_STATIONS-1].sq_perimeter) / 2;	
+		//TODO: moment_to_trim_1_deg
+		
+		Model::fitness = sq_wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
-		OptimizableModel::fitness = 0.0;
+		Model::fitness = 0.0;
 	}
 	
 }

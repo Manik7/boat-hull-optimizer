@@ -10,18 +10,20 @@
 #include "../Bbox.h"
 #include "HullParameters.h"
 
+//TODO: change this template parameter to be the number of stations, and simply compute the number of genes from there. 
 template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> {
 	
 	using Model = OptimizableModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
+	using StationCalc = StationCalculator<int, HullParameters<NUMBER_OF_GENES> >;
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
-	//TODO should be static const
+	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[NUMBER_OF_GENES/3]; 
-	static const HullParameters<NUMBER_OF_GENES> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	static const StationCalculator<int, HullParameters<NUMBER_OF_GENES> > station_calculator;
+	HullParameters<NUMBER_OF_GENES> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
+	StationCalculator<int, HullParameters<NUMBER_OF_GENES> > station_calculator;
 	
 private: //attributes
 	double volume = 0.0;
