@@ -6,13 +6,13 @@ struct HullParameters
 {
 // 	HullParameters() : MIN_VOLUME(0.75), MAX_TWIST_RATE_DEG(20.0) {}
 	
-	static constexpr double MIN_VOLUME = 0.75;
-	static constexpr double MAX_TWIST_RATE_DEG = 20.0;
-	static const int HALF_LWL = 3500;
-	static const int HALF_BWL = 290;
-	static const int MAX_DRAFT = 450;
-	static const int STATION_SPACING = (3*HALF_LWL) / NUMBER_OF_GENES;
-	static const int NUMBER_OF_STATIONS = (3*3500) / NUMBER_OF_GENES;
+	static constexpr double minVolume = 0.75;
+	static constexpr double maxTwistRateDeg = 20.0;
+	static constexpr int halfLwl = 3500;
+	static constexpr int halfBwl = 290;
+	static constexpr int maxDraft = 450;
+	static constexpr int stationSpacing = (3*(halfLwl-100)) / NUMBER_OF_GENES;
+	static constexpr int numberOfStations = NUMBER_OF_GENES / 3;
 };
 /*
 HullParameters<NUMBER_OF_GENES>::MIN_VOLUME(0.75);

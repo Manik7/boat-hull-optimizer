@@ -4,44 +4,44 @@
 #include <utility>
 #include <random>
 
-template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
+// template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 struct OptimizableModel {
 public:
- 	typedef NumberType T;
-	using Optimizable_model = OptimizableModel<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
-	static constexpr int numberOfGenes = NUMBER_OF_GENES;
-	static constexpr int domainLo = DOMAIN_LO;
-	static constexpr int domainHi = DOMAIN_HI;
+ 	typedef int NumType;
+	using Optimizable_model = OptimizableModel; //<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
+	static constexpr int numberOfGenes = 15;
+	static constexpr int domainLo = 0;
+	static constexpr int domainHi = 100;
+	static constexpr double mutationRate = 0.01;
 	
 protected:
-	std::pair<int,T> genome[NUMBER_OF_GENES]; //parameter domain (input values), parameter range (output, the real values)
+	std::pair<int,NumType> genome[numberOfGenes]; //parameter domain (input values), parameter range (output, the real values)
 	
 public:
-	std::random_device rd; // obtain a random number from hardware
+	std::random_device rd; // obtain a random number from hardware //TODO: make static
 	std::mt19937 engine; //TODO: make static
 	std::uniform_int_distribution<int> indexDistribution; //TODO: make static
 	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
 	std::bernoulli_distribution coinFlipDistribution; //TODO: make static
-	static constexpr double MUTATION_RATE = 0.01;
 	
 	double fitness = 0.0;
 	
 	OptimizableModel();
-	OptimizableModel(std::pair< int, T > genome[]);
+	OptimizableModel(std::pair< int, NumType > genome[]);
 	
 	void crossover(OptimizableModel& partner, OptimizableModel& child); //TODO: Figure out the signature with the best performance
 	void mutate();
 	
-	virtual void output()=0;
+	virtual void output() const=0;
 	
 	// TODO: set_parameter always updates the fitness, meaning many useless calculations if multiple parameters are changed 'at once'
 	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
 		genome[index].first = domain_value;
-		genome[index].second = (get_range_max(index) - get_range_min(index)) * T(domain_value - DOMAIN_LO) / (DOMAIN_HI-DOMAIN_LO) + get_range_min(index);
+		genome[index].second = (get_range_max(index) - get_range_min(index)) * NumType(domain_value - domainLo) / (domainHi-domainLo) + get_range_min(index);
 		compute_fitness();
 	}
 	
-	inline T get_parameter(int index) {
+	inline NumType get_parameter(int index) const {
 		return genome[index].first;
 	}
 	
@@ -55,10 +55,8 @@ protected:
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 
 	 * of the function for each parameter. */
-	virtual T get_range_min(int index)=0; // Get the min value for the range (i.e. real values) for the parameters
-	virtual T get_range_max(int index)=0;
+	virtual NumType get_range_min(int index) const=0; // Get the min value for the range (i.e. real values) for the parameters
+	virtual NumType get_range_max(int index) const=0;
 };
-
-#include "OptimizableModel.tpp"
 
 #endif // OPTIMIZABLE_MODEL_H
