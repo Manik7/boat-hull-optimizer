@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <random>
+#include <cassert>
 
 // template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 struct OptimizableModel {
@@ -17,6 +18,9 @@ public:
 protected:
 	std::pair<int,NumType> genome[numberOfGenes]; //parameter domain (input values), parameter range (output, the real values)
 	
+private:
+	bool isFitnessUpdated = false;
+	double m_fitness = 0.0;
 public:
 	std::random_device rd; // obtain a random number from hardware //TODO: make static
 	std::mt19937 engine; //TODO: make static
@@ -24,10 +28,10 @@ public:
 	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
 	std::bernoulli_distribution coinFlipDistribution; //TODO: make static
 	
-	double fitness = 0.0;
+	double fitness();
 	
 	OptimizableModel();
-	OptimizableModel(std::pair< int, NumType > genome[]);
+	OptimizableModel(std::pair< int, NumType > genes[]);
 	
 	void crossover(OptimizableModel& partner, OptimizableModel& child); //TODO: Figure out the signature with the best performance
 	void mutate();
@@ -50,7 +54,7 @@ protected:
 	 * or updates the values first and then returns it if changes have been made. You'd need a simple
 	 * flag such as 'isUpToDate' which you set to false every time set_parameter is called.
 	 */
-	virtual void compute_fitness()=0; //compute and set the fitness value
+	virtual double compute_fitness() const=0; //compute the fitness value
 	
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 

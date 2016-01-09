@@ -27,15 +27,15 @@ public: //attributes
 	StationCalculator<int, HullParameters<numberOfGenes> > station_calculator;
 	
 private: //attributes
-	double volume = 0.0;
-	double sq_wetted_area = 0.0;
-	double moment_to_trim_1_deg = 0.0;
+	mutable double volume = 0.0;
+	mutable double sq_wetted_area = 0.0;
+	mutable double moment_to_trim_1_deg = 0.0;
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
 	HullModel(std::pair< int, NumType > genome[]);
 	void output() const; //TODO: do file output here as well, and not just console output
-	void compute_fitness(); //compute and set the fitness value
+	double compute_fitness() const; //compute and return the fitness value
 	
 protected: //methods	
 	/*TODO: as a performance improvement, you might be able to do with with a template parameter 

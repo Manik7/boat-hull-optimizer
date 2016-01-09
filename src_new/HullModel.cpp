@@ -39,7 +39,7 @@ void HullModel::output() const {
 	}
 }
 
-void HullModel::compute_fitness()
+double HullModel::compute_fitness() const
 {
 	bool constraints_ok = true;
 	StationProperties properties[hull_parameters.numberOfStations];
@@ -80,9 +80,9 @@ void HullModel::compute_fitness()
 		sq_wetted_area -= hull_parameters.stationSpacing * (properties[0].sq_perimeter + properties[hull_parameters.numberOfStations-1].sq_perimeter) / 2;	
 		//TODO: moment_to_trim_1_deg
 		
-		Model::fitness = sq_wetted_area; //TODO: moment_to_trim_1_deg
+		return sq_wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
-		Model::fitness = 0.0;
+		return 0.0;
 	}
 	
 }

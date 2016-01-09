@@ -27,8 +27,8 @@ public:
 	HillClimber(Model* model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, Model::numberOfGenes-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
-		coinFlipDistribution(std::bernoulli_distribution(0.9)) //adjust dice roll probability
+		valueDistribution(std::uniform_int_distribution<int>(-5, 5)), 
+		coinFlipDistribution(std::bernoulli_distribution(0.9)) //adjust probability of accepting worse fitness
 		{ }
 	
 	void run(int steps = 2) {
@@ -44,7 +44,7 @@ public:
 		 * to do it perhaps? -- The problem there though is that Stations etc are partially hardcoded
 		 * in the MC methods.
 		 */
-		double oldFitness = model->fitness;		// store old fitness
+		double oldFitness = model->fitness();		// store old fitness
 		int index = indexDistribution(engine);		// choose parameter to modify
 		int oldValue = model->get_parameter(index); 	// store old parameter value	
 		int modifier = valueDistribution(engine);	// get random value as a modifier for the parameter
@@ -60,10 +60,8 @@ public:
 			model->set_parameter(index, oldValue + modifier);
 		}
 		
-		model->compute_fitness();
-		
 		// decide whether or not to keep the new value
-		if(model->fitness > 0.0+epsilon && ( (model->fitness < oldFitness-epsilon) || coinFlipDistribution(engine))) {
+		if(model->fitness() > 0.0+epsilon && ( (model->fitness() < oldFitness-epsilon) || coinFlipDistribution(engine))) {
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll

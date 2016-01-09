@@ -1,6 +1,7 @@
 #include "OptimizableModel.h"
 
 OptimizableModel::OptimizableModel() : 
+	isFitnessUpdated(false),
 	indexDistribution(std::uniform_int_distribution<int>(0, numberOfGenes-1)),
 	valueDistribution(std::uniform_int_distribution<int>(numberOfGenes, domainHi)),
 	coinFlipDistribution(std::bernoulli_distribution(mutationRate)),
@@ -19,12 +20,9 @@ OptimizableModel::OptimizableModel() :
 		genome[i].first = 0;
 		genome[i].second = 0;
 	}
-	
-	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
 }
 
-OptimizableModel::OptimizableModel(std::pair<int, NumType> genes[]) : OptimizableModel()
-{
+OptimizableModel::OptimizableModel(std::pair<int, NumType> genes[]) : OptimizableModel() {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 
 	 * and the size could be verified via assertion as well. 
@@ -34,7 +32,16 @@ OptimizableModel::OptimizableModel(std::pair<int, NumType> genes[]) : Optimizabl
 		genome[i] = genes[i];		
 	}
 	
-	compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
+	assert(isFitnessUpdated == false);
+}
+
+double OptimizableModel::fitness() {
+	if(isFitnessUpdated) {
+		return m_fitness;
+	} else {
+		isFitnessUpdated = true;
+		return m_fitness = compute_fitness();
+	}
 }
 
 void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& child)
@@ -57,9 +64,10 @@ void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& ch
 // 			newGenome[i] = partner.parameters[i];
 // 		}
 // 	}
-	child.compute_fitness(); //TODO: remove this when you go for the lazy fitness calculation
+	child.isFitnessUpdated = false;
 }
 
+//TODO: set this to do mutations by adding a normally-distributed delta ontop of the current value
 void OptimizableModel::mutate()
 {
 	for (int i = 0; i < numberOfGenes; ++i) {

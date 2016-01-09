@@ -9,8 +9,11 @@ void old_alg();
 void new_alg();
 
 int main () {
-	old_alg();
-// 	new_alg();
+// 	old_alg();
+	
+	std::cout << "NEW ALGORITHM\n\n";
+	
+ 	new_alg();
 }
 
 void old_alg() {
@@ -29,7 +32,7 @@ void old_alg() {
 	hull.export_hull_coordinates("seed.dat");
 	
 	if (!hull.satisfies_constraints()) {
-		carlos.run(100*1000*1000);
+		carlos.run(10*1000*1000);
 		std::cout << "Monte Carlo\n";
 		hull.print_hull();
 	} else {
@@ -39,7 +42,7 @@ void old_alg() {
 	
 	if (hull.satisfies_constraints()) {
 		std::cout << "Seed generated successfully! Starting Greed...\n\n";
-		greed.run(100*1000*1000);
+		greed.run(10*1000*1000);
 		std::cout << "Greedy\n";
 		hull.print_hull();
 		hull.export_hull_coordinates("greed.dat");
