@@ -9,7 +9,7 @@ void old_alg();
 void new_alg();
 
 int main () {
-// 	old_alg();
+	old_alg();
 	
 	std::cout << "NEW ALGORITHM\n\n";
 	
@@ -32,7 +32,7 @@ void old_alg() {
 	hull.export_hull_coordinates("seed.dat");
 	
 	if (!hull.satisfies_constraints()) {
-		carlos.run(10*1000*1000);
+		carlos.run(1*1000*1000);
 		std::cout << "Monte Carlo\n";
 		hull.print_hull();
 	} else {
