@@ -42,7 +42,6 @@ public:
 	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
 		genome[index].first = domain_value;
 		genome[index].second = (get_range_max(index) - get_range_min(index)) * NumType(domain_value - domainLo) / (domainHi-domainLo) + get_range_min(index);
-		compute_fitness();
 	}
 	
 	inline NumType get_parameter(int index) const {

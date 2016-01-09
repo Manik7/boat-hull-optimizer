@@ -5,18 +5,18 @@
 #include "src_new/HullModel.h"
 #include "src_new/HillClimber.h"
 
-void old_alg();
-void new_alg();
+void old_alg(int);
+void new_alg(int);
 
 int main () {
-	old_alg();
+	old_alg(5);
 	
 	std::cout << "NEW ALGORITHM\n\n";
 	
- 	new_alg();
+ 	new_alg(5);
 }
 
-void old_alg() {
+void old_alg(int runs = 5) {
 	OptimizableHull hull;
 	hull.compute_properties();
 	
@@ -32,7 +32,7 @@ void old_alg() {
 	hull.export_hull_coordinates("seed.dat");
 	
 	if (!hull.satisfies_constraints()) {
-		carlos.run(1*1000*1000);
+		carlos.run(runs);
 		std::cout << "Monte Carlo\n";
 		hull.print_hull();
 	} else {
@@ -51,11 +51,11 @@ void old_alg() {
 	}
 }
 
-void new_alg() {	
+void new_alg(int runs = 5) {	
 	HullModel hull;
 	HillClimber<HullModel> hillary(&hull);
 	
 	hull.output();
-	hillary.run(5);
+	hillary.run(runs);
 	hull.output();
 }

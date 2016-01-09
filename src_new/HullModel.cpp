@@ -34,9 +34,10 @@ void HullModel::output() const {
 			<< std::to_string(Model::genome[3*stat_no + CHINE_X].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
-			<< '\t' << properties.area << '\t' << properties.sq_perimeter << '\t'
+			<< properties.area << '\t' << properties.sq_perimeter << '\t'
 			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
 	}
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << sqrt(sq_wetted_area)*4*pow(10,-6) << " m²\n" << std::endl;
 }
 
 double HullModel::compute_fitness() const
