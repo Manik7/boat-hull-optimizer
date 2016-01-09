@@ -13,8 +13,8 @@ SET(hull_optimizer_SOURCES
 	OptimizableHull.cpp
 	Station.cpp
 	src_new/HillClimber.h
-	src_new/HullModel.cpp
-	src_new/OptimizableModel.cpp
+# 	src_new/HullModel.tpp
+# 	src_new/OptimizableModel.cpp
 # 	src_new/StationCalculator.cpp
 )
 

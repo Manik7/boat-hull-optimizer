@@ -24,7 +24,7 @@ public:
 	Point_3 find_point_with_z_coord(double z_value, double epsilon = 0.001) const;
 
 	// Do a binary-search over t, looking for the value which corresponds to the specified z-coordinate
-	double find_t_for_z_coord(double z_value, double t_low, double t_high, double epsilon = 0.001) const;
+	double find_t_for_z_coord(double z_value, double t_low = 0.0, double t_high = 1.0, double epsilon = 0.001) const;
 	
 protected:
 

@@ -56,7 +56,7 @@ private: //methods
 	void flare_angle_deg();
 	
 	inline StationProperties calculate_station_properties(int station_index) {
-		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, Model::genome[3*station_index]+CHINE_X, Model::genome[3*station_index]+CHINE_Y, Model::genome[3*station_index]+KEEL_Y);
+		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, Model::genome[3*station_index+CHINE_X].second, Model::genome[3*station_index+CHINE_Y].second, Model::genome[3*station_index+KEEL_Y].second);
 	}
 	
 	inline bool twist_rate_ok(StationProperties& first, StationProperties& second) {
@@ -70,5 +70,7 @@ private: //methods
 		*/
 	}
 };
+
+#include "HullModel.tpp"
 
 #endif //HULL_MODEL_H

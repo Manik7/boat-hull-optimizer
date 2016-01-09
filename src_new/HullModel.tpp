@@ -1,10 +1,8 @@
-#include "HullModel.h"
+// #include "HullModel.h"
 
 template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO, int DOMAIN_HI>
 HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::HullModel() 
-	: station_parameters(StationParameters()),
-	hull_parameters(HullParameters<NUMBER_OF_GENES>()),
-	station_calculator(StationCalc(hull_parameters))
+	: station_parameters(), hull_parameters(HullParameters<NUMBER_OF_GENES>()), station_calculator(StationCalc(hull_parameters))
 {
 	WaterlineCurve wl_curve(hull_parameters.HALF_LWL, hull_parameters.HALF_BWL);
 	
@@ -13,9 +11,11 @@ HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::HullModel()
 		Model::set_parameter(geneNo, DOMAIN_HI);
 	}
 	
-	for (int statNo : hull_parameters.NUMBER_OF_STATIONS) {
+	int statZCoord;
+	for (int statNo = 0; statNo < hull_parameters.NUMBER_OF_STATIONS; ++statNo) {
 		//compute the beams of the stations and initialize the station_parameters with those
-		station_parameters[statNo] = StationParameters(wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(statNo*hull_parameters.STATION_SPACING)));
+		statZCoord = statNo*hull_parameters.STATION_SPACING;
+		station_parameters[statNo] = StationParameters(statZCoord, wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(statZCoord)));
 	}
 }
 
@@ -31,10 +31,10 @@ void HullModel<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>::output()
 		properties = calculate_station_properties(stat_no);
 		
 		std::cout << station_parameters[stat_no].z_coord << '\t' 
-			<< station_parameters[stat_no].half_beam.x << '\t' 
-			<< Model::genome[3*stat_no + CHINE_X] << '\t' 
+			<< station_parameters[stat_no].half_beam << '\t' 
+/*			<< Model::genome[3*stat_no + CHINE_X] << '\t' 
 			<< Model::genome[3*stat_no + CHINE_Y] << '\t' 
-			<< Model::genome[3*stat_no + KEEL_Y] << '\t' 		
+			<< Model::genome[3*stat_no + KEEL_Y] << '\t' */		
 			<< '\t' << properties.area << '\t' << properties.sq_perimeter << '\t'
 			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
 	}

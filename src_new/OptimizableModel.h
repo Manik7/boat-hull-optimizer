@@ -17,7 +17,7 @@ protected:
 	std::pair<int,T> genome[NUMBER_OF_GENES]; //parameter domain (input values), parameter range (output, the real values)
 	
 public:
-	static std::random_device rd; // obtain a random number from hardware
+	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 engine; //TODO: make static
 	std::uniform_int_distribution<int> indexDistribution; //TODO: make static
 	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
@@ -58,5 +58,7 @@ protected:
 	virtual T get_range_min(int index)=0; // Get the min value for the range (i.e. real values) for the parameters
 	virtual T get_range_max(int index)=0;
 };
+
+#include "OptimizableModel.tpp"
 
 #endif // OPTIMIZABLE_MODEL_H
