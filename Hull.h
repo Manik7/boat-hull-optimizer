@@ -20,7 +20,7 @@ protected:
 	std::vector<Station> stations;
 	const WaterlineCurve wl_curve;
 	const double max_twist_deg = 20.0; // degrees per 1000 mm
-	const double min_hull_volume = 0.65 * 1000*1000*1000 /4; //in cubic millimeters for 1/4th of the hull
+	const double min_hull_volume = 0.75 / 4 * 1000*1000*1000; //in cubic millimeters for 1/4th of the hull
 	const int half_lwl;
 	const int half_bwl;
 	const int number_of_stations;

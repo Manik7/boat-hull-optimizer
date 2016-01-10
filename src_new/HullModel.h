@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "OptimizableModel.h"
 #include "StationCalculator.h"
@@ -29,13 +30,14 @@ public: //attributes
 	
 private: //attributes
 	mutable double volume = 0.0;
-	mutable double sq_wetted_area = 0.0;
+	mutable double wetted_area = 0.0;
 	mutable double moment_to_trim_1_deg = 0.0;
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
 	HullModel(std::pair< int, NumType > genome[]);
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
+	void export_hull_coordinates(std::string filename) const;
 	double compute_fitness() const; //compute and return the fitness value
 	
 protected: //methods	

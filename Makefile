@@ -6,8 +6,7 @@ release:
 debug:
 	$(MAKE) -C build/debug/
 
-visualization: clean_data
-	./main
+visualization:
 	gnuplot visualization.gp
 
 profile: debug

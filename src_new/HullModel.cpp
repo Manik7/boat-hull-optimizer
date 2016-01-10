@@ -25,7 +25,7 @@ void HullModel::output() /*const*/ {
 	
 	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
 	
-	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "sq_per.\t" <<"flare\t" << "deadrise" << std::endl;
+	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
 	
 	for (int stat_no=0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
@@ -36,17 +36,41 @@ void HullModel::output() /*const*/ {
 			<< std::to_string(Model::genome[3*stat_no + CHINE_X].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
-			<< properties.area << '\t' << properties.sq_perimeter << '\t'
+			<< properties.area << '\t' << properties.perimeter << '\t'
 			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
 	}
-	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << sqrt(sq_wetted_area)*4*pow(10,-6) << " m²\n" << std::endl;
+	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+}
+
+void HullModel::export_hull_coordinates(std::string filename) const {
+	std::ofstream datfile;
+	datfile.open("../../data/" + filename);
+	
+	if (datfile.is_open()) {
+	
+		datfile << "# Station x y z coordinates\n";
+		
+		int z_coord;
+		
+		for (int stat_no=0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
+			z_coord = station_parameters[stat_no].z_coord;
+			
+			datfile << "\n\nstation-" << z_coord << '\n';
+			datfile << 0 << ' ' << Model::genome[3*stat_no + KEEL_Y].second << ' ' << z_coord << '\n';
+			datfile << Model::genome[3*stat_no + CHINE_X].second << ' ' << Model::genome[3*stat_no + CHINE_Y].second << ' ' << z_coord << '\n';
+			datfile << station_parameters[stat_no].half_beam << ' ' << 0 << ' ' << z_coord << '\n';
+			datfile << 0 << ' ' << 0 << ' ' << z_coord << '\n';
+		}
+		
+		datfile.close();
+	} else std::cout << "Error opening file!\n";
 }
 
 double HullModel::compute_fitness() const
 {
 	StationProperties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
-	sq_wetted_area = 0.0;
+	wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
 	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
@@ -63,24 +87,23 @@ double HullModel::compute_fitness() const
 		
 // 		else if (i>0) { //TODO: uncommment this twist rate check
 // 			if(!twist_rate_ok(properties[i-1],properties[i])) {
-// 				constraints_ok = false;
 // 				return 0.0;
 // 			}
 // 		}
 		
 		//volume, WSA, moment to trim calcs
 		volume += properties[stat_no].area * hull_parameters.stationSpacing;
-		sq_wetted_area += properties[stat_no].sq_perimeter * hull_parameters.stationSpacing * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
+		wetted_area += properties[stat_no].perimeter * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
 		//TODO: moment_to_trim_1_deg
 	}
 		
 	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
 	volume -= (properties[0].area + properties[hull_parameters.numberOfStations-1].area) * hull_parameters.stationSpacing / 2;
-	sq_wetted_area -= (properties[0].sq_perimeter + properties[hull_parameters.numberOfStations-1].sq_perimeter) * hull_parameters.stationSpacing * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
+	wetted_area -= (properties[0].perimeter + properties[hull_parameters.numberOfStations-1].perimeter) * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
 	//TODO: moment_to_trim_1_deg
 
 	if (volume > hull_parameters.minVolume*pow(10,9)/4) {
-		return pow(10,12) / sq_wetted_area; //TODO: moment_to_trim_1_deg
+		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
 		return 0.0;
 	}

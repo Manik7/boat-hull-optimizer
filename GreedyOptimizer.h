@@ -27,8 +27,8 @@ public:
 	GreedyOptimizer(OptimizableType* model) : model(model), engine(std::mt19937(rd())),
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, model->numberOfParameters-1)), 
-		valueDistribution(std::uniform_int_distribution<int>(-1, 1)), 
-		coinFlipDistribution(std::bernoulli_distribution(0.9)), //adjust dice roll probability
+		valueDistribution(std::uniform_int_distribution<int>(-5, 5)), 
+		coinFlipDistribution(std::bernoulli_distribution(0.5)), //adjust dice roll probability
 		epsilon(0.00001) { }
 		
 	void run(int steps = 2) {
