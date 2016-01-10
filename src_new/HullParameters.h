@@ -3,9 +3,7 @@
 
 template<int NUMBER_OF_GENES>
 struct HullParameters
-{
-// 	HullParameters() : MIN_VOLUME(0.75), MAX_TWIST_RATE_DEG(20.0) {}
-	
+{	
 	static constexpr double minVolume = 0.75;
 	static constexpr double maxTwistRateDeg = 20.0;
 	static constexpr int halfLwl = 3500;

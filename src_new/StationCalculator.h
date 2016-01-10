@@ -23,8 +23,14 @@ struct StationCalculator {
 	StationProperties calculate_station_properties(T beam_x, T chine_x, T chine_y, T keel_y) const {
 		double area(chine_x * chine_y + ( (beam_x - chine_x) * chine_y + chine_x * (keel_y - chine_y) )/2.0);
 		double sq_perimeter(sq_edge_length(0, keel_y, chine_x, chine_y) + sq_edge_length(chine_x, chine_y, beam_x, 0));
-		double flare_deg(deg(atan( (beam_x-chine_x) / chine_y )));
-		double deadrise_deg(deg(atan( (keel_y - chine_y) / chine_x )));
+		
+// 		assert(chine_y>0);
+// 		double flare_deg(deg(atan( (beam_x-chine_x) / chine_y )));
+		double flare_deg((chine_y > 0) ? deg(atan( (beam_x-chine_x) / chine_y )) : 90.0);
+		
+// 		assert(chine_x>0);
+// 		double deadrise_deg(deg(atan( (keel_y - chine_y) / chine_x )));		
+		double deadrise_deg((chine_x > 0) ? deg(atan( (keel_y - chine_y) / chine_x )) : 0.0);
 		
 		return StationProperties(area, sq_perimeter, flare_deg, deadrise_deg);
 	}

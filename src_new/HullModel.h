@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
 
 #include "OptimizableModel.h"
 #include "StationCalculator.h"
@@ -34,7 +35,7 @@ private: //attributes
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
 	HullModel(std::pair< int, NumType > genome[]);
-	void output() const; //TODO: do file output here as well, and not just console output
+	void output() /*const*/; //TODO: do file output here as well, and not just console output
 	double compute_fitness() const; //compute and return the fitness value
 	
 protected: //methods	

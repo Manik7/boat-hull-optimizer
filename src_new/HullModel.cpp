@@ -5,23 +5,25 @@ HullModel::HullModel()
 {
 	WaterlineCurve wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl);
 	
-	for (int geneNo = 0; geneNo < numberOfGenes; ++geneNo) {
-		Model::genome[geneNo] = std::pair<int, NumType>(0, 0);
-		Model::set_parameter(geneNo, domainHi);
-	}
-	
 	int statZCoord;
 	for (int statNo = 0; statNo < hull_parameters.numberOfStations; ++statNo) {
 		//compute the beams of the stations and initialize the station_parameters with those
 		statZCoord = statNo*hull_parameters.stationSpacing;
 		station_parameters[statNo] = StationParameters(statZCoord, wl_curve.x_coordinate(wl_curve.find_t_for_z_coord(statZCoord)));
 	}
+	
+	for (int geneNo = 0; geneNo < numberOfGenes; ++geneNo) {
+		Model::genome[geneNo] = std::pair<int, NumType>(0, 0);
+		Model::set_parameter(geneNo, domainHi);
+	}
 }
 
 HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome), station_calculator(StationCalc(hull_parameters)) {}
 
-void HullModel::output() const {
+void HullModel::output() /*const*/ {
 	StationProperties properties;
+	
+	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
 	
 	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "sq_per.\t" <<"flare\t" << "deadrise" << std::endl;
 	
@@ -42,7 +44,6 @@ void HullModel::output() const {
 
 double HullModel::compute_fitness() const
 {
-	bool constraints_ok = true;
 	StationProperties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
 	sq_wetted_area = 0.0;
@@ -54,34 +55,32 @@ double HullModel::compute_fitness() const
 		
 		if (station_parameters[stat_no].deadrise_min > properties[stat_no].deadrise_deg || properties[stat_no].deadrise_deg > station_parameters[stat_no].deadrise_max) {
 			//deadrise NOT ok
-			constraints_ok = false;
-			break;
+			return 0.0;
 		} else if (station_parameters[stat_no].flare_min > properties[stat_no].flare_deg || properties[stat_no].flare_deg > station_parameters[stat_no].flare_max) {
 			// flare NOT ok
-			constraints_ok = false;
-			break;
+			return 0.0;
 		} 
 		
 // 		else if (i>0) { //TODO: uncommment this twist rate check
 // 			if(!twist_rate_ok(properties[i-1],properties[i])) {
 // 				constraints_ok = false;
-// 				break;
+// 				return 0.0;
 // 			}
 // 		}
 		
 		//volume, WSA, moment to trim calcs
 		volume += properties[stat_no].area * hull_parameters.stationSpacing;
-		sq_wetted_area += properties[stat_no].sq_perimeter * hull_parameters.stationSpacing;
+		sq_wetted_area += properties[stat_no].sq_perimeter * hull_parameters.stationSpacing * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
 		//TODO: moment_to_trim_1_deg
 	}
 		
-	if(constraints_ok) {
-		// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
-		volume -= hull_parameters.stationSpacing * (properties[0].area + properties[hull_parameters.numberOfStations-1].area) / 2;
-		sq_wetted_area -= hull_parameters.stationSpacing * (properties[0].sq_perimeter + properties[hull_parameters.numberOfStations-1].sq_perimeter) / 2;	
-		//TODO: moment_to_trim_1_deg
-		
-		return sq_wetted_area; //TODO: moment_to_trim_1_deg
+	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
+	volume -= (properties[0].area + properties[hull_parameters.numberOfStations-1].area) * hull_parameters.stationSpacing / 2;
+	sq_wetted_area -= (properties[0].sq_perimeter + properties[hull_parameters.numberOfStations-1].sq_perimeter) * hull_parameters.stationSpacing * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
+	//TODO: moment_to_trim_1_deg
+
+	if (volume > hull_parameters.minVolume*pow(10,9)/4) {
+		return pow(10,12) / sq_wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
 		return 0.0;
 	}

@@ -36,12 +36,12 @@ public:
 	void crossover(OptimizableModel& partner, OptimizableModel& child); //TODO: Figure out the signature with the best performance
 	void mutate();
 	
-	virtual void output() const=0;
+	virtual void output() /*const*/=0;
 	
-	// TODO: set_parameter always updates the fitness, meaning many useless calculations if multiple parameters are changed 'at once'
 	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
 		genome[index].first = domain_value;
 		genome[index].second = (get_range_max(index) - get_range_min(index)) * NumType(domain_value - domainLo) / (domainHi-domainLo) + get_range_min(index);
+		isFitnessUpdated = false;
 	}
 	
 	inline NumType get_parameter(int index) const {

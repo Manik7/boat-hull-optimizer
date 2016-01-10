@@ -28,7 +28,7 @@ public:
 #endif
 		indexDistribution(std::uniform_int_distribution<int>(0, Model::numberOfGenes-1)), 
 		valueDistribution(std::uniform_int_distribution<int>(-5, 5)), 
-		coinFlipDistribution(std::bernoulli_distribution(0.9)) //adjust probability of accepting worse fitness
+		coinFlipDistribution(std::bernoulli_distribution(0.5)) //adjust probability of accepting worse fitness
 		{ }
 	
 	void run(int steps = 2) {
@@ -61,7 +61,7 @@ public:
 		}
 		
 		// decide whether or not to keep the new value
-		if(model->fitness() > 0.0+epsilon && ( (model->fitness() < oldFitness-epsilon) || coinFlipDistribution(engine))) {
+		if(model->fitness() > 0.0+epsilon && ( (model->fitness() > oldFitness-epsilon) || coinFlipDistribution(engine))) {
 			// keep new solution if valid AND either:
 				// (a) is fitter or 
 				// (b) you won the dice roll
