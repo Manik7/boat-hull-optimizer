@@ -37,7 +37,7 @@ void HullModel::output() /*const*/ {
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
 			<< properties.area << '\t' << properties.perimeter << '\t'
-			<< properties.flare_deg << '\t' << properties.deadrise_deg << std::endl;
+			<< deg(properties.flare_rad) << '\t' << deg(properties.deadrise_rad) << std::endl;
 	}
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
@@ -77,10 +77,10 @@ double HullModel::compute_fitness() const
 		
 		properties[stat_no] = StationProperties(calculate_station_properties(stat_no));
 		
-		if (station_parameters[stat_no].deadrise_min > properties[stat_no].deadrise_deg || properties[stat_no].deadrise_deg > station_parameters[stat_no].deadrise_max) {
+		if (station_parameters[stat_no].deadrise_min_rad > properties[stat_no].deadrise_rad || properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
 			//deadrise NOT ok
 			return 0.0;
-		} else if (station_parameters[stat_no].flare_min > properties[stat_no].flare_deg || properties[stat_no].flare_deg > station_parameters[stat_no].flare_max) {
+		} else if (station_parameters[stat_no].flare_min_rad > properties[stat_no].flare_rad || properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
 			// flare NOT ok
 			return 0.0;
 		} 

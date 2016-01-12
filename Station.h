@@ -43,6 +43,10 @@ private:
 	int sq_edge_length(Point_3 a, Point_3 b) const;
 	bool points_in_bbox() const;
 	void update();
+	
+	static constexpr double deg(double rad) {
+		return rad/3.14159265*180.0;
+	}
 
 public:
 	Bbox bbox() const;

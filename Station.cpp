@@ -121,7 +121,7 @@ bool Station::points_in_bbox() const //TODO: Only needed for the initialization 
 }
 
 bool Station::satisfies_constraints() const { // TODO: points_in_bbox can be removed here, only needed for initialization of the hull
-	if (flare_angle_deg() >= constraints_.flare_min && flare_angle_deg() < constraints_.flare_max && deadrise_angle_deg() >= constraints_.deadrise_min && deadrise_angle_deg() < constraints_.deadrise_max) { 
+	if (flare_angle_deg() >= deg(constraints_.flare_min_rad) && flare_angle_deg() < deg(constraints_.flare_max_rad) && deadrise_angle_deg() >= deg(constraints_.deadrise_min_rad) && deadrise_angle_deg() < deg(constraints_.deadrise_max_rad)) { 
 		return true;
 	} else return false;
 }

@@ -9,11 +9,11 @@ void old_alg(int);
 void new_alg(int);
 
 int main () {
-	old_alg(1000*1000);
+// 	old_alg(10*1000*1000);
 	
 	std::cout << "NEW ALGORITHM\n" << std::endl;
 	
- 	new_alg(1000*1000);
+ 	new_alg(10*1000*1000);
 }
 
 void old_alg(int runs = 5) {

@@ -27,13 +27,15 @@ struct StationCalculator {
 		
 // 		assert(chine_y>0);
 // 		double flare_deg(deg(atan( (beam_x-chine_x) / chine_y )));
-		double flare_deg((chine_y > 0) ? deg(atan( (beam_x-chine_x) / chine_y )) : 90.0);
+// 		double flare_deg((chine_y > 0) ? deg(atan( (beam_x-chine_x) / chine_y )) : 90.0);
+		double flare_rad(atan2(beam_x-chine_x, chine_y));
 		
 // 		assert(chine_x>0);
 // 		double deadrise_deg(deg(atan( (keel_y - chine_y) / chine_x )));		
-		double deadrise_deg((chine_x > 0) ? deg(atan( (keel_y - chine_y) / chine_x )) : 0.0);
+// 		double deadrise_deg((chine_x > 0) ? deg(atan( (keel_y - chine_y) / chine_x )) : 0.0);
+		double deadrise_rad(atan2(keel_y - chine_y, chine_x));
 		
-		return StationProperties(area, perimeter, flare_deg, deadrise_deg);
+		return StationProperties(area, perimeter, flare_rad, deadrise_rad);
 	}
 	
 private:
@@ -43,10 +45,6 @@ private:
 	
 	inline double edge_length(int a_x, int a_y, int b_x, int b_y) const {
 		return sqrt(sq_edge_length(a_x, a_y, b_x, b_y));
-	}
-	
-	inline double deg(double rad) const {
-		return rad/3.14159265*180.0;
 	}
 };
 

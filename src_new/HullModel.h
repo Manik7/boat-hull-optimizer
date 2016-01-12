@@ -68,14 +68,18 @@ private: //methods
 	}
 	
 	inline bool twist_rate_ok(StationProperties& first, StationProperties& second) const {
-		return second.flare_deg < first.flare_deg + hull_parameters.maxTwistRateDeg 
-			&& second.deadrise_deg < first.deadrise_deg + hull_parameters.maxTwistRateDeg; 
+		return second.flare_rad < first.flare_rad + hull_parameters.maxTwistRateDeg 
+			&& second.deadrise_rad < first.deadrise_rad + hull_parameters.maxTwistRateDeg; 
 			
 		/* NOTE: You do not check for an increasing panel twist here, meaning that 
 		* decreasing flare & deadrise angles are possible. Furthermore, if the angles 
 		* are decreasing, then that decrease is not limited to maxTwistRateDeg so 
 		* it is hoped that the hulls will simply optimize such cases away.
 		*/
+	}
+	
+	inline double deg(double rad) const {
+		return rad/3.14159265*180.0;
 	}
 };
 
