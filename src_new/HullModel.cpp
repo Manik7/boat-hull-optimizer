@@ -66,7 +66,7 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 	} else std::cout << "Error opening file!\n";
 }
 
-double HullModel::compute_fitness() const
+double HullModel::compute_fitness() /*const*/
 {
 	StationProperties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
@@ -87,6 +87,7 @@ double HullModel::compute_fitness() const
 		
 // 		else if (i>0) { //TODO: uncommment this twist rate check
 // 			if(!twist_rate_ok(properties[i-1],properties[i])) {
+// 				//twist-rate NOT ok
 // 				return 0.0;
 // 			}
 // 		}
@@ -102,7 +103,7 @@ double HullModel::compute_fitness() const
 	wetted_area -= (properties[0].perimeter + properties[hull_parameters.numberOfStations-1].perimeter) * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
 	//TODO: moment_to_trim_1_deg
 
-	if (volume > hull_parameters.minVolume*pow(10,9)/4) {
+	if (volume > hull_parameters.minVolume) {
 		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
 		return 0.0;

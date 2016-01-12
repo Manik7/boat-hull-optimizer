@@ -68,6 +68,7 @@ public:
 		} else {
 			model->set_parameter(index, oldValue); //revert
 		}
+		model->station_calculator.increment_iteration_no();
 	}
 };
 

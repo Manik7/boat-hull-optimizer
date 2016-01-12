@@ -53,7 +53,7 @@ protected:
 	 * or updates the values first and then returns it if changes have been made. You'd need a simple
 	 * flag such as 'isUpToDate' which you set to false every time set_parameter is called.
 	 */
-	virtual double compute_fitness() const=0; //compute the fitness value
+	virtual double compute_fitness() /*const*/=0; //compute the fitness value
 	
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 
