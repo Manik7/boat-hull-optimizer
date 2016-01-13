@@ -20,13 +20,13 @@ class MemoizedStationCalculator : public StationCalculator<CoordType, HullParame
 // 	using Key = InputParameters; 
 	using Key = int; 
 	using T = std::pair<StationProperties, int>;
-	std::unordered_map<Key, T> map; //TODO: fix the size of the map to some constant size
+	mutable std::unordered_map<Key, T> map; //TODO: fix the size of the map to some constant size
 	
 	static constexpr int target_map_size = 1000;
 	static constexpr int insertions_until_cleanup = 100; //the number of insertions which can be performed before cleanup is invoked
 	static constexpr int maximum_allowed_age = 3;
-	int insertion_counter = 0; // increment this value every time a new station is added to the map
-	int iteration_no = 0; //the current iteration i.e. time step
+	mutable int insertion_counter = 0; // increment this value every time a new station is added to the map
+	mutable int iteration_no = 0; //the current iteration i.e. time step
 	
 public:
 	
@@ -37,7 +37,7 @@ public:
 	/*if element in map, return StationProperties and set its last access time to the current iteration. 
 	 *If element not in map, calculate it, and insert it into the map (with current iteration as last 
 	 * access time)*/
-	StationProperties calculate_station_properties(int beam_x, int chine_x, int chine_y, int keel_y)
+	StationProperties calculate_station_properties(int beam_x, int chine_x, int chine_y, int keel_y) const
 	{
 		/* NOTE: map[] creates a new entry with that key (and a default-constructed 'value') 
 		* if the element is not in the map. Question: is it possible to get the 
@@ -88,7 +88,7 @@ private:
 	 * removed element is to be older than maximum_allowed_age. What if this latter constraint is 
 	 * impossible to meet? This could happen if all the stations in the map are really new for
 	 * instance. Remember to exempt the map from cleanup during its initial populating of the map.*/
-	void cleanup() 
+	void cleanup() const
 	{
 		//auto should be: unordered_map<Key,T>::iterator
 		for (auto it = map.begin(); insertion_counter > 0 && it != map.end(); ++it) {

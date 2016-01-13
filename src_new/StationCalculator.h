@@ -20,7 +20,7 @@ struct StationCalculator {
 	StationCalculator(HullParameters& hullparam) : hull_parameters(hullparam) {}
 	
 	// public methods	
-	virtual StationProperties calculate_station_properties(CoordType beam_x, CoordType chine_x, CoordType chine_y, CoordType keel_y) /*const*/ {
+	virtual StationProperties calculate_station_properties(CoordType beam_x, CoordType chine_x, CoordType chine_y, CoordType keel_y) const {
 		double area(chine_x * chine_y + ( (beam_x - chine_x) * chine_y + chine_x * (keel_y - chine_y) )/2.0);
 		double perimeter(edge_length(0, keel_y, chine_x, chine_y) + edge_length(chine_x, chine_y, beam_x, 0));
 // 		double sq_perimeter(sq_edge_length(0, keel_y, chine_x, chine_y) + edge_length(chine_x, chine_y, beam_x, 0));

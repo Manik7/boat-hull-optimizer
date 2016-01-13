@@ -7,7 +7,7 @@
 #include <fstream>
 
 #include "OptimizableModel.h"
-#include "MemoizedStationCalculator.h"
+#include "StationCalculator.h"
 #include "../StationParameters.h"
 #include "../Bbox.h"
 #include "HullParameters.h"
@@ -18,7 +18,7 @@ class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAI
 {
 	
 	using Model = OptimizableModel;//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
-	using StationCalc = MemoizedStationCalculator<int, HullParameters<numberOfGenes> >;
+	using StationCalc = StationCalculator<int, HullParameters<numberOfGenes> >;
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
@@ -26,7 +26,7 @@ public: //attributes
 	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[numberOfGenes/3]; 
 	HullParameters<numberOfGenes> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	MemoizedStationCalculator<int, HullParameters<numberOfGenes> > station_calculator;
+	StationCalculator<int, HullParameters<numberOfGenes> > station_calculator;
 	
 private: //attributes
 	mutable double volume = 0.0;
@@ -38,7 +38,7 @@ public: //methods
 	HullModel(std::pair< int, NumType > genome[]);
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
 	void export_hull_coordinates(std::string filename) const;
-	double compute_fitness(); //compute and return the fitness value
+	double compute_fitness() const; //compute and return the fitness value
 	
 protected: //methods	
 	/*TODO: as a performance improvement, you might be able to do with with a template parameter 
@@ -60,7 +60,7 @@ protected: //methods
 private: //methods
 	void flare_angle_deg();
 	
-	inline StationProperties calculate_station_properties(int station_index) /*const*/ {
+	inline StationProperties calculate_station_properties(int station_index) const {
 		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, 
 									Model::genome[3*station_index+CHINE_X].second, 
 									Model::genome[3*station_index+CHINE_Y].second, 

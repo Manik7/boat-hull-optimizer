@@ -66,7 +66,7 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 	} else std::cout << "Error opening file!\n";
 }
 
-double HullModel::compute_fitness() /*const*/
+double HullModel::compute_fitness() const
 {
 	StationProperties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
