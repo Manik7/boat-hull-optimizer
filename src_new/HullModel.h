@@ -8,11 +8,13 @@
 
 #include "OptimizableModel.h"
 #include "StationCalculator.h"
+#include "../WaterlineCurve.h"
 #include "../StationParameters.h"
 #include "../Bbox.h"
 #include "HullParameters.h"
 
-//TODO: change this template parameter to be the number of stations, and simply compute the number of genes from there. 
+//TODO: change this template parameter to be the number of stations
+
 // template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> 
 {

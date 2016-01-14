@@ -6,7 +6,7 @@
 
 #include "StationProperties.h"
 #include "HullParameters.h"
-#include "../WaterlineCurve.h"
+// #include "../WaterlineCurve.h"
 
 //TODO: Make the hull_parameters into template parameters to clean the code up a bit (?)
 
