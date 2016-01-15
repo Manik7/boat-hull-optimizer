@@ -1,7 +1,7 @@
 #include "HullModel.h"
 
 HullModel::HullModel() 
-	: station_parameters(), hull_parameters(HullParameters<numberOfGenes>()), station_calculator(StationCalc(hull_parameters))
+	: station_parameters(), hull_parameters(HullParameters<numberOfGenes>())
 {
 	WaterlineCurve wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl);
 	
@@ -18,10 +18,10 @@ HullModel::HullModel()
 	}
 }
 
-HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome), station_calculator(StationCalc(hull_parameters)) {}
+HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome) {}
 
 void HullModel::output() /*const*/ {
-	StationProperties properties;
+	Station_properties properties;
 	
 	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
 	
@@ -68,14 +68,14 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 
 double HullModel::compute_fitness() const
 {
-	StationProperties properties[hull_parameters.numberOfStations];
+	Station_properties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
 	wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
 	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
-		properties[stat_no] = StationProperties(calculate_station_properties(stat_no));
+		properties[stat_no] = calculate_station_properties(stat_no);
 		
 		if (station_parameters[stat_no].deadrise_min_rad > properties[stat_no].deadrise_rad || properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
 			//deadrise NOT ok

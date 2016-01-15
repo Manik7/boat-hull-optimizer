@@ -7,18 +7,20 @@
 #include <fstream>
 
 #include "OptimizableModel.h"
-#include "StationCalculator.h"
+// #include "StationCalculator.h"
+#include "SharedStationProperties.h"
+#include "../WaterlineCurve.h"
 #include "../StationParameters.h"
 #include "../Bbox.h"
 #include "HullParameters.h"
 
-//TODO: change this template parameter to be the number of stations, and simply compute the number of genes from there. 
+//TODO: change this template parameter to be the number of stations
+
 // template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> 
 {
-	
+	using Station_properties = SharedStationProperties<int>;
 	using Model = OptimizableModel;//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
-	using StationCalc = StationCalculator<int, HullParameters<numberOfGenes> >;
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
@@ -26,7 +28,6 @@ public: //attributes
 	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[numberOfGenes/3]; 
 	HullParameters<numberOfGenes> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	StationCalculator<int, HullParameters<numberOfGenes> > station_calculator;
 	
 private: //attributes
 	mutable double volume = 0.0;
@@ -60,14 +61,14 @@ protected: //methods
 private: //methods
 	void flare_angle_deg();
 	
-	inline StationProperties calculate_station_properties(int station_index) const {
-		return station_calculator.calculate_station_properties(station_parameters[station_index].half_beam, 
-									Model::genome[3*station_index+CHINE_X].second, 
-									Model::genome[3*station_index+CHINE_Y].second, 
-									Model::genome[3*station_index+KEEL_Y].second);
+	inline Station_properties calculate_station_properties(int station_index) const {
+		return Station_properties(station_parameters[station_index].half_beam, 
+					Model::genome[3*station_index+CHINE_X].second, 
+					Model::genome[3*station_index+CHINE_Y].second, 
+					Model::genome[3*station_index+KEEL_Y].second);
 	}
 	
-	inline bool twist_rate_ok(StationProperties& first, StationProperties& second) const {
+	inline bool twist_rate_ok(Station_properties& first, Station_properties& second) const {
 		return second.flare_rad < first.flare_rad + hull_parameters.maxTwistRateRad 
 			&& second.deadrise_rad < first.deadrise_rad + hull_parameters.maxTwistRateRad; 
 			
