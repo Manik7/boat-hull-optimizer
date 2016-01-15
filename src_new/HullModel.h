@@ -58,9 +58,7 @@ protected: //methods
 		}
 	}
 
-private: //methods
-	void flare_angle_deg();
-	
+private: //methods	
 	inline Station_properties calculate_station_properties(int station_index) const {
 		return Station_properties(station_parameters[station_index].half_beam, 
 					Model::genome[3*station_index+CHINE_X].second, 
