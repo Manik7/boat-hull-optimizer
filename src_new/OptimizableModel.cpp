@@ -44,12 +44,12 @@ double OptimizableModel::fitness() {
 	}
 }
 
-void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& child)
+int OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& child)
 {
 	int crossover_point = indexDistribution(engine);
 	
 	int i = 0;
-	for ( ; i < crossover_point && i < numberOfGenes; ++i) { //this one's genes are copied
+	for ( ; i <= crossover_point && i < numberOfGenes; ++i) { //this one's genes are copied
 		child.genome[i] = genome[i];
 	}
 	for ( ; i < numberOfGenes; ++i) { //partner's gene are copied
@@ -65,14 +65,19 @@ void OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& ch
 // 		}
 // 	}
 	child.isFitnessUpdated = false;
+	return crossover_point;
 }
 
+
 //TODO: set this to do mutations by adding a normally-distributed delta ontop of the current value
-void OptimizableModel::mutate()
-{
-	for (int i = 0; i < numberOfGenes; ++i) {
-		if (coinFlipDistribution(engine)) { // choose if parameter is to mutate
-			set_parameter(i, valueDistribution(engine)); // get a random value for the parameter
-		}
-	}
-}
+/*TODO: BUG: You have to return the index of the mutated parameter, so you can update your 
+ * station_properties in the HullModel. You can modify at most one gene then, and return its index. 
+ */
+// void OptimizableModel::mutate()
+// {
+// 	for (int i = 0; i < numberOfGenes; ++i) {
+// 		if (coinFlipDistribution(engine)) { // choose if parameter is to mutate
+// 			set_parameter(i, valueDistribution(engine)); // get a random value for the parameter
+// 		}
+// 	}
+// }

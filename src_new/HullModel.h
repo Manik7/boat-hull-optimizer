@@ -28,19 +28,25 @@ public: //attributes
 	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[numberOfGenes/3];
 	static constexpr HullParameters<numberOfGenes> hull_parameters = HullParameters<numberOfGenes>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-	mutable Station_properties properties[numberOfGenes/3];
+	mutable Station_properties station_properties[numberOfGenes/3];
+	bool station_properties_updated[numberOfGenes/3] = {false};
 	
 private: //attributes
-	mutable double volume = 0.0;
-	mutable double wetted_area = 0.0;
-	mutable double moment_to_trim_1_deg = 0.0;
+	double volume = 0.0;
+	double wetted_area = 0.0;
+	double moment_to_trim_1_deg = 0.0;
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
 	HullModel(std::pair< int, NumType > genome[]);
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
 	void export_hull_coordinates(std::string filename) const;
-	double compute_fitness() const; //compute and return the fitness value
+	double compute_fitness(); //compute and return the fitness value //TODO: merge this with the fitness() function of the superclass???
+	
+	inline void set_parameter(int gene_index, int domain_value) {
+		station_properties_updated[gene_index/3] = false;
+		Optimizable_model::set_parameter(gene_index, domain_value);
+	}
 	
 protected: //methods	
 	/*TODO: as a performance improvement, you might be able to do with with a template parameter 
@@ -60,7 +66,8 @@ protected: //methods
 	}
 
 private: //methods	
-	inline Station_properties calculate_station_properties(int station_index) const {
+	inline Station_properties calculate_station_properties(int station_index) {
+		station_properties_updated[station_index] = true;
 		return Station_properties(station_parameters[station_index].half_beam, 
 					Model::genome[3*station_index+CHINE_X].second, 
 					Model::genome[3*station_index+CHINE_Y].second, 

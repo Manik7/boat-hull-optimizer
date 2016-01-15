@@ -33,14 +33,18 @@ public:
 	OptimizableModel();
 	OptimizableModel(std::pair< int, NumType > genes[]);
 	
-	void crossover(OptimizableModel& partner, OptimizableModel& child); //TODO: Figure out the signature with the best performance
-	void mutate();
+	/* Overwrites the 'child' object with a newly created Hull. Returns the 
+	 * crossover point, i.e. the highest gene index taken from this parent. 
+	 * A crossover-point of 1 would mean the first two genes came from this 
+	 * parent, the rest from the partner.*/
+	virtual int crossover(OptimizableModel& partner, OptimizableModel& child); 
+// 	virtual void mutate();
 	
 	virtual void output() /*const*/=0;
 	
-	inline void set_parameter(int index, int domain_value) { // Sets the domain value & updates the fitness 
-		genome[index].first = domain_value;
-		genome[index].second = (get_range_max(index) - get_range_min(index)) * NumType(domain_value - domainLo) / (domainHi-domainLo) + get_range_min(index);
+	virtual inline void set_parameter(int gene_index, int domain_value) { // Sets the domain value & updates the fitness 
+		genome[gene_index].first = domain_value;
+		genome[gene_index].second = (get_range_max(gene_index) - get_range_min(gene_index)) * NumType(domain_value - domainLo) / (domainHi-domainLo) + get_range_min(gene_index);
 		isFitnessUpdated = false;
 	}
 	
@@ -53,7 +57,7 @@ protected:
 	 * or updates the values first and then returns it if changes have been made. You'd need a simple
 	 * flag such as 'isUpToDate' which you set to false every time set_parameter is called.
 	 */
-	virtual double compute_fitness() const=0; //compute the fitness value
+	virtual double compute_fitness()=0; //compute the fitness value
 	
 	/*TODO: as a performance improvement, you might be able to do with with 
 	 * a template parameter to encourage to compiler to precompile one version 

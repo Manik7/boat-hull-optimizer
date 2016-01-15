@@ -66,7 +66,7 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 	} else std::cout << "Error opening file!\n";
 }
 
-double HullModel::compute_fitness() const
+double HullModel::compute_fitness()
 {
 // 	Station_properties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
@@ -75,12 +75,15 @@ double HullModel::compute_fitness() const
 	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
-		properties[stat_no] = Station_properties(calculate_station_properties(stat_no));
+		if(!station_properties_updated[stat_no]) {
+			station_properties[stat_no] = Station_properties(calculate_station_properties(stat_no));
+			station_properties_updated[stat_no] = true;
+		}
 		
-		if (station_parameters[stat_no].deadrise_min_rad > properties[stat_no].deadrise_rad || properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
+		if (station_parameters[stat_no].deadrise_min_rad > station_properties[stat_no].deadrise_rad || station_properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
 			//deadrise NOT ok
 			return 0.0;
-		} else if (station_parameters[stat_no].flare_min_rad > properties[stat_no].flare_rad || properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
+		} else if (station_parameters[stat_no].flare_min_rad > station_properties[stat_no].flare_rad || station_properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
 			// flare NOT ok
 			return 0.0;
 		} 
@@ -93,14 +96,14 @@ double HullModel::compute_fitness() const
 // 		}
 		
 		//volume, WSA, moment to trim calcs
-		volume += properties[stat_no].area * hull_parameters.stationSpacing;
-		wetted_area += properties[stat_no].perimeter * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
+		volume += station_properties[stat_no].area * hull_parameters.stationSpacing;
+		wetted_area += station_properties[stat_no].perimeter * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
 		//TODO: moment_to_trim_1_deg
 	}
 		
 	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
-	volume -= (properties[0].area + properties[hull_parameters.numberOfStations-1].area) * hull_parameters.stationSpacing / 2;
-	wetted_area -= (properties[0].perimeter + properties[hull_parameters.numberOfStations-1].perimeter) * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
+	volume -= (station_properties[0].area + station_properties[hull_parameters.numberOfStations-1].area) * hull_parameters.stationSpacing / 2;
+	wetted_area -= (station_properties[0].perimeter + station_properties[hull_parameters.numberOfStations-1].perimeter) * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
 	//TODO: moment_to_trim_1_deg
 
 	if (volume > hull_parameters.minVolume) {
