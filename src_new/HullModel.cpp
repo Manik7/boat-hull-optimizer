@@ -92,16 +92,19 @@ double HullModel::compute_fitness()
 // 		}
 		
 		//volume, WSA, moment to trim calcs
-		volume += station_properties[stat_no].area * hull_parameters.stationSpacing;
-		wetted_area += station_properties[stat_no].perimeter * hull_parameters.stationSpacing; //The stationSpacing must be squared as well for this to be the sq_WSA
+		volume += station_properties[stat_no].area;
+		wetted_area += station_properties[stat_no].perimeter; //The stationSpacing must be squared as well for this to be the sq_WSA
 		//TODO: moment_to_trim_1_deg
 	}
 		
 	// Subtract 1/2 the station spacing's worth of volume and area for the first and last station respectively
-	volume -= (station_properties[0].area + station_properties[hull_parameters.numberOfStations-1].area) * hull_parameters.stationSpacing / 2;
-	wetted_area -= (station_properties[0].perimeter + station_properties[hull_parameters.numberOfStations-1].perimeter) * hull_parameters.stationSpacing / 2; //TODO: The equation in this line is potentially incorrect
+	volume -= (station_properties[0].area + station_properties[hull_parameters.numberOfStations-1].area) / 2;
+	wetted_area -= (station_properties[0].perimeter + station_properties[hull_parameters.numberOfStations-1].perimeter) / 2;
 	//TODO: moment_to_trim_1_deg
 
+	volume *= hull_parameters.stationSpacing;
+	wetted_area *= hull_parameters.stationSpacing;
+	
 	if (volume > hull_parameters.minVolume) {
 		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
 	} else {
