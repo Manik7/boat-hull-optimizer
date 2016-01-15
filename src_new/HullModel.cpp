@@ -21,25 +21,23 @@ HullModel::HullModel()
 HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome) {}
 
 void HullModel::output() /*const*/ {
-	Station_properties properties;
-	
-	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
-	
 	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
 	
 	for (int stat_no=0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
-		properties = this->calculate_station_properties(stat_no);
+		station_properties[stat_no] = this->calculate_station_properties(stat_no); //force recalculation of the station properties just to be sure they are accurate
 		
 		std::cout << station_parameters[stat_no].z_coord << '\t' 
 			<< station_parameters[stat_no].half_beam << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_X].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
-			<< properties.area << '\t' << properties.perimeter << '\t'
-			<< deg(properties.flare_rad) << '\t' << deg(properties.deadrise_rad) << std::endl;
+			<< station_properties.area << '\t' << station_properties.perimeter << '\t'
+			<< deg(station_properties.flare_rad) << '\t' << deg(station_properties.deadrise_rad) << std::endl;
 	}
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+	isFitnessUpdated = false; //force fitness recalculation, just in case
+	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
 }
 
 void HullModel::export_hull_coordinates(std::string filename) const {
