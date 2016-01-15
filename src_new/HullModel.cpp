@@ -32,12 +32,11 @@ void HullModel::output() /*const*/ {
 			<< std::to_string(Model::genome[3*stat_no + CHINE_X].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
-			<< station_properties.area << '\t' << station_properties.perimeter << '\t'
-			<< deg(station_properties.flare_rad) << '\t' << deg(station_properties.deadrise_rad) << std::endl;
+			<< station_properties[stat_no].area << '\t' << station_properties[stat_no].perimeter << '\t'
+			<< deg(station_properties[stat_no].flare_rad) << '\t' << deg(station_properties[stat_no].deadrise_rad) << std::endl;
 	}
+	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
 	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
-	isFitnessUpdated = false; //force fitness recalculation, just in case
-	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl;
 }
 
 void HullModel::export_hull_coordinates(std::string filename) const {
