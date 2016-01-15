@@ -68,7 +68,6 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 
 double HullModel::compute_fitness()
 {
-// 	Station_properties properties[hull_parameters.numberOfStations];
 	volume = 0.0;
 	wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
