@@ -21,7 +21,6 @@ class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAI
 {
 	using Station_properties = SharedStationProperties<int>;
 	using Model = OptimizableModel;//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
-// 	using StationCalc = StationCalculator<int, HullParameters<numberOfGenes> >;
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
@@ -29,7 +28,6 @@ public: //attributes
 	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[numberOfGenes/3]; 
 	HullParameters<numberOfGenes> hull_parameters; //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
-// 	StationCalculator<int, HullParameters<numberOfGenes> > station_calculator;
 	
 private: //attributes
 	mutable double volume = 0.0;
