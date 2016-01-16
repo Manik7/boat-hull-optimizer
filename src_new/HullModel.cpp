@@ -35,8 +35,10 @@ void HullModel::output() /*const*/ {
 			<< station_properties[stat_no].area << '\t' << station_properties[stat_no].perimeter << '\t'
 			<< deg(station_properties[stat_no].flare_rad) << '\t' << deg(station_properties[stat_no].deadrise_rad) << std::endl;
 	}
+	
+	std::cout << "Properties of complete hull" << std::endl;
 	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
-	std::cout << "Properties of complete hull" << std::endl << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+	std::cout << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
 
 void HullModel::export_hull_coordinates(std::string filename) const {
