@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "../Optimizer.h"
+#include "Optimizer.h"
 #include "OptimizableModel.h"
 
 template <typename OptimizableModel >

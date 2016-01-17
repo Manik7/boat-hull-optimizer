@@ -7,11 +7,9 @@
 #include <fstream>
 
 #include "OptimizableModel.h"
-// #include "StationCalculator.h"
 #include "SharedStationProperties.h"
-#include "../WaterlineCurve.h"
-#include "../StationParameters.h"
-#include "../Bbox.h"
+#include "WaterlineCurve.h"
+#include "StationParameters.h"
 #include "HullParameters.h"
 
 //TODO: change this template parameter to be the number of stations
