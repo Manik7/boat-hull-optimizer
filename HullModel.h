@@ -23,7 +23,6 @@ class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAI
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
 	
-	//TODO should be static const, or maybe it's easier if you make them static constexpr
 	StationParameters station_parameters[numberOfGenes/3];
 	static constexpr HullParameters<numberOfGenes> hull_parameters = HullParameters<numberOfGenes>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
 	mutable Station_properties station_properties[numberOfGenes/3];
