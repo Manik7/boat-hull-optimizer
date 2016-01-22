@@ -32,7 +32,7 @@ private:
 	std::bernoulli_distribution coinFlipDistribution;
 	
 	//Attributes
-	ModelType hulls[population_size];
+	ModelType population[population_size];
 	unsigned int current_iteration_number = 0;
 	
 public:
@@ -40,19 +40,19 @@ public:
 	
 	
 	/*   I. Selection: Stochasitc acceptance to determine set of parents
-		 * 
-		 *  II. Crossover & Mutation:
-		 * 	Iterate over parents (check birthdays to be make sure 
-		 * 	they haven't been overwritten by an infant, if they 
-		 * 	have, that's too bad, take the next parent from the list),
-		 * 	and do a crossover. For the crossover, select 1 (or 2)
-		 * 	random members of the population to be overwritten, but 
-		 *	ensure that infants are never chosen a victims (check age).
-		 * 
-		 * III. Fitness evaluation:
-		 * 	Iterate over the population to determine each fitness value
-		 * 	and the total fitness. 
-		 */
+	 * 
+	 *  II. Crossover & Mutation:
+	 * 	Iterate over parents (check birthdays to be make sure 
+	 * 	they haven't been overwritten by an infant, if they 
+	 * 	have, that's too bad, take the next parent from the list),
+	 * 	and do a crossover. For the crossover, select 1 (or 2)
+	 * 	random members of the population to be overwritten, but 
+	 *	ensure that infants are never chosen a victims (check age).
+	 * 
+	 * III. Fitness evaluation:
+	 * 	Iterate over the population to determine each fitness value
+	 * 	and the total fitness. 
+	 */
 	void do_step() {
 		
 		
