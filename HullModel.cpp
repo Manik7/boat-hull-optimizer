@@ -18,7 +18,7 @@ HullModel::HullModel()
 	}
 }
 
-HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome) {}
+HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[], std::mt19937 engine): OptimizableModel(genome, engine) {}
 
 HullModel::HullModel(std::mt19937 engine): OptimizableModel(engine)
 {}

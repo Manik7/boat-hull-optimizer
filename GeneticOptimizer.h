@@ -9,6 +9,15 @@
 #include "Optimizer.h"
 #include "HullModel.h"
 
+template<typename ModelType>
+struct Individual {
+	ModelType model;
+	int birthday = 0;
+	
+	Individual() : model(ModelType()) {}
+	Individual(ModelType model) : model(model){}
+};
+
 // template <typename OptimizableModel >
 class GeneticOptimizer : public Optimizer {
 	
@@ -35,7 +44,7 @@ private:
 	std::bernoulli_distribution coinFlipDistribution;
 	
 	//Attributes
-	std::pair<ModelType, int> population[population_size];
+	Individual<ModelType> population[population_size];
 	unsigned int current_generation = 0;
 	
 	static constexpr int number_of_crossovers = population_size/10;
@@ -56,7 +65,7 @@ public:
 		coinFlipDistribution(std::bernoulli_distribution(0.5)) //adjust probability of accepting worse fitness
 	{ 
 		for (int i = 0; i<population_size; ++i) {
-			population[i] = std::make_pair(ModelType(engine), 0);
+			population[i] = Individual<ModelType>(ModelType(engine));
 		}
 	}
 	
@@ -88,7 +97,7 @@ public:
 			//select first parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= 100.*population[index].first.fitness()/population_total_fitness && population[index].second != current_generation) {
+				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation) {
 					first_parent_idx = index;
 					break;
 				}
@@ -97,7 +106,7 @@ public:
 			//select second parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= 100.*population[index].first.fitness()/population_total_fitness && population[index].second != current_generation && index != first_parent_idx) {
+				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
 					second_parent_idx = index;
 					break;
 				}
@@ -106,22 +115,22 @@ public:
 			//select first child
 			while(true) {
 				index = individualDistribution(engine);
-				if(population[index].second != current_generation && index != first_parent_idx && index != second_parent_idx) {
+				if(population[index].birthday != current_generation && index != first_parent_idx && index != second_parent_idx) {
 					first_child_idx = index;
 					break;
 				}
 			}
 			
-			population[first_parent_idx].first.crossover(population[second_parent_idx].first, population[first_child_idx].first);
-			population[first_child_idx].first.mutate();
-			population[first_child_idx].second = current_generation;
+			population[first_parent_idx].model.crossover(population[second_parent_idx].model, population[first_child_idx].model);
+			population[first_child_idx].model.mutate();
+			population[first_child_idx].birthday = current_generation;
 			
 		}
 		
 		//iterate over all elements computing their fitness and updating the rolling total
 		population_total_fitness = 0.;
 		for (auto it : population) {
-			population_total_fitness += it.first.fitness();
+			population_total_fitness += it.model.fitness();
 		}
 	}
 	
@@ -167,9 +176,9 @@ public:
 		
 		//TODO: Calculate the standard deviation as well
 		for (int i = 0; i<population_size; ++i) {
-			population_total_fitness += population[i].first.fitness();
-			if (population[i].first.fitness() > best_fitness) {
-				best_fitness = population[i].first.fitness();
+			population_total_fitness += population[i].model.fitness();
+			if (population[i].model.fitness() > best_fitness) {
+				best_fitness = population[i].model.fitness();
 				best_candidate_idx = i;
 			}
 		}
@@ -177,8 +186,8 @@ public:
 		population_mean_fitness = population_total_fitness/population_size;
 		std::cout << "Mean fitness = " << population_mean_fitness << "\n";
 		
-		population[best_candidate_idx].first.output();
-		population[best_candidate_idx].first.export_hull_coordinates("GA_" + std::to_string(current_generation) + ".dat");
+		population[best_candidate_idx].model.output();
+		population[best_candidate_idx].model.export_hull_coordinates("GA_" + std::to_string(current_generation) + ".dat");
 	}
 };
 

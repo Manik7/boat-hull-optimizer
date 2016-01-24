@@ -22,12 +22,12 @@ private:
 	bool isFitnessUpdated = false;
 	double m_fitness = 0.0;
 public:
-	std::random_device rd; // obtain a random number from hardware //TODO: make static
-	std::mt19937 engine; //TODO: make static
-	std::uniform_int_distribution<int> indexDistribution; //TODO: make static
-	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
-	std::normal_distribution<double> modifierDistribution; //TODO: make static	
-	std::bernoulli_distribution coinFlipDistribution; //TODO: make static
+	static std::random_device rd; // obtain a random number from hardware
+	static std::mt19937 engine;
+	static std::uniform_int_distribution<int> indexDistribution;
+	static std::uniform_int_distribution<int> valueDistribution;
+	static std::normal_distribution<double> modifierDistribution;	
+	static std::bernoulli_distribution coinFlipDistribution;
 	
 	double fitness();
 	

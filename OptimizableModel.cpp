@@ -1,18 +1,24 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel() :
+std::random_device OptimizableModel::rd;
+#ifdef DETERMINISTIC_RUN
+std::mt19937 OptimizableModel::engine = std::mt19937(0);
+#else
+std::mt19937 OptimizableModel::engine = std::mt19937(OptimizableModel::rd());
+#endif
+std::uniform_int_distribution<int> OptimizableModel::indexDistribution = std::uniform_int_distribution<int>(0, OptimizableModel::numberOfGenes-1);
+std::uniform_int_distribution<int> OptimizableModel::valueDistribution = std::uniform_int_distribution<int>(OptimizableModel::numberOfGenes, OptimizableModel::domainHi);
+std::normal_distribution<double> OptimizableModel::modifierDistribution = std::normal_distribution<double>(0., 2.5);
+std::bernoulli_distribution OptimizableModel::coinFlipDistribution = std::bernoulli_distribution(OptimizableModel::mutationRate);
+
+OptimizableModel::OptimizableModel() /*:
 	
 #ifdef DETERMINISTIC_RUN
 	OptimizableModel(std::mt19937(0))
 #else
-	OptimizableModel(std::mt19937(rd()))
-#endif
-{
-	/* TODO: The values are (and need to be) hard copied. 
-	 * With an std::vector this would be less of a problem, 
-	 * and the size could be verified via assertion as well. 
-	 */
-	
+	OptimizableModel(std::mt19937(OptimizableModel::rd()))
+#endif*/
+{	
 	for (int i = 0; i < numberOfGenes; ++i) { 
 		genome[i].first = 0;
 		genome[i].second = 0;
@@ -34,12 +40,9 @@ OptimizableModel::OptimizableModel(std::pair<int, NumType> genome[], std::mt1993
 	assert(isFitnessUpdated == false);
 }
 
-OptimizableModel::OptimizableModel(std::mt19937 engine) : isFitnessUpdated(false),
-	indexDistribution(std::uniform_int_distribution<int>(0, numberOfGenes-1)),
-	valueDistribution(std::uniform_int_distribution<int>(numberOfGenes, domainHi)),
-	modifierDistribution(std::normal_distribution<double>(0., 2.5)),
-	coinFlipDistribution(std::bernoulli_distribution(mutationRate)), engine(engine)
-{}
+OptimizableModel::OptimizableModel(std::mt19937 engine) : OptimizableModel()/*, engine(engine)*/ {
+	engine = engine;
+}
 
 
 double OptimizableModel::fitness() {
