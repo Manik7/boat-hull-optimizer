@@ -9,7 +9,7 @@ void new_alg(int);
 int main () {
 	std::cout << "NEW ALGORITHM\n" << std::endl;
 	
- 	new_alg(100*1000*1000);
+ 	new_alg(10*1000*1000);
 }
 
 void new_alg(int runs = 5) {	

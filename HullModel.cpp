@@ -1,7 +1,7 @@
 #include "HullModel.h"
 
 HullModel::HullModel() 
-	: station_parameters()
+	: OptimizableModel(), station_parameters()
 {
 	WaterlineCurve wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl);
 	
@@ -19,6 +19,10 @@ HullModel::HullModel()
 }
 
 HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[]): OptimizableModel(genome) {}
+
+HullModel::HullModel(std::mt19937 engine): OptimizableModel(engine)
+{}
+
 
 void HullModel::output() /*const*/ {
 	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
@@ -65,6 +69,19 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 	} else std::cout << "Error opening file!\n";
 }
 
+/*TODO: Modifiy this function in such a way that the fitness is computed from several terms, 
+ * each normalized to [0,1]. The additive constraint terms c_1...c_n are a measure of how close
+ * the hull is to meeting that constraint. The multiplicative constraint terms m_1...m_n are 
+ * binary, 1 when the constraint is met, else 0. The normalized Fitness terms f_WSA and f_pitch 
+ * are subject to these multipliers. The overall formula is of the form:
+ * 
+ * F = c_1 + c_2 + c_3 + m_1*m_2*m_3*(f_WSA + f_pitch)
+ * 
+ * This process ensures the algorithm first tries to satisfy all the constraints, and only then
+ * starts working with the parameters which are to be optimized (WSA & pitch). Leaving the valid 
+ * region is possible, but the fitness of such an inidivdual would be siginificantly lower than 
+ * that of an individual who meets all the constraints.
+ */
 double HullModel::compute_fitness()
 {
 	volume = 0.0;

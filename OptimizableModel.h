@@ -26,19 +26,21 @@ public:
 	std::mt19937 engine; //TODO: make static
 	std::uniform_int_distribution<int> indexDistribution; //TODO: make static
 	std::uniform_int_distribution<int> valueDistribution; //TODO: make static
+	std::normal_distribution<double> modifierDistribution; //TODO: make static	
 	std::bernoulli_distribution coinFlipDistribution; //TODO: make static
 	
 	double fitness();
 	
 	OptimizableModel();
 	OptimizableModel(std::pair< int, NumType > genes[]);
+	OptimizableModel(std::mt19937 engine);
 	
 	/* Overwrites the 'child' object with a newly created Hull. Returns the 
 	 * crossover point, i.e. the highest gene index taken from this parent. 
 	 * A crossover-point of 1 would mean the first two genes came from this 
 	 * parent, the rest from the partner.*/
 	virtual int crossover(OptimizableModel& partner, OptimizableModel& child); 
-// 	virtual void mutate();
+	virtual void mutate();
 	
 	virtual void output() /*const*/=0;
 	

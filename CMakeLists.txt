@@ -10,6 +10,7 @@ SET(hull_optimizer_SOURCES
 	HillClimber.h
 	HullModel.cpp
 	OptimizableModel.cpp
+	GeneticOptimizer.h
 )
 
 ADD_EXECUTABLE(hull_optimizer ${hull_optimizer_SOURCES})

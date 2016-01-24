@@ -1,14 +1,11 @@
 #include "OptimizableModel.h"
 
-OptimizableModel::OptimizableModel() : 
-	isFitnessUpdated(false),
-	indexDistribution(std::uniform_int_distribution<int>(0, numberOfGenes-1)),
-	valueDistribution(std::uniform_int_distribution<int>(numberOfGenes, domainHi)),
-	coinFlipDistribution(std::bernoulli_distribution(mutationRate)),
+OptimizableModel::OptimizableModel() :
+	
 #ifdef DETERMINISTIC_RUN
-	engine(std::mt19937(0))
+	OptimizableModel(std::mt19937(0))
 #else
-	engine(std::mt19937(rd()))
+	OptimizableModel(std::mt19937(rd()))
 #endif
 {
 	/* TODO: The values are (and need to be) hard copied. 
@@ -34,6 +31,14 @@ OptimizableModel::OptimizableModel(std::pair<int, NumType> genes[]) : Optimizabl
 	
 	assert(isFitnessUpdated == false);
 }
+
+OptimizableModel::OptimizableModel(std::mt19937 engine) : isFitnessUpdated(false),
+	indexDistribution(std::uniform_int_distribution<int>(0, numberOfGenes-1)),
+	valueDistribution(std::uniform_int_distribution<int>(numberOfGenes, domainHi)),
+	modifierDistribution(std::normal_distribution<double>(0., 2.5)),
+	coinFlipDistribution(std::bernoulli_distribution(mutationRate)), engine(engine)
+{}
+
 
 double OptimizableModel::fitness() {
 	if(isFitnessUpdated) {
@@ -68,16 +73,16 @@ int OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& chi
 	return crossover_point;
 }
 
-
-//TODO: set this to do mutations by adding a normally-distributed delta ontop of the current value
-/*TODO: BUG: You have to return the index of the mutated parameter, so you can update your 
- * station_properties in the HullModel. You can modify at most one gene then, and return its index. 
- */
-// void OptimizableModel::mutate()
-// {
-// 	for (int i = 0; i < numberOfGenes; ++i) {
-// 		if (coinFlipDistribution(engine)) { // choose if parameter is to mutate
-// 			set_parameter(i, valueDistribution(engine)); // get a random value for the parameter
-// 		}
-// 	}
-// }
+void OptimizableModel::mutate()
+{
+	for (int i = 0; i < numberOfGenes; ++i) {
+		int modifier = int(modifierDistribution(engine));
+		if (get_parameter(i) + modifier > domainHi) {
+			set_parameter(i, domainHi);
+		} else if (get_parameter(i) + modifier < domainLo) {
+			set_parameter(i, domainLo);
+		} else {
+			set_parameter(i, get_parameter(i)+modifier);
+		}
+	}
+}
