@@ -27,6 +27,7 @@ public: //attributes
 	static constexpr HullParameters<numberOfGenes> hull_parameters = HullParameters<numberOfGenes>(); //TODO: You could make the hull model inherit from HullParameters, so you can access the values directly, which might clean up the code a little
 	mutable Station_properties station_properties[numberOfGenes/3];
 	bool station_properties_updated[numberOfGenes/3] = {false};
+	int birth_generation = 0;
 	
 private: //attributes
 	double volume = 0.0;

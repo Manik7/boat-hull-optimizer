@@ -3,6 +3,8 @@
 
 #include <random>
 #include <chrono>
+#include <cassert>
+#include <utility>
 
 #include "Optimizer.h"
 #include "HullModel.h"
@@ -83,7 +85,7 @@ public:
 		
 		for (int i = 0; i<number_of_crossovers; ++i) {
 			
-			//find first parent
+			//select first parent
 			while(true) {
 				index = individualDistribution(engine);
 				if(chanceDistribution(engine) <= 100.*population[index].first.fitness()/population_total_fitness && population[index].second != current_generation) {
@@ -92,7 +94,7 @@ public:
 				}
 			}
 
-			//second parent
+			//select second parent
 			while(true) {
 				index = individualDistribution(engine);
 				if(chanceDistribution(engine) <= 100.*population[index].first.fitness()/population_total_fitness && population[index].second != current_generation && index != first_parent_idx) {
@@ -101,7 +103,7 @@ public:
 				}
 			}
 			
-			//first child
+			//select first child
 			while(true) {
 				index = individualDistribution(engine);
 				if(population[index].second != current_generation && index != first_parent_idx && index != second_parent_idx) {
@@ -116,33 +118,68 @@ public:
 			
 		}
 		
-		//TODO: iterate over all elements and compute their fitness (as well as counting up the total fitness)
-		
+		//iterate over all elements computing their fitness and updating the rolling total
+		population_total_fitness = 0.;
+		for (auto it : population) {
+			population_total_fitness += it.first.fitness();
+		}
 	}
 	
-	void run(int steps = 5) {
+	void run(int steps = 10) {
 	
+		constexpr unsigned int number_of_interim_outputs = 0;
 		std::chrono::time_point<std::chrono::system_clock> start, end;
 		
-		//TODO: Find, output and export population-leader
-		
+		evaluate_population();
 		start = std::chrono::system_clock::now();
-		for (; current_generation<steps; ++current_generation) {
-			//TODO: add output of the population parameters at regular intervals
-			do_step();
+		
+		if(number_of_interim_outputs > 0) {
+			for (int i = 0; i < number_of_interim_outputs; ++i) {	
+				for (int j = 0; j<steps/(number_of_interim_outputs+1); ++j) {
+					do_step();
+				}
+				evaluate_population();
+			}
+		} else {
+			for (int i = 0; i < steps; ++i) {
+				do_step();
+			}
 		}
+		
 		end = std::chrono::system_clock::now();
+		
+		if (number_of_interim_outputs==0) evaluate_population();
+		
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		std::cout << "Elapsed time = " << elapsed_seconds.count() << std::endl;
-		
-		//TODO: Find, output and export population-leader
 	}
 	
-	/* Calculate the total fitness, mean fitness, and standard deviation and output 
+	/* //TODO Calculate the total fitness, mean fitness, and standard deviation and output 
 	 * them in a log file together with a time stamp. This method is called at a 
 	 * regular but very large interval, so the progress of the optimization can be 
 	 * seen.*/
-	void calculate_population_parameters(); //TODO
+	void evaluate_population() {
+		
+		int best_candidate_idx = 0;
+		double best_fitness = 0.0;
+		
+		population_total_fitness = 0.0;
+		
+		//TODO: Calculate the standard deviation as well
+		for (int i = 0; i<population_size; ++i) {
+			population_total_fitness += population[i].first.fitness();
+			if (population[i].first.fitness() > best_fitness) {
+				best_fitness = population[i].first.fitness();
+				best_candidate_idx = i;
+			}
+		}
+		
+		population_mean_fitness = population_total_fitness/population_size;
+		std::cout << "Mean fitness = " << population_mean_fitness << "\n";
+		
+		population[best_candidate_idx].first.output();
+		population[best_candidate_idx].first.export_hull_coordinates("GA_" + std::to_string(current_generation) + ".dat");
+	}
 };
 
 #endif //GENETIC_OPTIMIZER_H

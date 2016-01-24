@@ -19,14 +19,16 @@ OptimizableModel::OptimizableModel() :
 	}
 }
 
-OptimizableModel::OptimizableModel(std::pair<int, NumType> genes[]) : OptimizableModel() {
+// OptimizableModel::OptimizableModel(OptimizableModel& model) : OptimizableModel(model.genome, model.engine) {}
+
+OptimizableModel::OptimizableModel(std::pair<int, NumType> genome[], std::mt19937 engine) : OptimizableModel(engine) {
 	/* TODO: The values are (and need to be) hard copied. 
 	 * With an std::vector this would be less of a problem, 
 	 * and the size could be verified via assertion as well. 
 	 */
 	
 	for (int i = 0; i < numberOfGenes; ++i) { 
-		genome[i] = genes[i];		
+		this->genome[i] = genome[i];		
 	}
 	
 	assert(isFitnessUpdated == false);
@@ -75,14 +77,19 @@ int OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& chi
 
 void OptimizableModel::mutate()
 {
-	for (int i = 0; i < numberOfGenes; ++i) {
-		int modifier = int(modifierDistribution(engine));
-		if (get_parameter(i) + modifier > domainHi) {
-			set_parameter(i, domainHi);
-		} else if (get_parameter(i) + modifier < domainLo) {
-			set_parameter(i, domainLo);
-		} else {
-			set_parameter(i, get_parameter(i)+modifier);
+	for (int index = 0; index < numberOfGenes; ++index) {
+		int oldValue = get_parameter(index); 	// store old parameter value	
+		int modifier = valueDistribution(engine);	// get random value as a modifier for the parameter
+						
+		// modify the parameter
+		if (oldValue + modifier > domainHi) { //resulting value too big
+			set_parameter(index, domainHi);
+		} 
+		else if (oldValue + modifier < domainLo) { //too small
+			set_parameter(index, domainLo);
+		} 
+		else { //can be changed freely
+			set_parameter(index, oldValue + modifier);
 		}
 	}
 }
