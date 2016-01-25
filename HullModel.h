@@ -36,8 +36,9 @@ private: //attributes
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
-	HullModel(std::pair< int, NumType > genome[], std::mt19937 engine);
+// 	HullModel(std::pair< int, NumType > genome[], std::mt19937 engine);
 	HullModel(std::mt19937 engine);
+	
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
 	void export_hull_coordinates(std::string filename) const;
 	double compute_fitness(); //compute and return the fitness value //TODO: merge this with the fitness() function of the superclass???

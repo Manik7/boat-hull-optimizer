@@ -33,7 +33,7 @@ public:
 	
 	OptimizableModel();
 // 	OptimizableModel(OptimizableModel& model);
-	OptimizableModel(std::pair< int, NumType > genes[], std::mt19937 engine);
+// 	OptimizableModel(std::pair< int, NumType > genes[], std::mt19937 engine);
 	OptimizableModel(std::mt19937 engine);
 	
 	/* Overwrites the 'child' object with a newly created Hull. Returns the 

@@ -23,22 +23,26 @@ OptimizableModel::OptimizableModel() /*:
 		genome[i].first = 0;
 		genome[i].second = 0;
 	}
+	
+// 	for (int i = 0; i < numberOfGenes; ++i) { 
+// 		set_parameter(i, valueDistribution(engine));
+// 	}
 }
 
 // OptimizableModel::OptimizableModel(OptimizableModel& model) : OptimizableModel(model.genome, model.engine) {}
 
-OptimizableModel::OptimizableModel(std::pair<int, NumType> genome[], std::mt19937 engine) : OptimizableModel(engine) {
-	/* TODO: The values are (and need to be) hard copied. 
-	 * With an std::vector this would be less of a problem, 
-	 * and the size could be verified via assertion as well. 
-	 */
-	
-	for (int i = 0; i < numberOfGenes; ++i) { 
-		this->genome[i] = genome[i];		
-	}
-	
-	assert(isFitnessUpdated == false);
-}
+// OptimizableModel::OptimizableModel(std::pair<int, NumType> genome[], std::mt19937 engine) : OptimizableModel(engine) {
+// 	/* TODO: The values are (and need to be) hard copied. 
+// 	 * With an std::vector this would be less of a problem, 
+// 	 * and the size could be verified via assertion as well. 
+// 	 */
+// 	
+// 	for (int i = 0; i < numberOfGenes; ++i) { 
+// 		this->genome[i] = genome[i];		
+// 	}
+// 	
+// 	assert(isFitnessUpdated == false);
+// }
 
 OptimizableModel::OptimizableModel(std::mt19937 engine) : OptimizableModel()/*, engine(engine)*/ {
 	engine = engine;

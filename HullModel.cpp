@@ -1,7 +1,7 @@
 #include "HullModel.h"
 
 HullModel::HullModel() 
-	: OptimizableModel(), station_parameters()
+	: /*OptimizableModel(),*/ station_parameters()
 {
 	WaterlineCurve wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl);
 	
@@ -18,10 +18,13 @@ HullModel::HullModel()
 	}
 }
 
-HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[], std::mt19937 engine): OptimizableModel(genome, engine) {}
+// HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[], std::mt19937 engine): OptimizableModel(genome, engine) {}
 
-HullModel::HullModel(std::mt19937 engine): OptimizableModel(engine)
-{}
+HullModel::HullModel(std::mt19937 engine): OptimizableModel(engine) {
+	for (int i = 0; i<numberOfGenes; ++i) {
+		set_parameter(i, valueDistribution(engine));
+	}
+}
 
 
 void HullModel::output() /*const*/ {

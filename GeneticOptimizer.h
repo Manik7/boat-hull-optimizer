@@ -33,7 +33,7 @@ class GeneticOptimizer : public Optimizer {
 	using ModelType = HullModel;
 	
 public:
-	static constexpr int population_size = 1000;
+	static constexpr int population_size = 10;
 
 private:
 	//Random numbers and distributions
