@@ -98,19 +98,14 @@ double HullModel::compute_fitness()
 			station_properties_updated[stat_no] = true;
 		}
 		
-		if (station_parameters[stat_no].deadrise_min_rad > station_properties[stat_no].deadrise_rad || station_properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
-			//deadrise NOT ok
-			return 0.0;
-		} else if (station_parameters[stat_no].flare_min_rad > station_properties[stat_no].flare_rad || station_properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
-			// flare NOT ok
-			return 0.0;
+		if (!deadrise_constraint(stat_no)) {
+			return 0.0; //deadrise NOT ok
+		} else if (!flare_constraint(stat_no)) {
+			return 0.0; // flare NOT ok
 		} 
-		
-// 		else if (i>0) { //TODO: uncommment this twist rate check
-// 			if(!twist_rate_ok(properties[i-1],properties[i])) {
-// 				//twist-rate NOT ok
-// 				return 0.0;
-// 			}
+
+// 		else if (!twist_constraint(stat_no)) {
+// 			return 0.0;
 // 		}
 		
 		//volume, WSA, moment to trim calcs
@@ -128,7 +123,7 @@ double HullModel::compute_fitness()
 	wetted_area *= hull_parameters.stationSpacing;
 	
 	if (volume > hull_parameters.minVolume) {
-		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
+		return fitness_term();
 	} else {
 		return 0.0;
 	}

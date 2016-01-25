@@ -85,9 +85,87 @@ private: //methods
 		*/
 	}
 	
-	inline double deg(double rad) const {
+	static constexpr deg(double rad) const {
 		return rad/3.14159265*180.0;
 	}
+	
+	static constexpr double rad(double deg) {
+		return deg/180.0*3.14159265;
+	}
+	
+	inline int deadrise_constraint(int stat_no) {
+		if (station_parameters[stat_no].deadrise_min_rad > station_properties[stat_no].deadrise_rad || station_properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
+			//deadrise NOT ok
+			return 0;
+		} else return 1;
+	}
+	
+	inline int flare_constraint(int stat_no) {
+		if (station_parameters[stat_no].flare_min_rad > station_properties[stat_no].flare_rad || station_properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
+				// flare NOT ok
+				return 0;
+		} else return 1;
+	}
+	
+	inline int twist_constraint(int stat_no) {
+		if (stat_no>0) { 
+			if(!twist_rate_ok(station_properties[stat_no-1],station_properties[stat_no])) {
+				return 0; //twist-rate NOT ok
+			} else return 1;
+		} else return 1;
+	}
+	
+	inline double volume_constraint() {
+		if (volume > hull_parameters.minVolume) {
+			return 1.0;
+		} else {
+			return 1/hull_parameters.minVolume;
+		}
+	}
+	
+	// this function returns the flare term for one station
+	inline double station_flare_term(int stat_no) {
+		double result;
+		double f_min = station_parameters[stat_no].flare_min_rad;
+		double f_max = station_parameters[stat_no].flare_max_rad;
+		double f = station_properties[stat_no].flare_rad;
+		
+		if (f_min < f && f < f_max) {
+			result = 1.;
+		} else if (f < f_min) {
+			result = f / f_min;
+		} else if (f > f_max) {
+			result = 1-(f - f_max) / (rad(90) - f_max);
+		} else {
+			assert(false); // flare invalid, i.e. not in [0°,90°]
+			result = 0.;
+		}
+		return result / hull_parameters.numberOfStations;
+	}
+	
+	inline double station_deadrise_term(int stat_no) {
+		double result;
+		
+		double d_min = station_parameters[stat_no].deadrise_min_rad;
+		double d_max = station_parameters[stat_no].deadrise_max_rad;
+		double d = station_properties[stat_no].deadrise_rad;
+		
+		if(d_min < d && d < d_max) {
+			result = 1.;
+		} else if (d < d_min) {
+			result = (d + rad(90)) / (d_min + rad(90));
+		} else if (d > d_max) {
+			result = 1-(d-d_max)/(rad(90) - d_max);
+		}
+		
+		return result / hull_parameters.numberOfStations;
+	}
+	
+	inline double fitness_term() {
+		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
+	}
+	
+	
 };
 
 #endif //HULL_MODEL_H
