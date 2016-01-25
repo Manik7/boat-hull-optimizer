@@ -85,12 +85,18 @@ private: //methods
 		*/
 	}
 	
-	static constexpr deg(double rad) const {
+	static constexpr double deg(double rad) {
 		return rad/3.14159265*180.0;
 	}
 	
 	static constexpr double rad(double deg) {
 		return deg/180.0*3.14159265;
+	}
+	
+	inline int volume_constraint(int stat_no) {
+		if (volume > hull_parameters.minVolume) {
+			return 1;
+		} else return 0;
 	}
 	
 	inline int deadrise_constraint(int stat_no) {
@@ -115,12 +121,30 @@ private: //methods
 		} else return 1;
 	}
 	
-	inline double volume_constraint() {
+	inline double volume_term() {
 		if (volume > hull_parameters.minVolume) {
 			return 1.0;
 		} else {
 			return 1/hull_parameters.minVolume;
 		}
+	}
+	
+	inline double station_deadrise_term(int stat_no) {
+		double result;
+		
+		double d_min = station_parameters[stat_no].deadrise_min_rad;
+		double d_max = station_parameters[stat_no].deadrise_max_rad;
+		double d = station_properties[stat_no].deadrise_rad;
+		
+		if(d_min <= d && d <= d_max) {
+			result = 1.;
+		} else if (d < d_min) {
+			result = (d + rad(90)) / (d_min + rad(90));
+		} else if (d > d_max) {
+			result = 1-(d-d_max)/(rad(90) - d_max);
+		}
+		
+		return result / hull_parameters.numberOfStations;
 	}
 	
 	// this function returns the flare term for one station
@@ -130,7 +154,7 @@ private: //methods
 		double f_max = station_parameters[stat_no].flare_max_rad;
 		double f = station_properties[stat_no].flare_rad;
 		
-		if (f_min < f && f < f_max) {
+		if (f_min <= f && f <= f_max) {
 			result = 1.;
 		} else if (f < f_min) {
 			result = f / f_min;
@@ -143,22 +167,9 @@ private: //methods
 		return result / hull_parameters.numberOfStations;
 	}
 	
-	inline double station_deadrise_term(int stat_no) {
-		double result;
-		
-		double d_min = station_parameters[stat_no].deadrise_min_rad;
-		double d_max = station_parameters[stat_no].deadrise_max_rad;
-		double d = station_properties[stat_no].deadrise_rad;
-		
-		if(d_min < d && d < d_max) {
-			result = 1.;
-		} else if (d < d_min) {
-			result = (d + rad(90)) / (d_min + rad(90));
-		} else if (d > d_max) {
-			result = 1-(d-d_max)/(rad(90) - d_max);
-		}
-		
-		return result / hull_parameters.numberOfStations;
+	inline double station_twist_term(int stat_no) {
+		//TODO
+		return 0.;
 	}
 	
 	inline double fitness_term() {

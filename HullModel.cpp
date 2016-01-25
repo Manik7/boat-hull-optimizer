@@ -73,12 +73,12 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 }
 
 /*TODO: Modifiy this function in such a way that the fitness is computed from several terms, 
- * each normalized to [0,1]. The additive constraint terms c_1...c_n are a measure of how close
- * the hull is to meeting that constraint. The multiplicative constraint terms m_1...m_n are 
+ * each normalized to [0,1]. The additive constraint terms t_1...t_n are a measure of how close
+ * the hull is to meeting that constraint. The multiplicative constraint terms c_1...c_n are 
  * binary, 1 when the constraint is met, else 0. The normalized Fitness terms f_WSA and f_pitch 
  * are subject to these multipliers. The overall formula is of the form:
  * 
- * F = c_1 + c_2 + c_3 + m_1*m_2*m_3*(f_WSA + f_pitch)
+ * F = t_1 + t_2 + t_3 + c_1*c_2*c_3*(f_WSA + f_pitch)
  * 
  * This process ensures the algorithm first tries to satisfy all the constraints, and only then
  * starts working with the parameters which are to be optimized (WSA & pitch). Leaving the valid 
@@ -91,6 +91,10 @@ double HullModel::compute_fitness()
 	wetted_area = 0.0;
 	moment_to_trim_1_deg = 0.0;
 	
+	//TODO twist
+	double deadrise_c = 1., flare_c = 1., twist_c = 1.; //constraint multipliers
+	double deadrise_t = 0, flare_t = 0, twist_t = 0; //additive terms
+	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
 		if(!station_properties_updated[stat_no]) {
@@ -98,15 +102,23 @@ double HullModel::compute_fitness()
 			station_properties_updated[stat_no] = true;
 		}
 		
-		if (!deadrise_constraint(stat_no)) {
-			return 0.0; //deadrise NOT ok
-		} else if (!flare_constraint(stat_no)) {
-			return 0.0; // flare NOT ok
-		} 
-
-// 		else if (!twist_constraint(stat_no)) {
-// 			return 0.0;
-// 		}
+// 		if (!deadrise_constraint(stat_no)) {
+// 			return 0.0; //deadrise NOT ok
+// 		} else if (!flare_constraint(stat_no)) {
+// 			return 0.0; // flare NOT ok
+// 		} 
+// 
+// // 		else if (!twist_constraint(stat_no)) {
+// // 			return 0.0;
+// // 		}
+		
+		deadrise_c *= deadrise_constraint(stat_no);
+		flare_c *= flare_constraint(stat_no);
+// 		twist_c *= twist_constraint(stat_no);
+		
+		deadrise_t += station_deadrise_term(stat_no);
+		flare_t += station_flare_term(stat_no);
+// 		twist_t += station_twist_term(stat_no);
 		
 		//volume, WSA, moment to trim calcs
 		volume += station_properties[stat_no].area;
@@ -122,10 +134,12 @@ double HullModel::compute_fitness()
 	volume *= hull_parameters.stationSpacing;
 	wetted_area *= hull_parameters.stationSpacing;
 	
-	if (volume > hull_parameters.minVolume) {
-		return fitness_term();
-	} else {
-		return 0.0;
-	}
+// 	if (volume > hull_parameters.minVolume) {
+// 		return fitness_term();
+// 	} else {
+// 		return 0.0;
+// 	}
+	
+	return volume_term() + deadrise_t + flare_t + deadrise_c*flare_c*fitness_term();
 	
 }
