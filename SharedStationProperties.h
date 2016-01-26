@@ -25,8 +25,9 @@ struct SharedStationProperties {
 		perimeter(edge_length(0, keel_y, chine_x, chine_y) + edge_length(chine_x, chine_y, beam_x, 0)),
 // 		sq_perimeter(sq_edge_length(0, keel_y, chine_x, chine_y) + edge_length(chine_x, chine_y, beam_x, 0)),
 		
-		flare_rad(atan2(beam_x-chine_x, chine_y)),
-		deadrise_rad(atan2(keel_y - chine_y, chine_x)) {}
+		flare_rad(atan2(beam_x-chine_x, chine_y)), //NOTE: if both arguments are 0 the output is not defined (-inf)
+		deadrise_rad(atan2(keel_y - chine_y, chine_x)) //NOTE: if both arguments are 0 the output is not defined (-inf)
+		{}
 
 private:
 				

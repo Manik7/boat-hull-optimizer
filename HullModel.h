@@ -37,7 +37,7 @@ private: //attributes
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
 // 	HullModel(std::pair< int, NumType > genome[], std::mt19937 engine);
-	HullModel(std::mt19937 engine);
+// 	HullModel(std::mt19937 engine);
 	
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
 	void export_hull_coordinates(std::string filename) const;
@@ -52,7 +52,7 @@ protected: //methods
 	/*TODO: as a performance improvement, you might be able to do with with a template parameter 
 	 * to encourage to compiler to precompile one version of the function for each parameter. */
 	inline NumType get_range_min(int gene_index) const { // Get the min value for the range (i.e. real values) for the parameters
-		return 0;
+		return 10; //having this != 0 ensures that the chine point cannot lie exactly on the keel-point or beam-point
 	}
 	inline NumType get_range_max(int gene_index) const {
 		switch (gene_index % 3) {
@@ -93,24 +93,22 @@ private: //methods
 		return deg/180.0*3.14159265;
 	}
 	
-	inline int volume_constraint(int stat_no) {
+	inline int volume_constraint() {
 		if (volume > hull_parameters.minVolume) {
 			return 1;
 		} else return 0;
 	}
 	
 	inline int deadrise_constraint(int stat_no) {
-		if (station_parameters[stat_no].deadrise_min_rad > station_properties[stat_no].deadrise_rad || station_properties[stat_no].deadrise_rad > station_parameters[stat_no].deadrise_max_rad) {
-			//deadrise NOT ok
-			return 0;
-		} else return 1;
+		if (station_parameters[stat_no].deadrise_min_rad <= station_properties[stat_no].deadrise_rad && station_properties[stat_no].deadrise_rad <= station_parameters[stat_no].deadrise_max_rad) {
+			return 1; //deadrise OK
+		} else return 0;
 	}
 	
 	inline int flare_constraint(int stat_no) {
-		if (station_parameters[stat_no].flare_min_rad > station_properties[stat_no].flare_rad || station_properties[stat_no].flare_rad > station_parameters[stat_no].flare_max_rad) {
-				// flare NOT ok
-				return 0;
-		} else return 1;
+		if (station_parameters[stat_no].flare_min_rad <= station_properties[stat_no].flare_rad && station_properties[stat_no].flare_rad <= station_parameters[stat_no].flare_max_rad) {
+			return 1; //flare OK
+		} else return 0;
 	}
 	
 	inline int twist_constraint(int stat_no) {
@@ -125,7 +123,7 @@ private: //methods
 		if (volume > hull_parameters.minVolume) {
 			return 1.0;
 		} else {
-			return 1/hull_parameters.minVolume;
+			return volume/hull_parameters.minVolume;
 		}
 	}
 	
@@ -135,6 +133,7 @@ private: //methods
 		double d_min = station_parameters[stat_no].deadrise_min_rad;
 		double d_max = station_parameters[stat_no].deadrise_max_rad;
 		double d = station_properties[stat_no].deadrise_rad;
+		assert (rad(-90) <= d && d <= rad(90));
 		
 		if(d_min <= d && d <= d_max) {
 			result = 1.;
@@ -144,6 +143,7 @@ private: //methods
 			result = 1-(d-d_max)/(rad(90) - d_max);
 		}
 		
+		assert(0. <= result && result <= 1.);
 		return result / hull_parameters.numberOfStations;
 	}
 	
@@ -153,6 +153,7 @@ private: //methods
 		double f_min = station_parameters[stat_no].flare_min_rad;
 		double f_max = station_parameters[stat_no].flare_max_rad;
 		double f = station_properties[stat_no].flare_rad;
+		assert (0 <= f && f <= rad(90));
 		
 		if (f_min <= f && f <= f_max) {
 			result = 1.;
@@ -164,6 +165,7 @@ private: //methods
 			assert(false); // flare invalid, i.e. not in [0°,90°]
 			result = 0.;
 		}
+		assert(0. <= result && result <= 1.);
 		return result / hull_parameters.numberOfStations;
 	}
 	

@@ -33,7 +33,8 @@ class GeneticOptimizer : public Optimizer {
 	using ModelType = HullModel;
 	
 public:
-	static constexpr int population_size = 10;
+	static constexpr int population_size = 1000;
+	static constexpr unsigned int number_of_interim_outputs = 5;
 
 private:
 	//Random numbers and distributions
@@ -64,8 +65,9 @@ public:
 		chanceDistribution(std::uniform_real_distribution<double>(0.,1.)),
 		coinFlipDistribution(std::bernoulli_distribution(0.5)) //adjust probability of accepting worse fitness
 	{ 
+		ModelType::engine = engine;
 		for (int i = 0; i<population_size; ++i) {
-			population[i] = Individual<ModelType>(ModelType(engine));
+			population[i] = Individual<ModelType>(ModelType());
 		}
 	}
 	
@@ -136,7 +138,6 @@ public:
 	
 	void run(int steps = 10) {
 	
-		constexpr unsigned int number_of_interim_outputs = 0;
 		std::chrono::time_point<std::chrono::system_clock> start, end;
 		
 		evaluate_population();

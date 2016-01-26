@@ -13,7 +13,7 @@ public:
 	static constexpr int numberOfGenes = 15;
 	static constexpr int domainLo = 0;
 	static constexpr int domainHi = 100;
-	static constexpr double mutationRate = 0.01;
+// 	static constexpr double mutationRate = 0.01;
 	
 protected:
 	std::pair<int,NumType> genome[numberOfGenes]; //parameter domain (input values), parameter range (output, the real values)
@@ -24,10 +24,10 @@ private:
 public:
 	static std::random_device rd; // obtain a random number from hardware
 	static std::mt19937 engine;
-	static std::uniform_int_distribution<int> indexDistribution;
-	static std::uniform_int_distribution<int> valueDistribution;
-	static std::normal_distribution<double> modifierDistribution;	
-	static std::bernoulli_distribution coinFlipDistribution;
+	static std::uniform_int_distribution<int> indexDistribution; //random index, i.e. gene
+	static std::uniform_int_distribution<int> valueDistribution; //random domain value
+	static std::normal_distribution<double> modifierDistribution; //mutation modifier
+	static std::bernoulli_distribution coinFlipDistribution; //do you mutate or not?
 	
 	double fitness();
 	

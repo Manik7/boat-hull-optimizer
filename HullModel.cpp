@@ -14,17 +14,21 @@ HullModel::HullModel()
 	
 	for (int geneNo = 0; geneNo < numberOfGenes; ++geneNo) {
 		Model::genome[geneNo] = std::pair<int, NumType>(0, 0);
-		Model::set_parameter(geneNo, domainHi);
+// 		Model::set_parameter(geneNo, domainHi);
+		Model::set_parameter(geneNo, valueDistribution(engine));
 	}
 }
 
 // HullModel::HullModel(std::pair< int, OptimizableModel::NumType > genome[], std::mt19937 engine): OptimizableModel(genome, engine) {}
 
-HullModel::HullModel(std::mt19937 engine): OptimizableModel(engine) {
-	for (int i = 0; i<numberOfGenes; ++i) {
-		set_parameter(i, valueDistribution(engine));
-	}
-}
+// HullModel::HullModel(std::mt19937 engine): HullModel(), OptimizableModel(engine) {
+// 	
+// 	engine = engine;
+// 	
+// 	for (int i = 0; i<numberOfGenes; ++i) {
+// 		set_parameter(i, valueDistribution(engine));
+// 	}
+// }
 
 
 void HullModel::output() /*const*/ {
@@ -45,7 +49,7 @@ void HullModel::output() /*const*/ {
 	
 	std::cout << "Properties of complete hull" << std::endl;
 	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
-	std::cout << "Volume =\t" << volume*4*pow(10,-9) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+	std::cout << "Volume =\t" << volume*4/(1000*1000*1000) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
 
 void HullModel::export_hull_coordinates(std::string filename) const {
@@ -140,6 +144,23 @@ double HullModel::compute_fitness()
 // 		return 0.0;
 // 	}
 	
-	return volume_term() + deadrise_t + flare_t + deadrise_c*flare_c*fitness_term();
+	assert(0 <= volume_term() && volume_term() <= 1);
+	assert(0 <= deadrise_t && deadrise_t <= 1);
+	assert(0 <= flare_t && flare_t <= 1);
+// 	assert(0 <= twist_t && twist_t <= 1);
+	
+	assert(flare_c == 0 || flare_c == 1);
+	assert(deadrise_c == 0 || deadrise_c == 1);
+// 	assert(twist_c == 0 || twist_c == 1);
+	
+	double volume_t(volume_term());
+	double volume_c(volume_constraint());
+	
+	double result = volume_t + deadrise_t + flare_t + volume_c*deadrise_c*flare_c*fitness_term();
+	if(result > 3.) {
+		double x = 0.;	
+	}
+	assert(0 <= result && result <= 10);
+	return result;
 	
 }

@@ -7,9 +7,9 @@ std::mt19937 OptimizableModel::engine = std::mt19937(0);
 std::mt19937 OptimizableModel::engine = std::mt19937(OptimizableModel::rd());
 #endif
 std::uniform_int_distribution<int> OptimizableModel::indexDistribution = std::uniform_int_distribution<int>(0, OptimizableModel::numberOfGenes-1);
-std::uniform_int_distribution<int> OptimizableModel::valueDistribution = std::uniform_int_distribution<int>(OptimizableModel::numberOfGenes, OptimizableModel::domainHi);
+std::uniform_int_distribution<int> OptimizableModel::valueDistribution = std::uniform_int_distribution<int>(OptimizableModel::domainLo, OptimizableModel::domainHi);
 std::normal_distribution<double> OptimizableModel::modifierDistribution = std::normal_distribution<double>(0., 2.5);
-std::bernoulli_distribution OptimizableModel::coinFlipDistribution = std::bernoulli_distribution(OptimizableModel::mutationRate);
+// std::bernoulli_distribution OptimizableModel::coinFlipDistribution = std::bernoulli_distribution(OptimizableModel::mutationRate);
 
 OptimizableModel::OptimizableModel() /*:
 	
@@ -85,18 +85,20 @@ int OptimizableModel::crossover(OptimizableModel& partner, OptimizableModel& chi
 void OptimizableModel::mutate()
 {
 	for (int index = 0; index < numberOfGenes; ++index) {
-		int oldValue = get_parameter(index); 	// store old parameter value	
-		int modifier = valueDistribution(engine);	// get random value as a modifier for the parameter
-						
-		// modify the parameter
-		if (oldValue + modifier > domainHi) { //resulting value too big
-			set_parameter(index, domainHi);
-		} 
-		else if (oldValue + modifier < domainLo) { //too small
-			set_parameter(index, domainLo);
-		} 
-		else { //can be changed freely
-			set_parameter(index, oldValue + modifier);
+// 		if(coinFlipDistribution(engine)) {
+			int oldValue = get_parameter(index); 	// store old parameter value	
+			int modifier = modifierDistribution(engine);	// get random value as a modifier for the parameter
+							
+			// modify the parameter
+			if (oldValue + modifier > domainHi) { //resulting value too big
+				set_parameter(index, domainHi);
+			} 
+			else if (oldValue + modifier < domainLo) { //too small
+				set_parameter(index, domainLo);
+			} 
+			else { //can be changed freely
+				set_parameter(index, oldValue + modifier);
+			}
 		}
-	}
+// 	}
 }
