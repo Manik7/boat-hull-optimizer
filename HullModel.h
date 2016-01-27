@@ -175,8 +175,17 @@ private: //methods
 	}
 	
 	inline double fitness_term() {
-		return 2*1000*1000 / wetted_area; //TODO: moment_to_trim_1_deg
-	}
+		//TODO: moment_to_trim_1_deg
+// 		return 1250*1000/wetted_area;
+		return 4*250*1000 / (wetted_area-1000*1000); 
+		/* I highly doubt the overall surface area of the hull will drop below 5m^2 no matter 
+		 * how much optimization is done. 1m^2 is subtracted from the WSA of the quarter-hull
+		 * so that changes in the (remaining) WSA have a much larger impact on the fitness 
+		 * function. Previously a 'huge' change in WSA from 6.0 to 5.5 would only have had a very
+		 * small effect on the overall fitness, especially with all the constraint terms going 
+		 * into the fitness as well. The result has been divided by 4, so that a hull with a WSA
+		 * of 5 would have a fitness term of 1.
+		 */	}
 	
 	
 };

@@ -35,7 +35,7 @@ class GeneticOptimizer : public Optimizer {
 public:
 	static constexpr int population_size = 1000;
 // 	static constexpr unsigned int number_of_interim_outputs = 24*6*5;
-	static constexpr unsigned int generations_per_output = 200*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
+	static constexpr unsigned int generations_per_output = 100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
 
 private:
 	//Random numbers and distributions
@@ -52,6 +52,8 @@ private:
 	static constexpr int number_of_crossovers = population_size/10;
 	
 	double population_total_fitness = 0.;
+	double population_best_fitness = 0.;
+	double population_worst_fitness = 100.;
 	double population_variance = 0.;
 	double population_mean_fitness = 0.;
 	
@@ -100,7 +102,8 @@ public:
 			//select first parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation) {
+// 				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation) {
+				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation) {
 					first_parent_idx = index;
 					break;
 				}
@@ -109,7 +112,8 @@ public:
 			//select second parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
+// 				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
+				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
 					second_parent_idx = index;
 					break;
 				}
@@ -132,8 +136,13 @@ public:
 		
 		//iterate over all elements computing their fitness and updating the rolling total
 		population_total_fitness = 0.;
+// 		population_worst_fitness = 100.;
+// 		population_best_fitness = 0.;
 		for (auto it : population) {
-			population_total_fitness += it.model.fitness();
+			double f(it.model.fitness());
+			population_total_fitness += f;
+			if (f > population_best_fitness) population_best_fitness = f;
+// 			if (f < population_worst_fitness) population_worst_fitness = f;
 		}
 	}
 	

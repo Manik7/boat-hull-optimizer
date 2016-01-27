@@ -8,7 +8,7 @@ std::mt19937 OptimizableModel::engine = std::mt19937(OptimizableModel::rd());
 #endif
 std::uniform_int_distribution<int> OptimizableModel::indexDistribution = std::uniform_int_distribution<int>(0, OptimizableModel::numberOfGenes-1);
 std::uniform_int_distribution<int> OptimizableModel::valueDistribution = std::uniform_int_distribution<int>(OptimizableModel::domainLo, OptimizableModel::domainHi);
-std::normal_distribution<double> OptimizableModel::modifierDistribution = std::normal_distribution<double>(0., 2.5);
+std::normal_distribution<double> OptimizableModel::modifierDistribution = std::normal_distribution<double>(0., 0.3);
 // std::bernoulli_distribution OptimizableModel::coinFlipDistribution = std::bernoulli_distribution(OptimizableModel::mutationRate);
 
 OptimizableModel::OptimizableModel() /*:
