@@ -8,12 +8,11 @@ void new_alg(int);
 void genetic_alg(int);
 
 int main () {
-	std::cout << "NEW ALGORITHM\n" << std::endl;
-	
 //  	new_alg(10*1000*1000);
-	
+	std::cout << "GENETIC ALGORITHM\n" << std::endl;
 #ifdef NDEBUG
- 	genetic_alg(6*1000*1000); //6 millions generations take 10 mins (release build)
+// 	genetic_alg(3*1000*1000); //3 million generations take 10 mins (release build)
+	genetic_alg(24*6*3*1000*1000);
 #else
 	genetic_alg(10*1000);
 #endif

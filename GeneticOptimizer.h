@@ -34,7 +34,8 @@ class GeneticOptimizer : public Optimizer {
 	
 public:
 	static constexpr int population_size = 1000;
-	static constexpr unsigned int number_of_interim_outputs = 5;
+// 	static constexpr unsigned int number_of_interim_outputs = 24*6*5;
+	static constexpr unsigned int generations_per_output = 200*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
 
 private:
 	//Random numbers and distributions
@@ -143,9 +144,9 @@ public:
 		evaluate_population();
 		start = std::chrono::system_clock::now();
 		
-		if(number_of_interim_outputs > 0) {
-			for (int i = 0; i < number_of_interim_outputs; ++i) {	
-				for (int j = 0; j<steps/(number_of_interim_outputs+1); ++j) {
+		if(generations_per_output > 0) {
+			for (int i = 0; i < steps/generations_per_output; ++i) {	
+				for (int j = 0; j<generations_per_output; ++j) {
 					do_step();
 				}
 				evaluate_population();
@@ -158,7 +159,7 @@ public:
 		
 		end = std::chrono::system_clock::now();
 		
-		if (number_of_interim_outputs==0) evaluate_population();
+		if (generations_per_output==0) evaluate_population();
 		
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		std::cout << "Elapsed time = " << elapsed_seconds.count() << std::endl;

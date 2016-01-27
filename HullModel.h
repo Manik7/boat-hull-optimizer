@@ -175,7 +175,7 @@ private: //methods
 	}
 	
 	inline double fitness_term() {
-		return pow(10,6) / wetted_area; //TODO: moment_to_trim_1_deg
+		return 2*1000*1000 / wetted_area; //TODO: moment_to_trim_1_deg
 	}
 	
 	
