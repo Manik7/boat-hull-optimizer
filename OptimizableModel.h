@@ -14,6 +14,7 @@ public:
 	static constexpr int domainLo = 0;
 	static constexpr int domainHi = 100;
 // 	static constexpr double mutationRate = 0.01;
+	static constexpr double mutation_standard_deviation = 0.3;
 	
 protected:
 	std::pair<int,NumType> genome[numberOfGenes]; //parameter domain (input values), parameter range (output, the real values)
