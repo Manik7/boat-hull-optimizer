@@ -52,6 +52,12 @@ void HullModel::output() /*const*/ {
 	std::cout << "Volume =\t" << volume*4/(1000*1000*1000) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
 
+void HullModel::export_hull(std::string filename) const {
+    export_hull_coordinates(filename);
+    export_gnuplot_script(filename);
+}
+
+//TODO: change this so that the filename is seperate from the file ending
 void HullModel::export_hull_coordinates(std::string filename) const {
 	std::ofstream datfile;
 	datfile.open("../../data/" + filename);
@@ -74,6 +80,20 @@ void HullModel::export_hull_coordinates(std::string filename) const {
 		
 		datfile.close();
 	} else std::cout << "Error opening file!\n";
+}
+
+void HullModel::create_gnuplot_script(std::string filename) const {
+    std::ofstream gpScript;
+	gpScript.open("../../data/" + filename + ".gp");
+	
+	if (gpScript.is_open()) {
+	    gpscript << "set output \"data/" << filename << ".svg\"\n";
+	    gpscript << "datafile = 'data/" << filename << ".dat'\n";
+	    gpscript << "plot datafile i 0 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 1 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 2 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 3 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 4 using 1:($2*-1) with lp lw 2 title columnheader(1)\n"
+	    
+	} else {
+	    } else std::cout << "Error opening file: " << filename << std::endl;
+	}
 }
 
 /*TODO: Modifiy this function in such a way that the fitness is computed from several terms, 
