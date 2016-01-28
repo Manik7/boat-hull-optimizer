@@ -40,14 +40,17 @@ public: //methods
 // 	HullModel(std::mt19937 engine);
 	
 	void output() /*const*/; //TODO: do file output here as well, and not just console output
+	void console_output();
 	void export_hull(std::string filename) const;
 	void export_hull_coordinates(std::string filename) const;
+	void export_gnuplot_script(std::string filename) const;
 	double compute_fitness(); //compute and return the fitness value //TODO: merge this with the fitness() function of the superclass???
 	
 	inline void set_parameter(int gene_index, int domain_value) {
 		station_properties_updated[gene_index/3] = false;
 		Optimizable_model::set_parameter(gene_index, domain_value);
 	}
+	
 	
 protected: //methods	
 	/*TODO: as a performance improvement, you might be able to do with with a template parameter 

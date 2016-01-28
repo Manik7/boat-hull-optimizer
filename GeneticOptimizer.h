@@ -198,7 +198,7 @@ public:
 		std::cout << "Mean fitness = " << population_mean_fitness << "\n";
 		
 		population[best_candidate_idx].model.output();
-		population[best_candidate_idx].model.export_hull_coordinates("GA_" + std::to_string(current_generation) + ".dat");
+		population[best_candidate_idx].model.export_hull("GA_" + std::to_string(current_generation));
 	}
 };
 

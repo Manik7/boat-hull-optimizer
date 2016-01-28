@@ -9,6 +9,9 @@ debug:
 visualization:
 	gnuplot visualization.gp
 
+plot_all:
+	cd data/ && gnuplot *.gp
+
 profile: debug
 	cd build/debug/ && ./hull_optimizer
 	cd build/debug/ && gprof -p ./hull_optimizer gmon.out
@@ -27,7 +30,7 @@ clean: clean_data clean_profiling
 	$(MAKE) -C build/debug/ clean
 
 clean_data:
-	rm -f data/*.dat data/*.svg
+	rm -f data/*.dat data/*.svg data/*.gp
 
 clean_profiling:
 	rm -f gmon.out
