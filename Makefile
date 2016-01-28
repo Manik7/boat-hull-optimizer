@@ -16,9 +16,6 @@ profile: debug
 	cd build/debug/ && ./hull_optimizer
 	cd build/debug/ && gprof -p ./hull_optimizer gmon.out
 	
-plot:
-	gnuplot visualization.gp
-	
 setup:
 	rm -rf build/release/*
 	rm -rf build/debug/*
