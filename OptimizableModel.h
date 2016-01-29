@@ -10,7 +10,7 @@ struct OptimizableModel {
 public:
  	typedef int NumType;
 	using Optimizable_model = OptimizableModel; //<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
-	static constexpr int numberOfGenes = 15;
+	static constexpr int numberOfGenes = 30;
 	static constexpr int domainLo = 0;
 	static constexpr int domainHi = 100;
 // 	static constexpr double mutationRate = 0.01;

@@ -96,10 +96,15 @@ void HullModel::export_gnuplot_script(std::string filename) const {
 		gpScript << "set yrange [-500:0]\n";
 		gpScript << "datafile = \"" << filename << ".dat\"\n";
 		gpScript << "set output \"" << filename << ".svg\"\n";
-		gpScript << "plot datafile i 0 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 1 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 2 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 3 using 1:($2*-1) with lp lw 2 title columnheader(1), datafile i 4 using 1:($2*-1) with lp lw 2 title columnheader(1)\n";
+		gpScript << "plot ";
+	
+		for (int s = 0; s < hull_parameters.numberOfStations; ++s) {
+			gpScript << "datafile i " << s << " using 1:($2*-1) with lp lw 2 title columnheader(1)";
+			if (s < hull_parameters.numberOfStations-1) gpScript << ", ";
+			else gpScript << "\n";
+		}
 	    
-	    
-	    gpScript.close();
+		gpScript.close();
 	} else std::cout << "Error opening file: " << filename << ".gp" << std::endl;
 }
 
