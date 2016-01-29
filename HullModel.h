@@ -2,8 +2,9 @@
 #define HULL_MODEL_H
 
 #include <vector>
-#include <iostream>
 #include <string>
+#include <iostream>
+#include <ostream>
 #include <fstream>
 
 #include "OptimizableModel.h"
@@ -39,11 +40,12 @@ public: //methods
 // 	HullModel(std::pair< int, NumType > genome[], std::mt19937 engine);
 // 	HullModel(std::mt19937 engine);
 	
-	void output() /*const*/; //TODO: do file output here as well, and not just console output
-	void console_output();
-	void export_hull(std::string filename) const;
+	void output(); //TODO: do file output here as well, and not just console output
+	void stream_output(std::ostream& stream);
+	void export_hull(std::string filename);
 	void export_hull_coordinates(std::string filename) const;
 	void export_gnuplot_script(std::string filename) const;
+	void export_hull_data(std::string filename) /*const*/;
 	double compute_fitness(); //compute and return the fitness value //TODO: merge this with the fitness() function of the superclass???
 	
 	inline void set_parameter(int gene_index, int domain_value) {

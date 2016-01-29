@@ -32,17 +32,17 @@ HullModel::HullModel()
 
 
 void HullModel::output() /*const*/ {
-	console_output();
+	stream_output(std::cout);
 }
 
-void HullModel::console_output() {
-	std::cout << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
+void HullModel::stream_output(std::ostream& stream) /*const*/ {
+	stream << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
 	
 	for (int stat_no=0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
 		station_properties[stat_no] = this->calculate_station_properties(stat_no); //force recalculation of the station properties just to be sure they are accurate
 		
-		std::cout << station_parameters[stat_no].z_coord << '\t' 
+		stream << station_parameters[stat_no].z_coord << '\t' 
 			<< station_parameters[stat_no].half_beam << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_X].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
@@ -51,14 +51,15 @@ void HullModel::console_output() {
 			<< deg(station_properties[stat_no].flare_rad) << '\t' << deg(station_properties[stat_no].deadrise_rad) << std::endl;
 	}
 	
-	std::cout << "Properties of complete hull" << std::endl;
-	std::cout << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
-	std::cout << "Volume =\t" << volume*4/(1000*1000*1000) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+	stream << "Properties of complete hull" << std::endl;
+	stream << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
+	stream << "Volume =\t" << volume*4/(1000*1000*1000) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
 }
 	
-void HullModel::export_hull(std::string filename) const {
+void HullModel::export_hull(std::string filename) /*const*/ {
     export_hull_coordinates(filename);
     export_gnuplot_script(filename);
+    export_hull_data(filename);
 }
 
 //TODO: change this so that the filename is seperate from the file ending
@@ -106,6 +107,15 @@ void HullModel::export_gnuplot_script(std::string filename) const {
 	    
 		gpScript.close();
 	} else std::cout << "Error opening file: " << filename << ".gp" << std::endl;
+}
+
+void HullModel::export_hull_data(std::string filename) /*const*/ {
+	std::ofstream hulldata;
+	hulldata.open("../../data/" + filename + ".txt");
+	if (hulldata.is_open()) {
+		stream_output(hulldata);
+		hulldata.close();
+	} else std::cout << "Error opening file: " << filename << ".txt" << std::endl;
 }
 
 /*TODO: Modifiy this function in such a way that the fitness is computed from several terms, 

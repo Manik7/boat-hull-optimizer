@@ -3,7 +3,10 @@
 
 struct StationParameters {
 
-	double flare_min_rad, flare_max_rad, deadrise_min_rad, deadrise_max_rad;
+	double flare_min_rad = rad(10.0);
+	double flare_max_rad = rad(30.0);
+	double deadrise_min_rad = rad(10.0);
+	double deadrise_max_rad = rad(45.0);
 	int z_coord, half_beam;
 
 	StationParameters(double fmin_deg, double fmax_deg, double dmin_deg, double dmax_deg) 
@@ -11,7 +14,7 @@ struct StationParameters {
 
 	StationParameters() : StationParameters(0, 777) {}
 
-	StationParameters(int z_coord, int half_beam) : flare_min_rad(rad(0.0)), flare_max_rad(rad(90.0)), deadrise_min_rad(rad(0.0)), deadrise_max_rad(rad(90.0)), z_coord(z_coord), half_beam(half_beam) {}
+	StationParameters(int z_coord, int half_beam) : z_coord(z_coord), half_beam(half_beam) {}
 	
 	static constexpr double rad(double deg) {
 		return deg/180.0*3.14159265;
