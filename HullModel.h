@@ -15,11 +15,10 @@
 
 //TODO: change this template parameter to be the number of stations
 
-// template <typename T, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 class HullModel : public OptimizableModel//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI> 
 {
 	using Station_properties = SharedStationProperties<int>;
-	using Model = OptimizableModel;//<T, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
+	using Model = OptimizableModel;
 	
 public: //attributes
 	enum {CHINE_X = 0, CHINE_Y = 1, KEEL_Y = 2};
@@ -37,8 +36,6 @@ private: //attributes
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs
-// 	HullModel(std::pair< int, NumType > genome[], std::mt19937 engine);
-// 	HullModel(std::mt19937 engine);
 	
 	void output(); //TODO: do file output here as well, and not just console output
 	void stream_output(std::ostream& stream);

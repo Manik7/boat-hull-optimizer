@@ -16,8 +16,5 @@ struct HullParameters
 	static constexpr int numberOfStations = NUMBER_OF_GENES / 3;
 	static constexpr int stationSpacing = (halfLwl-100) / (numberOfStations - 1);
 };
-/*
-HullParameters<NUMBER_OF_GENES>::MIN_VOLUME(0.75);
-HullParameters<NUMBER_OF_GENES>::MAX_TWIST_RATE_DEG(20.0);*/
 
 #endif // HULL_PARAMETERS_H

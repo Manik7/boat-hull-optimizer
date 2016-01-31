@@ -5,15 +5,13 @@
 #include <random>
 #include <cassert>
 
-// template <typename NumberType, int NUMBER_OF_GENES, int DOMAIN_LO = 0, int DOMAIN_HI = 100>
 struct OptimizableModel {
 public:
  	typedef int NumType;
-	using Optimizable_model = OptimizableModel; //<NumberType, NUMBER_OF_GENES, DOMAIN_LO, DOMAIN_HI>;
+	using Optimizable_model = OptimizableModel;
 	static constexpr int numberOfGenes = 15;
 	static constexpr int domainLo = 0;
 	static constexpr int domainHi = 100;
-// 	static constexpr double mutationRate = 0.01;
 	static constexpr double mutation_standard_deviation = 0.3;
 	
 protected:
@@ -33,8 +31,6 @@ public:
 	double fitness();
 	
 	OptimizableModel();
-// 	OptimizableModel(OptimizableModel& model);
-// 	OptimizableModel(std::pair< int, NumType > genes[], std::mt19937 engine);
 	OptimizableModel(std::mt19937 engine);
 	
 	/* Overwrites the 'child' object with a newly created Hull. Returns the 

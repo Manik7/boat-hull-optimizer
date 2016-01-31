@@ -4,16 +4,11 @@
 #include <cassert>
 #include <unordered_map>
 #include <utility>
-// #include <boost/functional/hash.hpp>
 
 #include "StationCalculator.h"
 
 template<typename CoordType, typename HullParameters>
 class MemoizedStationCalculator : public StationCalculator<CoordType, HullParameters> {	
-// 	struct InputParameters {
-// 		CoordType beam_x, chine_x, chine_y, keel_y;
-// 		InputParameters(CoordType beam_x, CoordType chine_x, CoordType chine_y, CoordType keel_y) : beam_x(beam_x), chine_x(chine_x), chine_y(chine_y), keel_y(keel_y) {}
-// 	};
 	
 	/*TODO: whereby InputParameters is some sort of struct containing (beam_x, chine_x, chine_y, keel_y) 
 	 * for the calculator and the int is a counter storing the iteration when the key was last retrieved*/
@@ -45,10 +40,7 @@ public:
 		* overwrite it immediately? */
 		assert(beam_x < 1000 && chine_x < 1000 && chine_y < 1000 && keel_y < 1000);
 		int key(((beam_x * 1000 + chine_x) * 1000 + chine_y) * 1000 + keel_y);
-// 		T& value(map[key]);
 		auto value = map.find(key);
-		
-// 		value->second.second = iteration_no; //whether default-constructed or already in there, update the access information
 		
 		if(value != map.end()) {
 			return value->second.first;
@@ -59,13 +51,8 @@ public:
 			T value_pair(StationCalculator<CoordType, HullParameters>::calculate_station_properties(beam_x, chine_x, chine_y, keel_y), iteration_no);
 			std::pair<int, T> entry(key,value_pair);
 			
-// 			value->second = std::pair<StationProperties, int>(StationCalculator<CoordType, HullParameters>::calculate_station_properties(beam_x, chine_x, chine_y, keel_y), iteration_no);
-// 			value->second.first = StationCalculator<CoordType, HullParameters>::calculate_station_properties(beam_x, chine_x, chine_y, keel_y);
-// 			value->second.second = iteration_no;
 			if(map_is_populated()) ++insertion_counter;
 			if(map_is_full()) cleanup();
-			
-// 			return value->second.first; //I hope the reference isn't invalidated by writing here
 			return value_pair.first;
 		}	
 	}

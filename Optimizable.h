@@ -15,14 +15,6 @@ struct Optimizable {
 	virtual bool satisfies_constraints() const =0;
 	virtual double fitness()=0;
 	virtual void output()=0;
-	
-// 	void set_all_parameters(int value = 0) { //TODO: This method does not work
-// 		for(int i = 0; i<numberOfParameters; ++i) {
-// 			this->set_parameter(i, value);
-// 		}
-// 	}
-	
-// 	virtual void set_all_parameters(int value = 0)=0;
 };
 
 #endif // OPTIMIZABLE_H

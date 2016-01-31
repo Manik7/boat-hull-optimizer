@@ -34,7 +34,6 @@ class GeneticOptimizer : public Optimizer {
 	
 public:
 	static constexpr int population_size = 1000;
-// 	static constexpr unsigned int number_of_interim_outputs = 24*6*5;
 	static constexpr unsigned int generations_per_output = 100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
 
 private:
@@ -102,7 +101,6 @@ public:
 			//select first parent
 			while(true) {
 				index = individualDistribution(engine);
-// 				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation) {
 				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation) {
 					first_parent_idx = index;
 					break;
@@ -112,7 +110,6 @@ public:
 			//select second parent
 			while(true) {
 				index = individualDistribution(engine);
-// 				if(chanceDistribution(engine) <= 100.*population[index].model.fitness()/population_total_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
 				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
 					second_parent_idx = index;
 					break;
