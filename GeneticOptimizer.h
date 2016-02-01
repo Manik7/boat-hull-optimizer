@@ -51,6 +51,7 @@ private:
 	static constexpr int number_of_crossovers = population_size/10;
 	
 	double population_total_fitness = 0.;
+	double population_sum_sqr_fitnesses = 0.;
 	double population_best_fitness = 0.;
 	double population_worst_fitness = 100.;
 	double population_variance = 0.;
@@ -178,24 +179,48 @@ public:
 	void evaluate_population() {
 		
 		int best_candidate_idx = 0;
-		double best_fitness = 0.0;
+		double best_fitness = 0.;
 		
-		population_total_fitness = 0.0;
+		population_total_fitness = 0.;
+		population_sum_sqr_fitnesses = 0.;
+		double K = population[0].model.fitness();
 		
-		//TODO: Calculate the standard deviation as well
+		// Using the shifted-data variance algorithm from: https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Computing_shifted_data
 		for (int i = 0; i<population_size; ++i) {
-			population_total_fitness += population[i].model.fitness();
-			if (population[i].model.fitness() > best_fitness) {
-				best_fitness = population[i].model.fitness();
+			double f = population[i].model.fitness();
+			population_total_fitness += f - K;
+			population_sum_sqr_fitnesses += (f - K) * (f - K);
+			if (f > best_fitness) {
+				best_fitness = f;
 				best_candidate_idx = i;
 			}
 		}
 		
-		population_mean_fitness = population_total_fitness/population_size;
-		std::cout << "Mean fitness = " << population_mean_fitness << "\n";
+		population_variance = (population_sum_sqr_fitnesses - (population_total_fitness * population_total_fitness)/population_size)/population_size;
+		
+		population_mean_fitness = population_total_fitness/population_size + K;
+		std::cout << "Mean fitness =\t" << population_mean_fitness << "\n";
+		std::cout << "Variance =\t\t" << population_variance << "\n";
+		std::cout << "Standard Deviation =\t" << std::sqrt(population_variance) << "\n";
 		
 		population[best_candidate_idx].model.output();
 		population[best_candidate_idx].model.export_hull("GA_" + std::to_string(current_generation));
+		//TODO: Output the population parameters like mean, variance, and the file with all the fitness values
+	}
+	
+	//dumps all fitness values into a text file to allow plotting a probability density function for instance
+	void output_all_fitnesses(std::string filename) {
+		std::ofstream output_file;
+		output_file.open("../../data/" + filename + ".txt");
+	
+		if (output_file.is_open()) {
+			
+			for (int i=0; i< population_size; ++i) {
+				output_file << i << "\t" << population[i].model.fitness() << "\n";
+			}
+			
+			output_file.close();
+		} else std::cout << "Error opening file: " << filename << ".dat" << std::endl;
 	}
 };
 
