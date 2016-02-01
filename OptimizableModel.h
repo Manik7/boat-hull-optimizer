@@ -15,7 +15,8 @@ public:
 	static constexpr double mutation_standard_deviation = 0.3;
 	
 protected:
-	std::pair<int,NumType> genome[numberOfGenes]; //parameter domain (input values), parameter range (output, the real values)
+	//<parameter domain (input values), parameter range (output, the real values)>
+	std::pair<int,NumType> genome[numberOfGenes]; 
 	
 private:
 	bool isFitnessUpdated = false;
