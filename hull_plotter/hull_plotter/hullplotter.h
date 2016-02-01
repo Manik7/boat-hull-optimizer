@@ -28,5 +28,14 @@ private:
 protected:
   void paintEvent(QPaintEvent *);
 
+  //looking from the front
+  void body_plan(Hull_qt &hull, QPainter& painter);
+
+  //looking from above
+  void breadth_plan(Hull_qt& hull, QPainter& painter);
+
+  //looking from the side
+  void sheer_plan(Hull_qt& hull, QPainter& painter);
+
 };
 #endif // HULLPLOTTER_H
