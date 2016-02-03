@@ -6,6 +6,22 @@ HullPlotter::HullPlotter(QWidget *parent) :
     ui(new Ui::HullPlotter)
 {
     ui->setupUi(this);
+
+    bodyPlanScene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(bodyPlanScene);
+
+    sheerPen = QPen(Qt::green);
+    sheerPen.setWidth(3);
+
+    stationPen = QPen(Qt::red);
+    stationPen.setWidth(3);
+
+    defaultPen = QPen(Qt::black);
+
+    //Set up a timer to update stuff regularily, see: http://doc.qt.io/qt-5/qtwidgets-widgets-analogclock-example.html
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    timer->start(1000);
 }
 
 HullPlotter::~HullPlotter()
@@ -15,14 +31,24 @@ HullPlotter::~HullPlotter()
 
 void HullPlotter::paintEvent(QPaintEvent *)
 {
-    QPointF a(50.,50.);
-    QPointF b(100.,100.);
+//    ++counter;
+//    bodyPlanLines[0]->setLine(counter, counter, 2*counter, 2*counter);
 
-//    qStationView station;
     Hull_qt hull;
 
-   QPainter painter(this);
-//   painter.drawText(QRect(20,20,200,200),"Hello World");
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    //clock example
+    using std::chrono::system_clock;
+    system_clock::time_point today = system_clock::now();
+    std::time_t tt;
+    tt = system_clock::to_time_t ( today );
+    //std::cout << "today is: " << ctime(&tt);
+
+   painter.drawText(QRect(20,20,200,200),ctime(&tt));
+
+   ui->time_label->setText(ctime(&tt));
 
    body_plan(hull, painter);
    breadth_plan(hull, painter);
@@ -32,36 +58,24 @@ void HullPlotter::paintEvent(QPaintEvent *)
 
 //view from the front
 void HullPlotter::body_plan(Hull_qt& hull, QPainter& painter) {
+
+    bodyPlanLines.clear();
+
     for (auto& iter : hull.stations) {
         QPointF origin(iter.origin.x, iter.origin.y);
         QPointF beam(iter.beam.x, iter.beam.y);
         QPointF chine(iter.chine.x, iter.chine.y);
         QPointF keel(iter.keel.x, iter.keel.y);
 
-        QTransform transform;
-        transform.translate(350, 30);
-        transform.scale(0.5,0.5);
-        painter.setTransform(transform);
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(origin, beam), sheerPen));
 
-        painter.setPen(QColor(0,255,0));
-        painter.drawLine(origin, beam);
-        painter.setPen(QColor(255,0,0));
-        painter.drawLine(beam, chine);
-        painter.drawLine(chine, keel);
-        painter.setPen(QColor(0,0,0));
-        painter.drawLine(keel, origin);
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(beam, chine), stationPen));
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(chine, keel), stationPen));
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(keel,origin), defaultPen)); //remove?
 
-        transform.scale(-1.0, 1.0);
-        painter.setTransform(transform);
-
-        painter.setPen(QColor(0,255,0));
-        painter.drawLine(origin, beam);
-        painter.setPen(QColor(255,0,0));
-        painter.drawLine(beam, chine);
-        painter.drawLine(chine, keel);
-        painter.setPen(QColor(0,0,0));
-        painter.drawLine(keel, origin);
-
+        for (auto iter : bodyPlanLines) {
+            iter->setScale(0.5);
+        }
     }
 }
 

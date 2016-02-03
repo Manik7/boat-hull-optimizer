@@ -4,6 +4,17 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QTransform>
+#include <QTimer>
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsLineItem>
+#include <QLineF>
+
+#include <iostream>
+#include <ctime>
+#include <ratio>
+#include <chrono>
+#include <string>
 
 #include "Station_qt.h"
 #include "Hull_qt.h"
@@ -25,6 +36,17 @@ private:
     //constexpr int numberOfStations = 5;
     //QT_Station stations[numberOfStations];
 
+    QGraphicsScene* bodyPlanScene;
+    QGraphicsScene* breadthPlan;
+    QGraphicsScene* sheerPlan;
+    QGraphicsEllipseItem* ellipse;
+
+    QPen sheerPen;
+    QPen stationPen;
+    QPen defaultPen;
+
+    std::vector<QGraphicsLineItem*> bodyPlanLines;
+
 protected:
   void paintEvent(QPaintEvent *);
 
@@ -36,6 +58,5 @@ protected:
 
   //looking from the side
   void sheer_plan(Hull_qt& hull, QPainter& painter);
-
 };
 #endif // HULLPLOTTER_H
