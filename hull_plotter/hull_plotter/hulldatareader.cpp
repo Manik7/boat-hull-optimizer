@@ -12,14 +12,21 @@ void HullDataReader::read(std::string ifile) {
 
         int line_number = 0, station = 0, point = 0;
 
-        while (ifs.good()) {
+        for (int st=0; st<5; ++st) {
+            for (int pt=0; ifs.good() && pt<4; ++pt) {
+                ifs >> hull_data[st][pt].x >> hull_data[st][pt].y >> hull_data[st][pt].z;
+                std::cout << hull_data[st][pt].x << " " << hull_data[st][pt].y << " " << hull_data[st][pt].z << "\n";
+            }
+        }
+
+        /*while (ifs.good()) {
             station = line_number / 5;
             point = line_number % 4;
 
             ifs >> hull_data[station][point].x >> hull_data[station][point].y >> hull_data[station][point].z;
             //std::cout << hull_data[station][point].x << " " << hull_data[station][point].y << " " << hull_data[station][point].z << "\n";
             ++line_number;
-        }
+        }*/
         ifs.get();
         ifs.close();
     } else {

@@ -65,6 +65,11 @@ private:
     std::vector<QGraphicsLineItem*> breadthPlanLines;
     std::vector<QGraphicsLineItem*> sheerPlanLines;
 
+    std::vector<QPointF> chine_points;
+    std::vector<QPointF> origin_points;
+    std::vector<QPointF> beam_points;
+    std::vector<QPointF> keel_points;
+
 protected:
   void paintEvent(QPaintEvent *);
 
@@ -75,6 +80,6 @@ protected:
   void breadth_plan(Hull_qt& hull);
 
   //looking from the side
-  void sheer_plan(Hull_qt& hull, QPainter& painter);
+  void sheer_plan(Hull_qt& hull);
 };
 #endif // HULLPLOTTER_H

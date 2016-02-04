@@ -82,7 +82,7 @@ void HullPlotter::paintEvent(QPaintEvent *)
     Hull_qt hull;
     HullDataReader h;
     hull.stations.clear();
-//    h.read("test.dat");
+    h.read("test.dat");
 
     std::string file;
     file = "pointcloud_data/GA_" + std::to_string(generation_number.value()) + ".pc";
@@ -91,8 +91,8 @@ void HullPlotter::paintEvent(QPaintEvent *)
     h.read(file);
     h.write_hull_qt(hull);
 
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
+   /* QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);*/
 
     //clock example
     using std::chrono::system_clock;
@@ -101,15 +101,15 @@ void HullPlotter::paintEvent(QPaintEvent *)
     tt = system_clock::to_time_t ( today );
     //std::cout << "today is: " << ctime(&tt);
 
-    painter.drawText(QRect(20,20,200,200),ctime(&tt));
+//    painter.drawText(QRect(20,20,200,200),ctime(&tt));
     std:: cout << ctime(&tt) << std::endl;
 
     ui->time_label->setText(ctime(&tt));
 
     body_plan(hull);
     breadth_plan(hull);
-    sheer_plan(hull, painter);
-    painter.end();
+    sheer_plan(hull);
+    //painter.end();
 }
 
 //view from the front
@@ -200,7 +200,7 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
 }
 
 //looking from the side
-void HullPlotter::sheer_plan(Hull_qt& hull, QPainter& painter) {
+void HullPlotter::sheer_plan(Hull_qt& hull) {
     sheerPlanLines.clear();
     sheerPlanScene->clear();
 
@@ -219,11 +219,11 @@ void HullPlotter::sheer_plan(Hull_qt& hull, QPainter& painter) {
         keel_points.push_back(QPointF(hull.stations[i].keel.y, hull.stations[i].keel.z));
     }
 
-    QTransform transform;
+    /*QTransform transform;
     transform.translate(100, 550);
     transform.scale(0.2,-0.2);
     transform.rotate(-90);
-    painter.setTransform(transform);
+    painter.setTransform(transform);*/
 
 
     for (auto first = ++(chine_points.begin()), second = chine_points.begin(); first!=chine_points.end(); ++first, ++second) {
