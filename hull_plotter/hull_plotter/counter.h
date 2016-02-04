@@ -7,7 +7,7 @@ class Counter : public QObject
 {
     Q_OBJECT
     int m_value = 0;
-    const int m_last_generation = 1000000;
+    const int m_last_generation = 3000000;
     const int m_generations_per_step = 10000;
     bool lastFile = false;
 public:

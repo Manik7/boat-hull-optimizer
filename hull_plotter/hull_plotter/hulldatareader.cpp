@@ -15,7 +15,7 @@ void HullDataReader::read(std::string ifile) {
         for (int st=0; st<5; ++st) {
             for (int pt=0; ifs.good() && pt<4; ++pt) {
                 ifs >> hull_data[st][pt].x >> hull_data[st][pt].y >> hull_data[st][pt].z;
-                std::cout << hull_data[st][pt].x << " " << hull_data[st][pt].y << " " << hull_data[st][pt].z << "\n";
+//                std::cout << hull_data[st][pt].x << " " << hull_data[st][pt].y << " " << hull_data[st][pt].z << "\n";
             }
         }
 

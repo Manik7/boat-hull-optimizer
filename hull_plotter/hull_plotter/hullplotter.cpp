@@ -151,17 +151,14 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
     std::vector<QPointF> chine_points;
     for (int i = 0; i<5; ++i) {
         chine_points.push_back(QPointF(hull.stations[i].chine.x, hull.stations[i].chine.z));
-        breadthPlanScene->addEllipse(hull.stations[i].chine.x, hull.stations[i].chine.z, 100, 100);
     }
     std::vector<QPointF> origin_points;
     for (int i = 0; i<5; ++i) {
         origin_points.push_back(QPointF(hull.stations[i].origin.x, hull.stations[i].origin.z));
-        breadthPlanScene->addEllipse(hull.stations[i].origin.x, hull.stations[i].origin.z, 100, 100);
     }
     std::vector<QPointF> beam_points;
     for (int i = 0; i<5; ++i) {
         beam_points.push_back(QPointF(hull.stations[i].beam.x, hull.stations[i].beam.z));
-        breadthPlanScene->addEllipse(hull.stations[i].beam.x, hull.stations[i].beam.z, 100, 100);
     }
 
     /*QTransform transform;
@@ -172,17 +169,17 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
 
     for (auto first = ++(chine_points.begin()), second = chine_points.begin(); first!=chine_points.end(); ++first, ++second) {
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *second), chinePen_thick));
-        //breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
+        breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
 
     for (auto first = ++(origin_points.begin()), second = origin_points.begin(); first!=origin_points.end(); ++first, ++second) {
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *second), keelPen_thick));
-        //breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
+        breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
 
     for (auto first = ++(beam_points.begin()), second = beam_points.begin(); first!=beam_points.end(); ++first, ++second) {
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *second), sheerPen_thick));
-        //breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
+        breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
 
 
@@ -211,7 +208,7 @@ void HullPlotter::sheer_plan(Hull_qt& hull) {
         chine_points.push_back(QPointF(hull.stations[i].chine.y, hull.stations[i].chine.z));
     }
     std::vector<QPointF> origin_points;
-    for (int i = 4; i<5; ++i) {
+    for (int i = 0; i<5; ++i) {
         origin_points.push_back(QPointF(hull.stations[i].origin.y, hull.stations[i].origin.z));
     }
     std::vector<QPointF> keel_points;
