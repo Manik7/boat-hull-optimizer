@@ -35,6 +35,9 @@ void HullPlotter::paintEvent(QPaintEvent *)
 //    bodyPlanLines[0]->setLine(counter, counter, 2*counter, 2*counter);
 
     Hull_qt hull;
+    HullDataReader h;
+    h.read("test.dat");
+    h.write_hull_qt(hull);
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -46,14 +49,15 @@ void HullPlotter::paintEvent(QPaintEvent *)
     tt = system_clock::to_time_t ( today );
     //std::cout << "today is: " << ctime(&tt);
 
-   painter.drawText(QRect(20,20,200,200),ctime(&tt));
+    painter.drawText(QRect(20,20,200,200),ctime(&tt));
+    std:: cout << ctime(&tt) << std::endl;
 
-   ui->time_label->setText(ctime(&tt));
+    ui->time_label->setText(ctime(&tt));
 
-   body_plan(hull, painter);
-   breadth_plan(hull, painter);
-   sheer_plan(hull, painter);
-   painter.end();
+    body_plan(hull, painter);
+    breadth_plan(hull, painter);
+    sheer_plan(hull, painter);
+    painter.end();
 }
 
 //view from the front

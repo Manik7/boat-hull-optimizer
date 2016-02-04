@@ -18,6 +18,7 @@
 
 #include "Station_qt.h"
 #include "Hull_qt.h"
+#include "hulldatareader.h"
 
 namespace Ui {
 class HullPlotter;

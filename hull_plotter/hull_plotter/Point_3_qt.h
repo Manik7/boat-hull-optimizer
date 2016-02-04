@@ -14,7 +14,7 @@ struct Point_3_qt {
 
     int x,y,z;
 
-    Point_3_qt(int x, int y, int z) : x(x), y(y), z(z) {}
+    Point_3_qt(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {}
 };
 
 #endif // POINT_3_QT_H

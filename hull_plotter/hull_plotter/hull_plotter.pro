@@ -13,13 +13,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        hullplotter.cpp
+        hullplotter.cpp \
+    hulldatareader.cpp
 
 HEADERS  += hullplotter.h \
     qStationView.h \
     Station_qt.h \
     Point_3_qt.h \
-    Hull_qt.h
+    Hull_qt.h \
+    hulldatareader.h
 
 FORMS    += hullplotter.ui
 
