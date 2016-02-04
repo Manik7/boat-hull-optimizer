@@ -38,13 +38,14 @@ private:
     //QT_Station stations[numberOfStations];
 
     QGraphicsScene* bodyPlanScene;
-    QGraphicsScene* breadthPlan;
-    QGraphicsScene* sheerPlan;
+    QGraphicsScene* breadthPlanScene;
+    QGraphicsScene* sheerPlanScene;
     QGraphicsEllipseItem* ellipse;
 
     QPen sheerPen;
     QPen stationPen;
     QPen defaultPen;
+    QPen pointPen;
 
     std::vector<QGraphicsLineItem*> bodyPlanLines;
 
@@ -52,7 +53,7 @@ protected:
   void paintEvent(QPaintEvent *);
 
   //looking from the front
-  void body_plan(Hull_qt &hull, QPainter& painter);
+  void body_plan(Hull_qt &hull);
 
   //looking from above
   void breadth_plan(Hull_qt& hull, QPainter& painter);

@@ -16,6 +16,9 @@ HullPlotter::HullPlotter(QWidget *parent) :
     stationPen = QPen(Qt::red);
     stationPen.setWidth(3);
 
+    pointPen = QPen(Qt::black);
+    pointPen.setWidth(20);
+
     defaultPen = QPen(Qt::black);
 
     //Set up a timer to update stuff regularily, see: http://doc.qt.io/qt-5/qtwidgets-widgets-analogclock-example.html
@@ -36,6 +39,7 @@ void HullPlotter::paintEvent(QPaintEvent *)
 
     Hull_qt hull;
     HullDataReader h;
+    hull.stations.clear();
     h.read("test.dat");
     h.write_hull_qt(hull);
 
@@ -54,16 +58,18 @@ void HullPlotter::paintEvent(QPaintEvent *)
 
     ui->time_label->setText(ctime(&tt));
 
-    body_plan(hull, painter);
+    body_plan(hull);
     breadth_plan(hull, painter);
     sheer_plan(hull, painter);
     painter.end();
 }
 
 //view from the front
-void HullPlotter::body_plan(Hull_qt& hull, QPainter& painter) {
+void HullPlotter::body_plan(Hull_qt& hull) {
 
     bodyPlanLines.clear();
+
+    bodyPlanScene->clear();
 
     for (auto& iter : hull.stations) {
         QPointF origin(iter.origin.x, iter.origin.y);
@@ -72,10 +78,14 @@ void HullPlotter::body_plan(Hull_qt& hull, QPainter& painter) {
         QPointF keel(iter.keel.x, iter.keel.y);
 
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(origin, beam), sheerPen));
-
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(beam, chine), stationPen));
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(chine, keel), stationPen));
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(keel,origin), defaultPen)); //remove?
+
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(keel, keel), pointPen));
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(chine, chine), pointPen));
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(beam, beam), pointPen));
+        bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(origin, origin), pointPen));
 
         for (auto iter : bodyPlanLines) {
             iter->setScale(0.5);
