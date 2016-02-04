@@ -6,8 +6,6 @@ HullPlotter::HullPlotter(QWidget *parent) :
     ui(new Ui::HullPlotter)
 {
     ui->setupUi(this);
-    //generation_number = Counter(this);
-    //generation_number.setValue(0);
 
     bodyPlanScene = new QGraphicsScene(this);
     ui->body_GraphicsView->setScene(bodyPlanScene);
@@ -76,9 +74,6 @@ HullPlotter::~HullPlotter()
 
 void HullPlotter::paintEvent(QPaintEvent *)
 {
-//    ++counter;
-//    bodyPlanLines[0]->setLine(counter, counter, 2*counter, 2*counter);
-
     Hull_qt hull;
     HullDataReader h;
     hull.stations.clear();
@@ -91,17 +86,11 @@ void HullPlotter::paintEvent(QPaintEvent *)
     h.read(file);
     h.write_hull_qt(hull);
 
-   /* QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);*/
-
     //clock example
     using std::chrono::system_clock;
     system_clock::time_point today = system_clock::now();
     std::time_t tt;
     tt = system_clock::to_time_t ( today );
-    //std::cout << "today is: " << ctime(&tt);
-
-//    painter.drawText(QRect(20,20,200,200),ctime(&tt));
     std:: cout << ctime(&tt) << std::endl;
 
     ui->time_label->setText(ctime(&tt));
@@ -109,7 +98,6 @@ void HullPlotter::paintEvent(QPaintEvent *)
     body_plan(hull);
     breadth_plan(hull);
     sheer_plan(hull);
-    //painter.end();
 }
 
 //view from the front
@@ -133,12 +121,6 @@ void HullPlotter::body_plan(Hull_qt& hull) {
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(chine, chine), pointPen));
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(beam, beam), pointPen));
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(origin, origin), pointPen));
-
-//        ui->breadth_GraphicsView->scale(0.5, 0.5);
-
-        /*for (auto iter : bodyPlanLines) {
-            iter->setScale(0.5);
-        }*/
     }
 }
 
@@ -161,12 +143,6 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
         beam_points.push_back(QPointF(hull.stations[i].beam.x, hull.stations[i].beam.z));
     }
 
-    /*QTransform transform;
-    transform.translate(100, 400);
-    transform.scale(0.2,0.2);
-    transform.rotate(-90);
-    painter.setTransform(transform);*/
-
     for (auto first = ++(chine_points.begin()), second = chine_points.begin(); first!=chine_points.end(); ++first, ++second) {
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *second), chinePen_thick));
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
@@ -181,17 +157,6 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *second), sheerPen_thick));
         breadthPlanLines.push_back(breadthPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
-
-
-
-    /*for (auto iter : breadthPlanLines) {
-        iter->setScale(0.2);
-    }*/
-
-    /*transform.scale(-1,1);
-    painter.setTransform(transform);*/
-
-    //previously everything was plotted again, under influence of the mirror transformation
 
     //TODO: Plot stations
 }
@@ -216,13 +181,6 @@ void HullPlotter::sheer_plan(Hull_qt& hull) {
         keel_points.push_back(QPointF(hull.stations[i].keel.y, hull.stations[i].keel.z));
     }
 
-    /*QTransform transform;
-    transform.translate(100, 550);
-    transform.scale(0.2,-0.2);
-    transform.rotate(-90);
-    painter.setTransform(transform);*/
-
-
     for (auto first = ++(chine_points.begin()), second = chine_points.begin(); first!=chine_points.end(); ++first, ++second) {
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *second), chinePen_thick));
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
@@ -237,21 +195,6 @@ void HullPlotter::sheer_plan(Hull_qt& hull) {
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *second), keelPen_thick));
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
-
-   /* painter.setPen(QColor(0,0,255));
-    for (auto first = ++(chine_points.begin()), second = chine_points.begin(); first!=chine_points.end(); ++first, ++second) {
-        painter.drawLine(*first, *second);
-    }
-
-    painter.setPen(QColor(0,255,0));
-    for (auto first = ++(origin_points.begin()), second = origin_points.begin(); first!=origin_points.end(); ++first, ++second) {
-        painter.drawLine(*first, *second);
-    }
-    painter.setPen(QColor(0,0,0));
-    for (auto first = ++(keel_points.begin()), second = keel_points.begin(); first!=keel_points.end(); ++first, ++second) {
-        painter.drawLine(*first, *second);
-    }*/
-
 
     //TODO: Plot stations
 }

@@ -18,15 +18,6 @@ void HullDataReader::read(std::string ifile) {
 //                std::cout << hull_data[st][pt].x << " " << hull_data[st][pt].y << " " << hull_data[st][pt].z << "\n";
             }
         }
-
-        /*while (ifs.good()) {
-            station = line_number / 5;
-            point = line_number % 4;
-
-            ifs >> hull_data[station][point].x >> hull_data[station][point].y >> hull_data[station][point].z;
-            //std::cout << hull_data[station][point].x << " " << hull_data[station][point].y << " " << hull_data[station][point].z << "\n";
-            ++line_number;
-        }*/
         ifs.get();
         ifs.close();
     } else {
