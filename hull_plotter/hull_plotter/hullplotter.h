@@ -9,6 +9,7 @@
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QLineF>
+#include <QString>
 
 #include <iostream>
 #include <ctime>
@@ -19,6 +20,7 @@
 #include "Station_qt.h"
 #include "Hull_qt.h"
 #include "hulldatareader.h"
+#include "counter.h"
 
 namespace Ui {
 class HullPlotter;
@@ -46,6 +48,9 @@ private:
     QPen stationPen;
     QPen defaultPen;
     QPen pointPen;
+
+    Counter generation_number;
+    unsigned int generation_step_size = 100000;
 
     std::vector<QGraphicsLineItem*> bodyPlanLines;
 

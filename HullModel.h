@@ -42,6 +42,7 @@ public: //methods
 	void export_hull(std::string filename);
 	void export_hull_coordinates(std::string filename) const;
 	void export_gnuplot_script(std::string filename) const;
+	void export_point_cloud(std::string filename) const;
 	void export_hull_data(std::string filename) /*const*/;
 	double compute_fitness(); //compute and return the fitness value //TODO: merge this with the fitness() function of the superclass???
 	

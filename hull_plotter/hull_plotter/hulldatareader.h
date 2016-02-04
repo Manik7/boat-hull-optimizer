@@ -6,7 +6,7 @@
 #include "Hull_qt.h"
 #include "Point_3_qt.h"
 
-struct HullDataReader {
+struct HullDataReader/* : public QObject */{
     enum {keel = 0, chine = 1, beam = 2, origin = 3};
 
     Point_3_qt hull_data[5][4];
@@ -14,6 +14,9 @@ struct HullDataReader {
     HullDataReader();
     void read(std::string ifile);
     void write_hull_qt(Hull_qt& hull);
+/*
+signals:
+    void invalidFile();*/
 };
 
 #endif // HULLDATAREADER_H

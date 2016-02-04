@@ -24,6 +24,7 @@ void HullDataReader::read(std::string ifile) {
         ifs.close();
     } else {
         std::cerr << "Failed to open file!" << std::endl;
+        /*emit invalidFile();*/
     }
 }
 

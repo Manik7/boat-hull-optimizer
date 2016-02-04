@@ -6,6 +6,8 @@ HullPlotter::HullPlotter(QWidget *parent) :
     ui(new Ui::HullPlotter)
 {
     ui->setupUi(this);
+    //generation_number = Counter(this);
+    //generation_number.setValue(0);
 
     bodyPlanScene = new QGraphicsScene(this);
     ui->graphicsView->setScene(bodyPlanScene);
@@ -24,7 +26,8 @@ HullPlotter::HullPlotter(QWidget *parent) :
     //Set up a timer to update stuff regularily, see: http://doc.qt.io/qt-5/qtwidgets-widgets-analogclock-example.html
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(1000);
+    QObject::connect(timer, SIGNAL(timeout()), &generation_number, SLOT(increment()));
+    timer->start(2000);
 }
 
 HullPlotter::~HullPlotter()
@@ -40,7 +43,13 @@ void HullPlotter::paintEvent(QPaintEvent *)
     Hull_qt hull;
     HullDataReader h;
     hull.stations.clear();
-    h.read("test.dat");
+//    h.read("test.dat");
+
+    std::string file;
+    file = "pointcloud_data/GA_" + std::to_string(generation_number.value()) + ".pc";
+
+    std::cout << "trying to read " << file << std::endl;
+    h.read(file);
     h.write_hull_qt(hull);
 
     QPainter painter(this);

@@ -27,7 +27,7 @@ clean: clean_data clean_profiling
 	$(MAKE) -C build/debug/ clean
 
 clean_data:
-	rm -f data/*.dat data/*.svg data/*.gp data/GA_*.txt
+	rm -f data/*.dat data/*.svg data/*.gp data/GA_*.txt data/GA_*.pc
 
 clean_profiling:
 	rm -f gmon.out
