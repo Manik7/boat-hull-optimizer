@@ -46,13 +46,24 @@ private:
 
     QPen sheerPen;
     QPen stationPen;
+    QPen chinePen;
+    QPen keelPen;
     QPen defaultPen;
     QPen pointPen;
+
+    QPen sheerPen_thick;
+    QPen stationPen_thick;
+    QPen chinePen_thick;
+    QPen keelPen_thick;
+    QPen defaultPen_thick;
+    QPen pointPen_thick;
 
     Counter generation_number;
     unsigned int generation_step_size = 100000;
 
     std::vector<QGraphicsLineItem*> bodyPlanLines;
+    std::vector<QGraphicsLineItem*> breadthPlanLines;
+    std::vector<QGraphicsLineItem*> sheerPlanLines;
 
 protected:
   void paintEvent(QPaintEvent *);
@@ -61,7 +72,7 @@ protected:
   void body_plan(Hull_qt &hull);
 
   //looking from above
-  void breadth_plan(Hull_qt& hull, QPainter& painter);
+  void breadth_plan(Hull_qt& hull);
 
   //looking from the side
   void sheer_plan(Hull_qt& hull, QPainter& painter);
