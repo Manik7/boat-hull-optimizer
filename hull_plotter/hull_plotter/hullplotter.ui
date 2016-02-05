@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>620</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,9 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QGraphicsView" name="sheer_GraphicsView"/>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="font">
@@ -36,8 +39,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QGraphicsView" name="sheer_GraphicsView"/>
+     <item row="0" column="1">
+      <widget class="QGraphicsView" name="breadth_GraphicsView"/>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
@@ -50,9 +53,6 @@
         <string>Top </string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QGraphicsView" name="breadth_GraphicsView"/>
      </item>
     </layout>
    </widget>
