@@ -7,6 +7,8 @@ HullPlotter::HullPlotter(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    double scale_factor = 0.12;
+
     bodyPlanScene = new QGraphicsScene(this);
     ui->body_GraphicsView->setScene(bodyPlanScene);
     ui->body_GraphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -15,13 +17,13 @@ HullPlotter::HullPlotter(QWidget *parent) :
     breadthPlanScene = new QGraphicsScene(this);
     ui->breadth_GraphicsView->setScene(breadthPlanScene);
     ui->breadth_GraphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    ui->breadth_GraphicsView->scale(0.15, 0.15);
+    ui->breadth_GraphicsView->scale(scale_factor, scale_factor);
     ui->breadth_GraphicsView->rotate(-90);
 
     sheerPlanScene = new QGraphicsScene(this);
     ui->sheer_GraphicsView->setScene(sheerPlanScene);
     ui->sheer_GraphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    ui->sheer_GraphicsView->scale(0.15, -0.15);
+    ui->sheer_GraphicsView->scale(scale_factor, -scale_factor);
     ui->sheer_GraphicsView->rotate(-90);
 
     sheerPen = QPen(Qt::green);
@@ -60,6 +62,9 @@ HullPlotter::HullPlotter(QWidget *parent) :
     defaultPen_thick = QPen(Qt::black);
     keelPen_thick.setWidth(9);
 
+    bigfont.setPixelSize(50);
+    reallybigfont.setPixelSize(300);
+
     //Set up a timer to update stuff regularily, see: http://doc.qt.io/qt-5/qtwidgets-widgets-analogclock-example.html
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -82,7 +87,7 @@ void HullPlotter::paintEvent(QPaintEvent *)
     std::string file;
     file = "pointcloud_data/GA_" + std::to_string(generation_number.value()) + ".pc";
 
-    std::cout << "trying to read " << file << std::endl;
+    //std::cout << "trying to read " << file << std::endl;
     h.read(file);
     h.write_hull_qt(hull);
 
@@ -94,7 +99,7 @@ void HullPlotter::paintEvent(QPaintEvent *)
     system_clock::time_point today = system_clock::now();
     std::time_t tt;
     tt = system_clock::to_time_t ( today );
-    std:: cout << ctime(&tt) << std::endl;
+    //std:: cout << ctime(&tt) << std::endl;
 
     ui->time_label->setText(ctime(&tt));
 
@@ -141,6 +146,11 @@ void HullPlotter::body_plan(Hull_qt& hull) {
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(beam, beam), pointPen));
         bodyPlanLines.push_back(bodyPlanScene->addLine(QLineF(origin, origin), pointPen));
     }
+    /*QGraphicsTextItem * io = new QGraphicsTextItem;
+    io->setPos(200,350);
+    io->setPlainText("Front");
+    io->setFont(bigfont);
+    bodyPlanScene->addItem(io);*/
 }
 
 //looking from above
@@ -178,6 +188,12 @@ void HullPlotter::breadth_plan(Hull_qt& hull) {
     }
 
     //TODO: Plot stations
+
+    /*QGraphicsTextItem * io = new QGraphicsTextItem;
+    io->setPos(500,50);
+    io->setPlainText("Top");
+    io->setFont(reallybigfont);
+    breadthPlanScene->addItem(io);*/
 }
 
 //looking from the side
@@ -214,6 +230,12 @@ void HullPlotter::sheer_plan(Hull_qt& hull) {
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *second), keelPen_thick));
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
+
+    /*QGraphicsTextItem * io = new QGraphicsTextItem;
+    io->setPos(200,50);
+    io->setPlainText("Side");
+    io->setFont(reallybigfont);
+    sheerPlanScene->addItem(io);*/
 
     //TODO: Plot stations
 }

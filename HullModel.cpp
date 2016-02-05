@@ -39,8 +39,8 @@ void HullModel::stream_output(std::ostream& stream) /*const*/ {
 	}
 	
 	stream << "Properties of candidate solution:" << std::endl;
-	stream << "Fitness = " << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
-	stream << "Volume =\t" << volume*4/(1000*1000*1000) << " m³" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m²\n" << std::endl;
+	stream << "Fitness =\t" << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
+	stream << "Volume =\t" << volume*4/(1000*1000*1000) << " m3" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m2" << std::endl;
 }
 	
 void HullModel::export_hull(std::string filename) /*const*/ {

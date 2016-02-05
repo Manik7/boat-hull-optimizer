@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
+#include <QGraphicsTextItem>
 #include <QLineF>
 #include <QString>
 
@@ -57,6 +58,9 @@ private:
     QPen keelPen_thick;
     QPen defaultPen_thick;
     QPen pointPen_thick;
+
+    QFont bigfont;
+    QFont reallybigfont;
 
     Counter generation_number;
     unsigned int generation_step_size = 100000;
