@@ -10,8 +10,6 @@ void HullDataReader::read(std::string ifile) {
     ifs.open(ifile, std::ifstream::in);
     if (ifs.is_open()) {
 
-        int line_number = 0, station = 0, point = 0;
-
         for (int st=0; st<5; ++st) {
             for (int pt=0; ifs.good() && pt<4; ++pt) {
                 ifs >> hull_data[st][pt].x >> hull_data[st][pt].y >> hull_data[st][pt].z;
