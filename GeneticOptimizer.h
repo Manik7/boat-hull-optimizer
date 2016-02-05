@@ -199,7 +199,7 @@ public:
 		population_variance = (population_sum_sqr_fitnesses - (population_total_fitness * population_total_fitness)/population_size)/population_size;
 		
 		population_mean_fitness = population_total_fitness/population_size + K;
-		std::cout << "Generation = \t" << current_generation << "\n";
+		std::cout << "\nGeneration = \t" << current_generation << "\n";
 		std::cout << "Mean fitness =\t" << population_mean_fitness << "\n";
 		std::cout << "Variance =\t\t" << population_variance << "\n";
 		std::cout << "Standard Deviation =\t" << std::sqrt(population_variance) << "\n\n";

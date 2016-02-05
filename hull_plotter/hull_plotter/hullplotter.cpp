@@ -222,7 +222,7 @@ void HullPlotter::sheer_plan(Hull_qt& hull) {
     }
 
     for (auto first = ++(origin_points.begin()), second = origin_points.begin(); first!=origin_points.end(); ++first, ++second) {
-        sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *second), keelPen_thick));
+        sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *second), sheerPen_thick));
         sheerPlanLines.push_back(sheerPlanScene->addLine(QLineF(*first, *first), pointPen_thick));
     }
 
