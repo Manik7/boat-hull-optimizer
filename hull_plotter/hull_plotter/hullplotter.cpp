@@ -86,6 +86,9 @@ void HullPlotter::paintEvent(QPaintEvent *)
     h.read(file);
     h.write_hull_qt(hull);
 
+    std::string textfile("textfiles/GA_" + std::to_string(generation_number.value()) + ".txt");
+    updateText(textfile);
+
     //clock example
     using std::chrono::system_clock;
     system_clock::time_point today = system_clock::now();
@@ -98,6 +101,22 @@ void HullPlotter::paintEvent(QPaintEvent *)
     body_plan(hull);
     breadth_plan(hull);
     sheer_plan(hull);
+}
+
+void HullPlotter::updateText(std::string filename) {
+
+    std::ifstream file(filename);
+    std::string str;
+    //std::string file_contents;
+    QString file_contents;
+    while (std::getline(file, str))
+    {
+      file_contents.push_back(str.c_str());
+      file_contents.push_back('\n');
+    }
+
+
+    ui->textBrowser->setText(file_contents);
 }
 
 //view from the front

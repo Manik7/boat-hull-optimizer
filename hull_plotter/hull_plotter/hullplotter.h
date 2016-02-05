@@ -73,6 +73,8 @@ private:
 protected:
   void paintEvent(QPaintEvent *);
 
+  void updateText(std::string filename);
+
   //looking from the front
   void body_plan(Hull_qt &hull);
 
