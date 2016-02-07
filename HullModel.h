@@ -30,9 +30,10 @@ public: //attributes
 	int birth_generation = 0;
 	
 private: //attributes
-	double volume = 0.0;
-	double wetted_area = 0.0;
-	double moment_to_trim_1_deg = 0.0;
+	double volume = 0.;
+	double wetted_area = 0.;
+	double moment_to_trim_1_deg = 0.;
+	double prismatic_coefficient = 0.;
 	
 public: //methods
 	HullModel(); // Uses the default parameter values hard-coded into all the parameter-structs

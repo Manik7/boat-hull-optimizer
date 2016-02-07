@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cassert>
 #include <utility>
+#include <cmath>
 
 #include "Optimizer.h"
 #include "HullModel.h"
@@ -34,7 +35,7 @@ class GeneticOptimizer : public Optimizer {
 	
 public:
 	static constexpr int population_size = 1000;
-	static constexpr unsigned int generations_per_output = 10000; //100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
+	static constexpr unsigned int generations_per_output = 100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
 
 private:
 	//Random numbers and distributions
@@ -49,6 +50,8 @@ private:
 	unsigned int current_generation = 0;
 	
 	static constexpr int number_of_crossovers = population_size/10;
+	static constexpr double base_selection_chance = 0.1;
+	static constexpr int selection_threshold_in_std_dev = 2;
 	
 	double population_total_fitness = 0.;
 	double population_sum_sqr_fitnesses = 0.;
@@ -56,6 +59,8 @@ private:
 	double population_worst_fitness = 100.;
 	double population_variance = 0.;
 	double population_mean_fitness = 0.;
+	
+	int best_candidate_idx = 0;
 	
 public:
 	//TODO: Constructor
@@ -99,10 +104,12 @@ public:
 		
 		for (int i = 0; i<number_of_crossovers; ++i) {
 			
+			// Selection
+			
 			//select first parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation) {
+				if(selection(index)) {
 					first_parent_idx = index;
 					break;
 				}
@@ -111,7 +118,7 @@ public:
 			//select second parent
 			while(true) {
 				index = individualDistribution(engine);
-				if(chanceDistribution(engine) <= population[index].model.fitness()/population_best_fitness && population[index].birthday != current_generation && index != first_parent_idx) {
+				if(selection(index) && index != first_parent_idx) {
 					second_parent_idx = index;
 					break;
 				}
@@ -133,22 +140,23 @@ public:
 		}
 		
 		//iterate over all elements computing their fitness and updating the rolling total
-		population_total_fitness = 0.;
+		calculate_population_parameters();
+		/*population_total_fitness = 0.;
 // 		population_worst_fitness = 100.;
-// 		population_best_fitness = 0.;
+		population_best_fitness = 0.;
 		for (auto it : population) {
 			double f(it.model.fitness());
 			population_total_fitness += f;
 			if (f > population_best_fitness) population_best_fitness = f;
 // 			if (f < population_worst_fitness) population_worst_fitness = f;
-		}
+		}*/
 	}
 	
 	void run(int steps = 10) {
 	
 		std::chrono::time_point<std::chrono::system_clock> start, end;
 		
-		evaluate_population();
+		output_population_parameters();
 		start = std::chrono::system_clock::now();
 		
 		if(generations_per_output > 0) {
@@ -156,7 +164,7 @@ public:
 				for (int j = 0; j<generations_per_output; ++j) {
 					do_step();
 				}
-				evaluate_population();
+				output_population_parameters();
 			}
 		} else {
 			for (int i = 0; i < steps; ++i) {
@@ -166,21 +174,36 @@ public:
 		
 		end = std::chrono::system_clock::now();
 		
-		if (generations_per_output==0) evaluate_population();
+		if (generations_per_output==0) output_population_parameters();
 		
 		std::chrono::duration<double> elapsed_seconds = end-start;
 		std::cout << "Elapsed time = " << elapsed_seconds.count() << std::endl;
 	}
 	
-	/* //TODO Calculate the total fitness, mean fitness, and standard deviation and output 
-	 * them in a log file together with a time stamp. This method is called at a 
-	 * regular but very large interval, so the progress of the optimization can be 
-	 * seen.*/
-	void evaluate_population() {
+	inline bool selection(int index) {
 		
-		int best_candidate_idx = 0;
-		double best_fitness = 0.;
+		static_assert(0. <= base_selection_chance && base_selection_chance <= 1., "The base selection chance must be a probability in [0,1]");
 		
+		/* Calculates the distance to the best solution in standard deviations. 1 minus this number is the probabilty 
+		 * of being selected. Alternatively, the number can be divided by some coeffcieint. This coefficent, the 
+		 * selection_threshold_in_std_dev defines just how many standard devs distant a solution must be, for the
+		 * std_dev_gradient term to be 0.0
+		 */
+		double std_dev_gradient = 1 - (population_best_fitness - population[index].model.fitness())*(population_best_fitness - population[index].model.fitness())/(population_variance * selection_threshold_in_std_dev);
+		
+		/* The std_dev_gradient term is forced to be non-negative, and is scaled so that it plus the base rate make for a 
+		 * maximum probabilty of 1, to avoid any saturation of the selection function. */
+		std_dev_gradient < 0 ? std_dev_gradient = 0 : (1-base_selection_chance)*std_dev_gradient;
+		
+		return chanceDistribution(engine) <= (base_selection_chance + std_dev_gradient) && population[index].birthday < current_generation;
+		
+// 		return chanceDistribution(engine) <= (population[index].model.fitness()/population_best_fitness) && population[index].birthday < current_generation; //old selection function
+	}
+	
+	//Find the best population member, computes the mean & variance
+	inline void calculate_population_parameters() {
+		best_candidate_idx = 0;
+		population_best_fitness = 0;
 		population_total_fitness = 0.;
 		population_sum_sqr_fitnesses = 0.;
 		double K = population[0].model.fitness();
@@ -190,15 +213,23 @@ public:
 			double f = population[i].model.fitness();
 			population_total_fitness += f - K;
 			population_sum_sqr_fitnesses += (f - K) * (f - K);
-			if (f > best_fitness) {
-				best_fitness = f;
+			if (f > population_best_fitness) {
+				population_best_fitness = f;
 				best_candidate_idx = i;
 			}
 		}
 		
 		population_variance = (population_sum_sqr_fitnesses - (population_total_fitness * population_total_fitness)/population_size)/population_size;
-		
 		population_mean_fitness = population_total_fitness/population_size + K;
+	}
+	
+	/* //TODO Calculate the total fitness, mean fitness, and stan0000; //dard deviation and output 
+	 * them in a log file together with a time stamp. This method is called at a 
+	 * regular but very large interval, so the progress of the optimization can be 
+	 * seen.*/
+	void output_population_parameters() {
+		calculate_population_parameters();
+		
 		std::cout << "\nGeneration = \t" << current_generation << "\n";
 		std::cout << "Mean fitness =\t" << population_mean_fitness << "\n";
 		std::cout << "Variance =\t\t" << population_variance << "\n";

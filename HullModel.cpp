@@ -23,7 +23,7 @@ void HullModel::output() /*const*/ {
 }
 
 void HullModel::stream_output(std::ostream& stream) /*const*/ {
-	stream << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << std::endl;
+	stream << "station\t" << "beam.x\t"<< "chine.x\t" << "chine.y\t" << "keel.y\t" << "area\t" << "per.\t" <<"flare\t" << "deadrise" << "\n";
 	
 	for (int stat_no=0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
@@ -35,17 +35,19 @@ void HullModel::stream_output(std::ostream& stream) /*const*/ {
 			<< std::to_string(Model::genome[3*stat_no + CHINE_Y].second) << '\t' 
 			<< std::to_string(Model::genome[3*stat_no + KEEL_Y].second) << '\t' 		
 			<< station_properties[stat_no].area << '\t' << station_properties[stat_no].perimeter << '\t'
-			<< deg(station_properties[stat_no].flare_rad) << '\t' << deg(station_properties[stat_no].deadrise_rad) << std::endl;
+			<< deg(station_properties[stat_no].flare_rad) << '\t' << deg(station_properties[stat_no].deadrise_rad) << "\n";
 	}
 	
-	stream << "Properties of candidate solution:" << std::endl;
-	stream << "Fitness =\t" << std::to_string(this->fitness()) << std::endl; //NOTE: fitness must be calcualted before outputting volume etc
-	stream << "Volume =\t" << volume*4/(1000*1000*1000) << " m3" << std::endl << "WSA =\t" << wetted_area*4*pow(10,-6) << " m2" << std::endl;
+	stream << "Properties of candidate solution:" << "\n";
+	stream << "Fitness =\t" << std::to_string(this->fitness()) << "\n"; //NOTE: fitness must be calcualted before outputting volume etc
+	stream << "Volume =\t" << volume*4/(1000*1000*1000) << " m3" << "\n" << "WSA =\t" << wetted_area*4*pow(10,-6) << " m2" << "\n";
+	stream << "C_p = \t" << prismatic_coefficient << "\n";
+	stream << std::endl;
 }
 	
 void HullModel::export_hull(std::string filename) /*const*/ {
     export_hull_coordinates(filename);
-    export_point_cloud(filename);
+//     export_point_cloud(filename);
     export_gnuplot_script(filename);
     export_hull_data(filename);
 }
@@ -127,7 +129,7 @@ void HullModel::export_hull_data(std::string filename) /*const*/ {
 	} else std::cout << "Error opening file: " << filename << ".txt" << std::endl;
 }
 
-/*TODO: Modifiy this function in such a way that the fitness is computed from several terms, 
+/* This function computes the fitness from several terms, 
  * each normalized to [0,1]. The additive constraint terms t_1...t_n are a measure of how close
  * the hull is to meeting that constraint. The multiplicative constraint terms c_1...c_n are 
  * binary, 1 when the constraint is met, else 0. The normalized Fitness terms f_WSA and f_pitch 
@@ -187,6 +189,7 @@ double HullModel::compute_fitness()
 	//TODO: moment_to_trim_1_deg
 
 	volume *= hull_parameters.stationSpacing;
+	prismatic_coefficient = volume/(station_properties[0].area*hull_parameters.lastStationOffset);
 	wetted_area *= hull_parameters.stationSpacing;
 	
 // 	if (volume > hull_parameters.minVolume) {

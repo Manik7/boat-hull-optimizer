@@ -14,7 +14,9 @@ struct HullParameters
 	static constexpr int halfBwl = 300;
 	static constexpr int maxDraft = 450;
 	static constexpr int numberOfStations = NUMBER_OF_GENES / 3;
-	static constexpr int stationSpacing = (halfLwl-100) / (numberOfStations - 1);
+	static constexpr int lastStationOffset = (halfLwl-100);
+	static constexpr int stationSpacing = lastStationOffset / (numberOfStations - 1);
+	
 };
 
 #endif // HULL_PARAMETERS_H

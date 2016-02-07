@@ -3,9 +3,9 @@
 
 struct StationParameters {
 
-	double flare_min_rad = rad(10.0);
+	double flare_min_rad = rad(00.0);
 	double flare_max_rad = rad(30.0);
-	double deadrise_min_rad = rad(25.0);
+	double deadrise_min_rad = rad(0.0);
 	double deadrise_max_rad = rad(60.0);
 	int z_coord, half_beam;
 
