@@ -35,7 +35,12 @@ class GeneticOptimizer : public Optimizer {
 	
 public:
 	static constexpr int population_size = 1000;
+	
+#if NDEBUG
 	static constexpr unsigned int generations_per_output = 100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
+#else 
+	static constexpr unsigned int generations_per_output = 100*1000; //Output every X generations. Note that 0 disables this functionality, outputting only at the beginnign and end.
+#endif
 
 private:
 	//Random numbers and distributions
