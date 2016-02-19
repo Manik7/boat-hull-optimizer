@@ -76,8 +76,9 @@ private:
 	double population_worst_fitness = 100.;
 	double population_variance = 0.;
 	double population_mean_fitness = 0.;
-	
 	int best_candidate_idx = 0;
+	
+	double all_time_best_fitness = 0.;
 	
 public:
 	//TODO: Constructor
@@ -144,8 +145,8 @@ public:
 			//select first child
 			while(true) {
 				index = individualDistribution(engine);
-				//Parents, newborns, & best solution of the prev. generation can not be overwritten
-				if(population[index].birthday != current_generation && index != first_parent_idx && index != second_parent_idx && index != best_candidate_idx) {
+				//Parents, newborns, & (NOTE: commented out elitism...) best solution of the prev. generation can not be overwritten
+				if(population[index].birthday != current_generation && index != first_parent_idx && index != second_parent_idx /*&& index != best_candidate_idx*/) {
 					first_child_idx = index;
 					break;
 				}
@@ -225,6 +226,11 @@ public:
 			if (f > population_best_fitness) {
 				population_best_fitness = f;
 				best_candidate_idx = i;
+				
+				if(f > all_time_best_fitness) {
+					all_time_best_fitness = f;
+					population[best_candidate_idx].model.export_hull("best_solution");
+				}
 			}
 		}
 		

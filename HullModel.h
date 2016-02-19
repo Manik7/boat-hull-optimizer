@@ -104,16 +104,66 @@ private: //methods
 		} else return 0;
 	}
 	
+	inline double volume_term() {
+		if (volume > hull_parameters.minVolume) {
+			return 1.0;
+		} else {
+			return volume/hull_parameters.minVolume;
+		}
+	}	
+	
 	inline int deadrise_constraint(int stat_no) {
 		if (station_parameters[stat_no].deadrise_min_rad <= station_properties[stat_no].deadrise_rad && station_properties[stat_no].deadrise_rad <= station_parameters[stat_no].deadrise_max_rad) {
 			return 1; //deadrise OK
 		} else return 0;
 	}
 	
+	inline double station_deadrise_term(int stat_no) {
+		double result;
+		
+		double d_min = station_parameters[stat_no].deadrise_min_rad;
+		double d_max = station_parameters[stat_no].deadrise_max_rad;
+		double d = station_properties[stat_no].deadrise_rad;
+		assert (rad(-90) <= d && d <= rad(90));
+		
+		if(d_min <= d && d <= d_max) {
+			result = 1.;
+		} else if (d < d_min) {
+			result = (d + rad(90)) / (d_min + rad(90));
+		} else if (d > d_max) {
+			result = 1-(d-d_max)/(rad(90) - d_max);
+		}
+		
+		assert(0. <= result && result <= 1.);
+		return result / hull_parameters.numberOfStations;
+	}
+	
 	inline int flare_constraint(int stat_no) {
 		if (station_parameters[stat_no].flare_min_rad <= station_properties[stat_no].flare_rad && station_properties[stat_no].flare_rad <= station_parameters[stat_no].flare_max_rad) {
 			return 1; //flare OK
 		} else return 0;
+	}
+	
+	// this function returns the flare term for one station
+	inline double station_flare_term(int stat_no) {
+		double result;
+		double f_min = station_parameters[stat_no].flare_min_rad;
+		double f_max = station_parameters[stat_no].flare_max_rad;
+		double f = station_properties[stat_no].flare_rad;
+		assert (0 <= f && f <= rad(90));
+		
+		if (f_min <= f && f <= f_max) {
+			result = 1.;
+		} else if (f < f_min) {
+			result = f / f_min;
+		} else if (f > f_max) {
+			result = 1-(f - f_max) / (rad(90) - f_max);
+		} else {
+			assert(false); // flare invalid, i.e. not in [0°,90°]
+			result = 0.;
+		}
+		assert(0. <= result && result <= 1.);
+		return result / hull_parameters.numberOfStations;
 	}
 	
 	inline int twist_constraint(int stat_no) {
@@ -124,6 +174,10 @@ private: //methods
 		} else return 1;
 	}
 	
+	inline double station_twist_term(int stat_no) {
+		//TODO
+		return 0.;
+	}
 	
 // 	/* check that the area is smaller than the predeccessor */
 // 	inline int convergence_constraint(int stat_no) {
@@ -149,61 +203,7 @@ private: //methods
 		else return 1; //the first station
 	}
 	
-	inline double volume_term() {
-		if (volume > hull_parameters.minVolume) {
-			return 1.0;
-		} else {
-			return volume/hull_parameters.minVolume;
-		}
-	}
-	
-	inline double station_deadrise_term(int stat_no) {
-		double result;
 		
-		double d_min = station_parameters[stat_no].deadrise_min_rad;
-		double d_max = station_parameters[stat_no].deadrise_max_rad;
-		double d = station_properties[stat_no].deadrise_rad;
-		assert (rad(-90) <= d && d <= rad(90));
-		
-		if(d_min <= d && d <= d_max) {
-			result = 1.;
-		} else if (d < d_min) {
-			result = (d + rad(90)) / (d_min + rad(90));
-		} else if (d > d_max) {
-			result = 1-(d-d_max)/(rad(90) - d_max);
-		}
-		
-		assert(0. <= result && result <= 1.);
-		return result / hull_parameters.numberOfStations;
-	}
-	
-	// this function returns the flare term for one station
-	inline double station_flare_term(int stat_no) {
-		double result;
-		double f_min = station_parameters[stat_no].flare_min_rad;
-		double f_max = station_parameters[stat_no].flare_max_rad;
-		double f = station_properties[stat_no].flare_rad;
-		assert (0 <= f && f <= rad(90));
-		
-		if (f_min <= f && f <= f_max) {
-			result = 1.;
-		} else if (f < f_min) {
-			result = f / f_min;
-		} else if (f > f_max) {
-			result = 1-(f - f_max) / (rad(90) - f_max);
-		} else {
-			assert(false); // flare invalid, i.e. not in [0°,90°]
-			result = 0.;
-		}
-		assert(0. <= result && result <= 1.);
-		return result / hull_parameters.numberOfStations;
-	}
-	
-	inline double station_twist_term(int stat_no) {
-		//TODO
-		return 0.;
-	}
-	
 // 	//TODO: Can this function be combined with the convergence_constraint for improved performance? 
 // 	inline double station_convergence_term(int stat_no) {	
 // 		double result;
@@ -233,17 +233,55 @@ private: //methods
 		} else { 
 			double prev_chine_x = Model::genome[3*(stat_no-1)+CHINE_X].second;
 			double prev_chine_y = Model::genome[3*(stat_no-1)+CHINE_Y].second;
-			double prev_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+// 			double prev_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
 			double curr_chine_x = Model::genome[3*stat_no+CHINE_X].second;
 			double curr_chine_y = Model::genome[3*stat_no+CHINE_Y].second;
-			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+// 			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
 			
 			result = (curr_chine_x <= prev_chine_x ? 1. : prev_chine_x/curr_chine_x);
 			result += (curr_chine_y <= prev_chine_y ? 1. : prev_chine_y/curr_chine_y);
-			result += (curr_keel_y <= prev_keel_y ? 1. : prev_keel_y/curr_keel_y);
-			result /= 3.;
+// 			result += (curr_keel_y <= prev_keel_y ? 1. : prev_keel_y/curr_keel_y);
+// 			result /= 3.;
+			result /= 2.;
 		}
 				
+		assert(0. <= result && result <= 1.);
+		return result / hull_parameters.numberOfStations;
+	}
+	
+	inline int rocker_constraint(int stat_no) {
+		if (stat_no > 0) {
+			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second; //the value from the previous station
+			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			
+			if(min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+		else return 1; //the first station
+	}
+	
+	inline double station_rocker_term(int stat_no) {
+		double result;
+		if(stat_no == 0) { //first station
+			result = 1.;
+		} else {
+			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			
+			if(min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) {
+				result = 1.;
+			} else if(curr_keel_y < min_keel_y) { //keel too high (too close to WL)
+				result = curr_keel_y/min_keel_y;
+			} else { //keel too deep
+				result = max_keel_y/curr_keel_y;
+			}
+		}
+		
 		assert(0. <= result && result <= 1.);
 		return result / hull_parameters.numberOfStations;
 	}
