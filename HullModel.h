@@ -125,15 +125,28 @@ private: //methods
 	}
 	
 	
-	/* check if all the beam and chine values of a station are smaller than those of its predecessor
-	 * or alternatively, just chekc that the area is smaller than the predeccessor */
+// 	/* check that the area is smaller than the predeccessor */
+// 	inline int convergence_constraint(int stat_no) {
+// 		if (stat_no>0) {
+// 			if(station_properties[stat_no].area < station_properties[stat_no-1].area) {
+// 				return 1;
+// 			}
+// 			else return 0; //this station is too large
+// 		} else return 1; //this is the 0th station
+// 	}
+	
+	/* check if all the beam and chine values of a station are smaller than those of its predecessor */
 	inline int convergence_constraint(int stat_no) {
 		if (stat_no>0) {
-			if(station_properties[stat_no].area < station_properties[stat_no-1].area) {
+			if(Model::genome[3*stat_no+CHINE_X].second <= Model::genome[3*(stat_no-1)+CHINE_X].second
+				&& Model::genome[3*stat_no+CHINE_Y].second <= Model::genome[3*(stat_no-1)+CHINE_Y].second
+				&& Model::genome[3*stat_no+KEEL_Y].second <= Model::genome[3*(stat_no-1)+KEEL_Y].second) 
+			{
 				return 1;
 			}
 			else return 0; //this station is too large
-		} else return 1; //this is the 0th station
+		}
+		else return 1; //the first station
 	}
 	
 	inline double volume_term() {
@@ -191,21 +204,44 @@ private: //methods
 		return 0.;
 	}
 	
-	//TODO: Can this function be combined with the convergence_constraint for improved performance? 
+// 	//TODO: Can this function be combined with the convergence_constraint for improved performance? 
+// 	inline double station_convergence_term(int stat_no) {	
+// 		double result;
+// 		
+// 		if(stat_no == 0) { //first station
+// 			result = 1.;
+// 		} else { 
+// 			double prev_area = station_properties[stat_no-1].area;
+// 			double curr_area = station_properties[stat_no].area;
+// 			
+// 			if (curr_area <= prev_area) {
+// 				result = 1.;
+// 			} else {
+// 				result = prev_area/curr_area;
+// 			}
+// 		}
+// 				
+// 		assert(0. <= result && result <= 1.);
+// 		return result / hull_parameters.numberOfStations;
+// 	}
+	
 	inline double station_convergence_term(int stat_no) {	
 		double result;
 		
 		if(stat_no == 0) { //first station
 			result = 1.;
 		} else { 
-			double prev_area = station_properties[stat_no-1].area;
-			double curr_area = station_properties[stat_no].area;
+			double prev_chine_x = Model::genome[3*(stat_no-1)+CHINE_X].second;
+			double prev_chine_y = Model::genome[3*(stat_no-1)+CHINE_Y].second;
+			double prev_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+			double curr_chine_x = Model::genome[3*stat_no+CHINE_X].second;
+			double curr_chine_y = Model::genome[3*stat_no+CHINE_Y].second;
+			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
 			
-			if (curr_area <= prev_area) {
-				result = 1.;
-			} else {
-				result = prev_area/curr_area;
-			}
+			result = (curr_chine_x <= prev_chine_x ? 1. : prev_chine_x/curr_chine_x);
+			result += (curr_chine_y <= prev_chine_y ? 1. : prev_chine_y/curr_chine_y);
+			result += (curr_keel_y <= prev_keel_y ? 1. : prev_keel_y/curr_keel_y);
+			result /= 3.;
 		}
 				
 		assert(0. <= result && result <= 1.);

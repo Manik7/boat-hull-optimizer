@@ -54,9 +54,21 @@ private:
 	Individual<ModelType> population[population_size];
 	unsigned int current_generation = 0;
 	
+	/* The number of crossovers done per generation */
 	static constexpr int number_of_crossovers = population_size/10;
+	
+	/* This is a measure of selection pressure. The probability for a candidate 
+	 * to be selected, irrespective of it's fitness. The fitness-proportional 
+	 * component is added ontop of this value.
+	 */
 	static constexpr double base_selection_chance = 0.1;
-	static constexpr int selection_threshold_in_std_dev = 2;
+	
+	/* This is a measure of selection pressure. Candidates more than x std-devs 
+	 * away from the optimal solution only get the base chance of being selected.
+	 * Increasing this value means that worse solutions have a high probability of
+	 * being chosen, but still proportional to their fitness.
+	 */
+	static constexpr int selection_threshold_in_std_dev = 2; 
 	
 	double population_total_fitness = 0.;
 	double population_sum_sqr_fitnesses = 0.;

@@ -206,10 +206,12 @@ double HullModel::compute_fitness()
 	assert(0 <= deadrise_t && deadrise_t <= 1);
 	assert(0 <= flare_t && flare_t <= 1);
 // 	assert(0 <= twist_t && twist_t <= 1);
+	assert(0 <= convergence_t && convergence_t <= 1);
 	
 	assert(flare_c == 0 || flare_c == 1);
 	assert(deadrise_c == 0 || deadrise_c == 1);
 // 	assert(twist_c == 0 || twist_c == 1);
+	assert(convergence_c == 0 || convergence_c == 1);
 	
 	double volume_t(volume_term());
 	double volume_c(volume_constraint());
