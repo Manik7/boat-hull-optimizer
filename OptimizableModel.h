@@ -12,7 +12,7 @@ public:
 	static constexpr int numberOfGenes = 15;
 	static constexpr int domainLo = 0;
 	static constexpr int domainHi = 100;
-	static constexpr double mutation_standard_deviation = 0.3;
+	static constexpr double mutation_standard_deviation = 0.3; // default = 0.3
 	
 protected:
 	//<parameter domain (input values), parameter range (output, the real values)>

@@ -253,7 +253,7 @@ private: //methods
 // 		return 4*250*1000 / (wetted_area-1000*1000); 
 // 		return (prismatic_coefficient-0.4)*2;
 // 		return prismatic_coefficient;
-		return 4*250*1000 / (wetted_area-1000*1000) + (prismatic_coefficient-0.4)*2;
+		return 4*250*1000 / (wetted_area-1000*1000) + 1.2 * (prismatic_coefficient-0.4)*2.5;
 		/* I highly doubt the overall surface area of the hull will drop below 5m^2 no matter 
 		 * how much optimization is done. 1m^2 is subtracted from the WSA of the quarter-hull
 		 * so that changes in the (remaining) WSA have a much larger impact on the fitness 

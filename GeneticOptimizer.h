@@ -61,14 +61,14 @@ private:
 	 * to be selected, irrespective of it's fitness. The fitness-proportional 
 	 * component is added ontop of this value.
 	 */
-	static constexpr double base_selection_chance = 0.1;
+	static constexpr double base_selection_chance = 0.3; //default = 0.1
 	
 	/* This is a measure of selection pressure. Candidates more than x std-devs 
 	 * away from the optimal solution only get the base chance of being selected.
 	 * Increasing this value means that worse solutions have a high probability of
 	 * being chosen, but still proportional to their fitness.
 	 */
-	static constexpr int selection_threshold_in_std_dev = 2; 
+	static constexpr int selection_threshold_in_std_dev = 5; //default = 2
 	
 	double population_total_fitness = 0.;
 	double population_sum_sqr_fitnesses = 0.;
@@ -144,7 +144,8 @@ public:
 			//select first child
 			while(true) {
 				index = individualDistribution(engine);
-				if(population[index].birthday != current_generation && index != first_parent_idx && index != second_parent_idx) {
+				//Parents, newborns, & best solution of the prev. generation can not be overwritten
+				if(population[index].birthday != current_generation && index != first_parent_idx && index != second_parent_idx && index != best_candidate_idx) {
 					first_child_idx = index;
 					break;
 				}
@@ -158,15 +159,6 @@ public:
 		
 		//iterate over all elements computing their fitness and updating the rolling total
 		calculate_population_parameters();
-		/*population_total_fitness = 0.;
-// 		population_worst_fitness = 100.;
-		population_best_fitness = 0.;
-		for (auto it : population) {
-			double f(it.model.fitness());
-			population_total_fitness += f;
-			if (f > population_best_fitness) population_best_fitness = f;
-// 			if (f < population_worst_fitness) population_worst_fitness = f;
-		}*/
 	}
 	
 	void run(int steps = 10) {
