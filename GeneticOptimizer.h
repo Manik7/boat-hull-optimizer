@@ -194,7 +194,7 @@ public:
 		 * selection_threshold_in_std_dev defines just how many standard devs distant a solution must be, for the
 		 * std_dev_gradient term to be 0.0
 		 */
-		double std_dev_gradient = 1 - (population_best_fitness - population[index].model.fitness())*(population_best_fitness - population[index].model.fitness())/(population_variance * selection_threshold_in_std_dev);
+		double std_dev_gradient = 1 - (population_best_fitness - population[index].model.fitness())*(population_best_fitness - population[index].model.fitness())/((population_variance+0.000001) * selection_threshold_in_std_dev);
 		
 		/* The std_dev_gradient term is forced to be non-negative, and is scaled so that it plus the base rate make for a 
 		 * maximum probabilty of 1, to avoid any saturation of the selection function. */

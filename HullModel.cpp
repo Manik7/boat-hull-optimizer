@@ -149,8 +149,8 @@ double HullModel::compute_fitness()
 	moment_to_trim_1_deg = 0.0;
 	
 	//TODO twist
-	double deadrise_c = 1., flare_c = 1., twist_c = 1.; //constraint multipliers
-	double deadrise_t = 0, flare_t = 0, twist_t = 0; //additive terms
+	double deadrise_c = 1., flare_c = 1., twist_c = 1., convergence_c = 1.; //constraint multipliers
+	double deadrise_t = 0., flare_t = 0., twist_t = 0., convergence_t = 0.; //additive terms
 	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
@@ -172,10 +172,12 @@ double HullModel::compute_fitness()
 		deadrise_c *= deadrise_constraint(stat_no);
 		flare_c *= flare_constraint(stat_no);
 // 		twist_c *= twist_constraint(stat_no);
+		convergence_c *= convergence_constraint(stat_no);
 		
 		deadrise_t += station_deadrise_term(stat_no);
 		flare_t += station_flare_term(stat_no);
 // 		twist_t += station_twist_term(stat_no);
+		convergence_t += station_convergence_term(stat_no);
 		
 		//volume, WSA, moment to trim calcs
 		volume += station_properties[stat_no].area;
@@ -189,8 +191,10 @@ double HullModel::compute_fitness()
 	//TODO: moment_to_trim_1_deg
 
 	volume *= hull_parameters.stationSpacing;
-	prismatic_coefficient = volume/(station_properties[0].area*hull_parameters.lastStationOffset);
 	wetted_area *= hull_parameters.stationSpacing;
+	prismatic_coefficient = volume/(station_properties[0].area*hull_parameters.lastStationOffset);
+	if(prismatic_coefficient > 1.) prismatic_coefficient = 1.; //cap the C_p at 1.0
+	
 	
 // 	if (volume > hull_parameters.minVolume) {
 // 		return fitness_term();
@@ -210,7 +214,7 @@ double HullModel::compute_fitness()
 	double volume_t(volume_term());
 	double volume_c(volume_constraint());
 	
-	double result = volume_t + deadrise_t + flare_t + volume_c*deadrise_c*flare_c*fitness_term();
+	double result = volume_t + deadrise_t + flare_t + convergence_t + volume_c*deadrise_c*flare_c*convergence_c*fitness_term();
 	if(result > 3.) {
 		double x = 0.;	
 	}

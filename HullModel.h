@@ -124,6 +124,18 @@ private: //methods
 		} else return 1;
 	}
 	
+	
+	/* check if all the beam and chine values of a station are smaller than those of its predecessor
+	 * or alternatively, just chekc that the area is smaller than the predeccessor */
+	inline int convergence_constraint(int stat_no) {
+		if (stat_no>0) {
+			if(station_properties[stat_no].area < station_properties[stat_no-1].area) {
+				return 1;
+			}
+			else return 0; //this station is too large
+		} else return 1; //this is the 0th station
+	}
+	
 	inline double volume_term() {
 		if (volume > hull_parameters.minVolume) {
 			return 1.0;
@@ -179,10 +191,33 @@ private: //methods
 		return 0.;
 	}
 	
+	//TODO: Can this function be combined with the convergence_constraint for improved performance? 
+	inline double station_convergence_term(int stat_no) {	
+		double result;
+		
+		if(stat_no == 0) { //first station
+			result = 1.;
+		} else { 
+			double prev_area = station_properties[stat_no-1].area;
+			double curr_area = station_properties[stat_no].area;
+			
+			if (curr_area <= prev_area) {
+				result = 1.;
+			} else {
+				result = prev_area/curr_area;
+			}
+		}
+				
+		assert(0. <= result && result <= 1.);
+		return result / hull_parameters.numberOfStations;
+	}
+	
 	inline double fitness_term() {
 		//TODO: moment_to_trim_1_deg
-// 		return 1250*1000/wetted_area;
-		return 4*250*1000 / (wetted_area-1000*1000); 
+// 		return 4*250*1000 / (wetted_area-1000*1000); 
+// 		return (prismatic_coefficient-0.4)*2;
+// 		return prismatic_coefficient;
+		return 4*250*1000 / (wetted_area-1000*1000) + (prismatic_coefficient-0.4)*2;
 		/* I highly doubt the overall surface area of the hull will drop below 5m^2 no matter 
 		 * how much optimization is done. 1m^2 is subtracted from the WSA of the quarter-hull
 		 * so that changes in the (remaining) WSA have a much larger impact on the fitness 
@@ -190,7 +225,8 @@ private: //methods
 		 * small effect on the overall fitness, especially with all the constraint terms going 
 		 * into the fitness as well. The result has been divided by 4, so that a hull with a WSA
 		 * of 5 would have a fitness term of 1.
-		 */	}
+		 */
+	}
 	
 	
 };
