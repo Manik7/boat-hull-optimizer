@@ -249,11 +249,63 @@ private: //methods
 		return result / hull_parameters.numberOfStations;
 	}
 	
+	inline double convergence_and_rocker_constraint(int stat_no) {
+		if (stat_no>0) {
+			
+			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			
+			if(Model::genome[3*stat_no+CHINE_X].second <= Model::genome[3*(stat_no-1)+CHINE_X].second
+				&& Model::genome[3*stat_no+CHINE_Y].second <= Model::genome[3*(stat_no-1)+CHINE_Y].second
+				&& min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) 
+			{
+				return 1;
+			}
+			else return 0; //this station is too large
+		}
+		else return 1; //the first station
+	}
+	
+	inline double station_convergence_and_rocker_term(int stat_no) {
+		double result;
+		
+		if(stat_no == 0) { //first station
+			result = 1.;
+		} else { 
+			double prev_chine_x = Model::genome[3*(stat_no-1)+CHINE_X].second;
+			double prev_chine_y = Model::genome[3*(stat_no-1)+CHINE_Y].second;
+// 			double prev_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+			double curr_chine_x = Model::genome[3*stat_no+CHINE_X].second;
+			double curr_chine_y = Model::genome[3*stat_no+CHINE_Y].second;
+// 			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+			
+			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
+			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
+			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			
+			result = (curr_chine_x <= prev_chine_x ? 1. : prev_chine_x/curr_chine_x);
+			result += (curr_chine_y <= prev_chine_y ? 1. : prev_chine_y/curr_chine_y);
+			
+			if(min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) {
+				result += 1.;
+			} else if(curr_keel_y < min_keel_y) { //keel too high (too close to WL)
+				result += curr_keel_y/min_keel_y;
+			} else { //keel too deep
+				result += max_keel_y/curr_keel_y;
+			}
+			result /= 3.;
+		}
+				
+		assert(0. <= result && result <= 1.);
+		return result / hull_parameters.numberOfStations;
+	}
+	
 	inline int rocker_constraint(int stat_no) {
 		if (stat_no > 0) {
 			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second; //the value from the previous station
 			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
-			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			double min_keel_y = max_keel_y - hull_parameters.stationSpacing*hull_parameters.keel_rise_rate;
 			
 			if(min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) {
 				return 1;
@@ -271,7 +323,7 @@ private: //methods
 		} else {
 			double max_keel_y = Model::genome[3*(stat_no-1)+KEEL_Y].second;
 			double curr_keel_y = Model::genome[3*stat_no+KEEL_Y].second;
-			double min_keel_y = max_keel_y - hull_parameters.keel_rise_rate*hull_parameters.stationSpacing;
+			double min_keel_y = max_keel_y - hull_parameters.stationSpacing*hull_parameters.keel_rise_rate;
 			
 			if(min_keel_y <= curr_keel_y && curr_keel_y <= max_keel_y) {
 				result = 1.;

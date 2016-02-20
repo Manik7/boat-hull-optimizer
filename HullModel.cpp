@@ -149,8 +149,8 @@ double HullModel::compute_fitness()
 	moment_to_trim_1_deg = 0.0;
 	
 	//TODO twist
-	double deadrise_c = 1., flare_c = 1., twist_c = 1., convergence_c = 1., rocker_c = 1.; //constraint multipliers
-	double deadrise_t = 0., flare_t = 0., twist_t = 0., convergence_t = 0., rocker_t = 0.; //additive terms
+	double deadrise_c = 1., flare_c = 1., twist_c = 1., convergence_c = 1., rocker_c = 1., convergence_rocker_c = 1.; //constraint multipliers
+	double deadrise_t = 0., flare_t = 0., twist_t = 0., convergence_t = 0., rocker_t = 0., convergence_rocker_t = 0.; //additive terms
 	
 	for (int stat_no = 0; stat_no<hull_parameters.numberOfStations; ++stat_no) {
 		
@@ -174,12 +174,14 @@ double HullModel::compute_fitness()
 // 		twist_c *= twist_constraint(stat_no);
 		convergence_c *= convergence_constraint(stat_no);
 		rocker_c *= rocker_constraint(stat_no);
+		convergence_rocker_c *= convergence_and_rocker_constraint(stat_no);
 		
 		deadrise_t += station_deadrise_term(stat_no);
 		flare_t += station_flare_term(stat_no);
 // 		twist_t += station_twist_term(stat_no);
 		convergence_t += station_convergence_term(stat_no);
 		rocker_t += station_rocker_term(stat_no);
+		convergence_rocker_t += station_convergence_and_rocker_term(stat_no);
 		
 		//volume, WSA, moment to trim calcs
 		volume += station_properties[stat_no].area;
@@ -210,17 +212,19 @@ double HullModel::compute_fitness()
 // 	assert(0 <= twist_t && twist_t <= 1);
 	assert(0 <= convergence_t && convergence_t <= 1);
 	assert(0 <= rocker_t && rocker_t <= 1);
+	assert(0 <= convergence_rocker_t && convergence_rocker_t <= 1);
 	
 	assert(flare_c == 0 || flare_c == 1);
 	assert(deadrise_c == 0 || deadrise_c == 1);
 // 	assert(twist_c == 0 || twist_c == 1);
 	assert(convergence_c == 0 || convergence_c == 1);
 	assert(rocker_c == 0 || rocker_c == 1);
+	assert(convergence_rocker_c == 0 || convergence_rocker_c == 1);
 	
 	double volume_t(volume_term());
 	double volume_c(volume_constraint());
 	
-	double result = volume_t + deadrise_t + flare_t + convergence_t + rocker_t + volume_c*deadrise_c*flare_c*convergence_c*rocker_c*fitness_term();
+	double result = volume_t + deadrise_t + flare_t + convergence_rocker_t + volume_c*deadrise_c*flare_c*convergence_rocker_c*fitness_term();
 	if(result > 3.) {
 		double x = 0.;	
 	}
