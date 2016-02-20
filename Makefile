@@ -9,7 +9,7 @@ debug:
 visualization:
 	gnuplot visualization.gp
 
-plot_all:
+plot:
 	cd data/ && gnuplot *.gp
 
 profile: debug

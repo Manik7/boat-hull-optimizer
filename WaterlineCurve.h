@@ -3,11 +3,21 @@
 
 #include "Bezier_quadratic.h"
 #include "Point_3.h"
+#include "HelperFunctions.h"
 
 struct WaterlineCurve : public Bezier_quadratic {
-	WaterlineCurve(int half_lwl, int half_beam, double control_vertex_fraction = 0.65) {
+	WaterlineCurve(int half_lwl, int half_beam) {
 		p0 = Point_3(half_beam, 0, 0);
-		p1 = Point_3(half_beam, 0, int(half_lwl*control_vertex_fraction));
+		p1 = Point_3(half_beam, 0, int(half_lwl*0.65));
+		p2 = Point_3(0, 0, half_lwl);
+	}
+	
+	WaterlineCurve(int half_lwl, int half_beam, double entry_half_angle_deg) {
+		
+		int intersection_coord = int(-half_beam/tan(helper::rad(entry_half_angle_deg))+half_lwl);
+		
+		p0 = Point_3(half_beam, 0, 0);
+		p1 = Point_3(half_beam, 0, intersection_coord);
 		p2 = Point_3(0, 0, half_lwl);
 	}
 };
