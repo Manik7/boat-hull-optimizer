@@ -2,6 +2,7 @@
 #define BEZIER_QUADRATIC_H
 
 #include <cmath>
+#include <cassert>
 
 #include "Point_3.h"
 

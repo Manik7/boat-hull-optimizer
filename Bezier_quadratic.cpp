@@ -11,14 +11,18 @@ Point_3 Bezier_quadratic::point_at_t(double t) const {
 	return point;
 }
 
-/* This function finds the first point along the bezier curve which has the specified z-coordinate value. Note that this only works if the given bezier spline is a monotonic function*/
+/* This function finds the first point along the bezier curve which has the specified 
+ * z-coordinate value. Note that this only works if the given bezier spline is a monotonic 
+ * function */
 Point_3 Bezier_quadratic::find_point_with_z_coord(double z_value, double epsilon) const {
 	return point_at_t(find_t_for_z_coord(z_value, 0.0, 1.0, epsilon));
 }
 
-// Finds say the x-value of the bezier curve by specifiying t, and giving the x coordinates of the three points of this spline. Care must be taken to specify the values along the correct axis.
+/* Finds say the x-value of the bezier curve by specifiying t, and giving the x coordinates 
+ * of the three points of this spline. Care must be taken to specify the values along the 
+ * correct axis.*/
 double Bezier_quadratic::evaluate_1D(double t, double p0_coord, double p1_coord, double p2_coord) const { 
-	//TODO: assert 0 <= t <= 1
+	assert(0 <= t && t <= 1);
 	return pow(1-t,2)*p0_coord + 2*(1-t)*t*p1_coord + pow(t,2)*p2_coord;
 }
 

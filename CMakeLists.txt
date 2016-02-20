@@ -6,6 +6,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG "-std=c++14 -g -pg -O0 -D DETERMINISTIC_RUN")
 
 SET(hull_optimizer_SOURCES 
 	Bezier_quadratic.cpp
+	Bezier_cubic.cpp
 	Main.cpp
 	HillClimber.h
 	HullModel.cpp

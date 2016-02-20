@@ -3,7 +3,7 @@
 HullModel::HullModel() 
 	: station_parameters()
 {
-	WaterlineCurve wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl, 9.0);
+	WaterlineCurveCubic wl_curve(hull_parameters.halfLwl, hull_parameters.halfBwl, 9.0);
 	
 	int statZCoord;
 	for (int statNo = 0; statNo < hull_parameters.numberOfStations; ++statNo) {

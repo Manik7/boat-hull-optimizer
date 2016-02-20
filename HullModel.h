@@ -10,6 +10,7 @@
 #include "OptimizableModel.h"
 #include "SharedStationProperties.h"
 #include "WaterlineCurve.h"
+#include "WaterlineCurveCubic.h"
 #include "StationParameters.h"
 #include "HullParameters.h"
 
