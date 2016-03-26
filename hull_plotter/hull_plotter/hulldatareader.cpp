@@ -19,7 +19,7 @@ void HullDataReader::read(std::string ifile) {
         ifs.get();
         ifs.close();
     } else {
-        std::cerr << "Failed to open file!" << std::endl;
+        //std::cerr << "Failed to open pointcloud file!" << std::endl; //TODO: bug here
         /*emit invalidFile();*/
     }
 }
