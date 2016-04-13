@@ -12,6 +12,9 @@ visualization:
 plot:
 	cd data/ && gnuplot *.gp
 
+update:
+	cd data/ && gnuplot best_solution.gp
+
 profile: debug
 	cd build/debug/ && ./hull_optimizer
 	cd build/debug/ && gprof -p ./hull_optimizer gmon.out
